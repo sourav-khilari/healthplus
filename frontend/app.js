@@ -34,11 +34,19 @@ document.getElementById("register-email").addEventListener("click", async () => 
 
   try {
 <<<<<<< HEAD
+<<<<<<< HEAD
    // const userCredential = await createUserWithEmailAndPassword(auth, email, password);
    // const idToken = await getIdToken(userCredential.user);
 
     // Send data to backend
     const response = await axiosInstance.post("/register", {  email, password, name });
+=======
+    //const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    //const idToken = await getIdToken(userCredential.user);
+
+    // Send data to backend
+    const response = await axiosInstance.post("/register", { email, password, name });
+>>>>>>> dc6a2930dac869f91701bf5fc457a5ae53f69614
 =======
     //const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     //const idToken = await getIdToken(userCredential.user);
