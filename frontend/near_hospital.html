@@ -35,7 +35,7 @@
   <script>
     async function fetchHospitals(lat, lng) {
       try {
-        const response = await fetch(`http://localhost:5000/api/hospitals?lat=${lat}&lng=${lng}`);
+        const response = await fetch(`http://localhost:8000/api/v1/users/pharmacy?lat=${lat}&lng=${lng}`);
         const hospitals = await response.json();
         displayHospitals(hospitals);
       } catch (error) {
@@ -48,7 +48,7 @@
       const hospitalList = document.getElementById("hospital-list");
       const loading = document.getElementById("loading");
       loading.style.display = "none";
-
+      console.log(hospitals);
       if (hospitals.length === 0) {
         hospitalList.innerHTML = "<p>No hospitals found nearby.</p>";
         return;

@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudnary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js"
+import axios from "axios"
 
 const registerUser = asyncHandler(async (req, res) => {
     const { email, password, name, idToken } = req.body;
@@ -18,7 +19,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
             // Check if the user exists in Firebase
             firebaseUser = await admin.auth().getUser(uid);
-
+            console.log("\n\n" + JSON.stringify(firebaseUser, null, 2) + "\n\n");
+            if(!firebaseUser){
+                throw new ApiError(400, 'user not registered');
+            }
             // Save to MongoDB if not already present
             let user = await User.findOne({ firebaseUid: uid });
             if (!user) {
@@ -95,9 +99,57 @@ const login = asyncHandler(async (req, res) => {
 });
 
 
+const nearestHospital=asyncHandler(async(req,res)=>{
+     const { lat, lng } = req.query; // Latitude and Longitude from the query
+    
+      if (!lat || !lng) {
+        throw new ApiError(400, "Latitude and Longitude are required.");
+      }
+      console.log("lat="+lat+"\n"+"lan="+lng);
+      const GEOAPIFY_API_KEY = "1fbb9d4b37744f8086172d1358dba01b"; 
+      //const url = `https://api.geoapify.com/v2/places?categories=healthcare.hospital&filter=circle:${lng},${lat},15000&limit=10&apiKey=1fbb9d4b37744f8086172d1358dba01b`;
+      const url = `https://api.geoapify.com/v2/places?categories=healthcare.hospital&filter=circle:${lng},${lat},15000&limit=10&apiKey=${GEOAPIFY_API_KEY}`;
+      try {
+        console.log("\nurl\n")
+        const response = await axios.get(url);
+        console.log("\nurl\n")
+        console.log(response);
+        //res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
+        return res.json(response.data.features); // Return hospital data
+      } catch (error) {
+        //console.error("Error fetching hospitals:", error);
+        throw new ApiError(500, "Failed to fetch hospital data.");
+        
+      }
+})
+
+
+const nearestPharmacy=asyncHandler(async(req,res)=>{
+    const { lat, lng } = req.query; // Latitude and Longitude from the query
+   
+     if (!lat || !lng) {
+       throw new ApiError(400, "Latitude and Longitude are required.");
+     }
+     const GEOAPIFY_API_KEY = "1fbb9d4b37744f8086172d1358dba01b"; 
+     console.log("lat="+lat+"\n"+"lan="+lng);
+     //const url = `https://api.geoapify.com/v2/places?categories=healthcare.pharmacy&filter=circle:${lng},${lat},15000&limit=10&apiKey=${process.env.GEOAPIFY_API_KEY}`;
+     const url = `https://api.geoapify.com/v2/places?categories=healthcare.pharmacy&filter=circle:${lng},${lat},15000&limit=10&apiKey=${GEOAPIFY_API_KEY}`;
+     try {
+       const response = await axios.get(url);
+       console.log(response);
+       //res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
+       return res.json(response.data.features); // Return hospital data
+     } catch (error) {
+       console.error("Error fetching hospitals:", error);
+       throw new ApiError(500, "Failed to fetch hospital data.");
+       
+     }
+})
 export {
     login,
     registerUser,
+    nearestHospital,
+    nearestPharmacy,
 }
 
 
