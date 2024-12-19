@@ -33,11 +33,11 @@ document.getElementById("register-email").addEventListener("click", async () => 
   const password = document.getElementById("password").value;
 
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const idToken = await getIdToken(userCredential.user);
+    //const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    //const idToken = await getIdToken(userCredential.user);
 
     // Send data to backend
-    const response = await axiosInstance.post("/register", { idToken, email, password, name });
+    const response = await axiosInstance.post("/register", { email, password, name });
     console.log(response.data);
     alert("Registration successful");
   } catch (error) {
@@ -57,7 +57,7 @@ document.getElementById("login-email").addEventListener("click", async () => {
 
     // Send data to backend
     const response = await axiosInstance.post("/login", { idToken });
-    console.log(response.data);
+    //console.log(response.data);
     alert("Login successful");
   } catch (error) {
     console.error("Login Error:", error.message);
