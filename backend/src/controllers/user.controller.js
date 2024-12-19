@@ -66,7 +66,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const login = asyncHandler(async (req, res) => {
     const { idToken, email } = req.body;
-
+    
     try {
         let decodedToken;
 
@@ -92,7 +92,7 @@ const login = asyncHandler(async (req, res) => {
         // Save token in cookies
         res.cookie('authToken', idToken, option);
 
-        res.status(200).json(new ApiResponse(200, user, 'Login successful'));
+       return res.status(200).json(new ApiResponse(200, user, 'Login successful'));
     } catch (error) {
         throw new ApiError(500, `Login failed: ${error.message}`);
     }
@@ -114,7 +114,7 @@ const nearestHospital=asyncHandler(async(req,res)=>{
         const response = await axios.get(url);
         console.log("\nurl\n")
         console.log(response);
-        //res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
+        //return res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
         return res.json(response.data.features); // Return hospital data
       } catch (error) {
         //console.error("Error fetching hospitals:", error);
@@ -137,11 +137,11 @@ const nearestPharmacy=asyncHandler(async(req,res)=>{
      try {
        const response = await axios.get(url);
        console.log(response);
-       //res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
+       //return res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
        return res.json(response.data.features); // Return hospital data
      } catch (error) {
        console.error("Error fetching hospitals:", error);
-       throw new ApiError(500, "Failed to fetch hospital data.");
+       throw new ApiError(500, "Failed to fetch hospital data.",error);
        
      }
 })
