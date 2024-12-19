@@ -8,7 +8,8 @@ const userSchema = new Schema({
   }, // Firebase UID
   email: {
     type: String,
-    required: true
+    required: true,
+    unique:true,
   }, // User email
   name: {
     type: String

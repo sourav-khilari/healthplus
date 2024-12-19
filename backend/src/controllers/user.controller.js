@@ -6,12 +6,68 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js"
 import axios from "axios"
 
+// const registerUser = asyncHandler(async (req, res) => {
+//     const { email, password, name, idToken } = req.body;
+
+//     try {
+//         let firebaseUser;
+//         let createdUser;
+//         if (idToken) {
+//             // Google Registration
+//             const decodedToken = await admin.auth().verifyIdToken(idToken);
+//             const { uid, email: firebaseEmail, name: firebaseName } = decodedToken;
+
+//             // Check if the user exists in Firebase
+//             firebaseUser = await admin.auth().getUser(uid);
+//             console.log("\n\n" + JSON.stringify(firebaseUser, null, 2) + "\n\n");
+//             if(!firebaseUser){
+//                 throw new ApiError(400, 'user not registered');
+//             }
+//             // Save to MongoDB if not already present
+//             let user = await User.findOne({ firebaseUid: uid });
+//             if (!user) {
+//                 user = new User({
+//                     firebaseUid: uid,
+//                     email: firebaseEmail,
+//                     name: firebaseName || firebaseEmail.split('@')[0],
+//                     authMethod: 'google',
+//                 });
+//                 createdUser = await user.save();
+//             }
+//         } else if (email && password) {
+//             // Email/Password Registration
+//             firebaseUser = await admin.auth().createUser({
+//                 email,
+//                 password,
+//                 displayName: name,
+//             });
+
+//             // Save to MongoDB
+//             let user = new User({
+//                 firebaseUid: firebaseUser.uid,
+//                 email,
+//                 name,
+//                 authMethod: 'email/password',
+//             });
+//             createdUser = await user.save();
+//         } else {
+//             throw new ApiError(400, 'Invalid registration request');
+//         }
+
+//         return res.status(201).json(
+//             new ApiResponse(201, createdUser, 'User registered successfully')
+//         );
+//     } catch (error) {
+//         throw new ApiError(500, `Registration failed: ${error.message}`);
+//     }
+// });
 const registerUser = asyncHandler(async (req, res) => {
     const { email, password, name, idToken } = req.body;
-
+    let firebaseUser;
     try {
-        let firebaseUser;
+        firebaseUser;
         let createdUser;
+
         if (idToken) {
             // Google Registration
             const decodedToken = await admin.auth().verifyIdToken(idToken);
@@ -20,9 +76,11 @@ const registerUser = asyncHandler(async (req, res) => {
             // Check if the user exists in Firebase
             firebaseUser = await admin.auth().getUser(uid);
             console.log("\n\n" + JSON.stringify(firebaseUser, null, 2) + "\n\n");
-            if(!firebaseUser){
-                throw new ApiError(400, 'user not registered');
+
+            if (!firebaseUser) {
+                throw new ApiError(400, 'User not registered');
             }
+
             // Save to MongoDB if not already present
             let user = await User.findOne({ firebaseUid: uid });
             if (!user) {
@@ -42,22 +100,34 @@ const registerUser = asyncHandler(async (req, res) => {
                 displayName: name,
             });
 
-            // Save to MongoDB
-            let user = new User({
-                firebaseUid: firebaseUser.uid,
-                email,
-                name,
-                authMethod: 'email/password',
-            });
-            createdUser = await user.save();
+            try {
+                // Save to MongoDB
+                let user = new User({
+                    firebaseUid: firebaseUser.uid,
+                    email,
+                    name,
+                    authMethod: 'email/password',
+                });
+                createdUser = await user.save();
+            } catch (error) {
+                // Cleanup Firebase User if MongoDB save fails
+                await admin.auth().deleteUser(firebaseUser.uid);
+                throw new ApiError(500, `MongoDB save failed: ${error.message}`);
+            }
         } else {
             throw new ApiError(400, 'Invalid registration request');
         }
 
-        res.status(201).json(
+        return res.status(201).json(
             new ApiResponse(201, createdUser, 'User registered successfully')
         );
     } catch (error) {
+        if (firebaseUser && firebaseUser.uid) {
+            // Cleanup Firebase User in case of any error
+            await admin.auth().deleteUser(firebaseUser.uid).catch((cleanupError) => {
+                console.error('Error cleaning up Firebase user:', cleanupError.message);
+            });
+        }
         throw new ApiError(500, `Registration failed: ${error.message}`);
     }
 });
@@ -66,7 +136,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const login = asyncHandler(async (req, res) => {
     const { idToken, email } = req.body;
-    
+
     try {
         let decodedToken;
 
