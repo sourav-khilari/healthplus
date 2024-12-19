@@ -1,0 +1,30 @@
+.home {
+  text-align: center;
+}
+
+.hero {
+  background-color: #f0f0f0;
+  padding: 50px 0;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 36px;
+  color: #333;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #666;
+}
+
+.services {
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+.service-cards {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
