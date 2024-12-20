@@ -42,7 +42,7 @@ build/Release
 node_modules/
 jspm_packages/
 
-./src/config/firebase-service-account.json
+./src/config/firebase-service-account.json/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
