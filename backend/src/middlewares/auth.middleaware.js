@@ -37,6 +37,38 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
   }
 });
 
+
+const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => {
+  const { idToken } = req.cookies;
+
+  if (!idToken) {
+      throw new ApiError(401, 'Unauthorized: No token provided');
+  }
+
+  try {
+      // Verify Firebase token
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      const { uid } = decodedToken;
+
+      // Check user's role in MongoDB
+      const user = await User.findOne({ firebaseUid: uid });
+      if (!user) {
+          throw new ApiError(404, 'User not found');
+      }
+
+      if (user.role !== requiredRole) {
+          throw new ApiError(403, `Forbidden: ${requiredRole} access required`);
+      }
+
+      req.user = user; // Attach user data to the request object
+      next();
+  } catch (error) {
+      throw new ApiError(401, `Unauthorized: ${error.message}`);
+  }
+});
+
+
 export{
     authMiddleware,
+    roleMiddleware,
 }    

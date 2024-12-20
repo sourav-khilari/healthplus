@@ -4,7 +4,6 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudnary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js";
-import axios from "axios";
 
 
 const addUser = asyncHandler(async (req, res) => {
@@ -60,7 +59,66 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 
 
+const getAllUsers = asyncHandler(async (req, res) => {
+    try {
+        // Check if the requester is an admin
+        if (req.user.role !== 'admin') {
+            throw new ApiError(403, 'Access denied: Admins only');
+        }
+
+        // Fetch all users from MongoDB
+        const users = await User.find({}) 
+            .select('name email role createdAt')       // Select only required fields
+            .sort({ createdAt: -1 });                  // Sort users by creation date (newest first)
+
+        return res.status(200).json(
+            new ApiResponse(200, users, 'Users fetched successfully')
+        );
+    } catch (error) {
+        throw new ApiError(500, `Failed to fetch users: ${error.message}`);
+    }
+});
+
+const updateUserStatus = asyncHandler(async (req, res) => {
+    const { firebaseUid, status } = req.body; // firebaseUid: Firebase UID, status: true/false
+
+    try {
+        // Check if the requester is an admin
+        if (req.user.role !== 'admin') {
+            throw new ApiError(403, 'Access denied: Admins only');
+        }
+
+        // Update the user's status in MongoDB
+        const user = await User.findOne({ firebaseUid });
+        if (!user) {
+            throw new ApiError(404, 'User not found');
+        }
+
+        user.status = status;
+        await user.save();
+
+        // Update the user's status in Firebase
+        await admin.auth().updateUser(firebaseUid, {
+            disabled: !status, // Firebase uses `disabled` for account activation/deactivation
+        });
+
+        return res.status(200).json(
+            new ApiResponse(200, { firebaseUid, status }, `User ${status ? 'activated' : 'deactivated'} successfully`)
+        );
+    } catch (error) {
+        throw new ApiError(500, `Failed to update user status: ${error.message}`);
+    }
+});
+
+
+
+
+
+
+
 export{
     addUser,
-    deleteUser
+    deleteUser,
+    getAllUsers,
+    updateUserStatus,
 }

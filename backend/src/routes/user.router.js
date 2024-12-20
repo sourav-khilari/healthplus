@@ -8,9 +8,9 @@ const router = Router()
 
 router.post('/register', registerUser);
 router.post('/login', login);
-// router.get("/hospital",authMiddleware,nearestHospital);
+router.get("/hospitals",authMiddleware,nearestHospital);
 // router.get("/pharmacy",authMiddleware,nearestPharmacy)
-router.get("/hospitals",nearestHospital);
+//router.get("/hospitals",nearestHospital);
 router.get("/pharmacy",nearestPharmacy)
 
 export default router

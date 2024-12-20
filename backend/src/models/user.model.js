@@ -20,6 +20,14 @@ const userSchema = new Schema({
   patient_id: {
     type: String,
     //unique: true
+  },
+  role:{
+    type:String,
+    default:"user",
+  },
+  status:{
+    type:Boolean,
+    default:true,
   }
 
 }, {

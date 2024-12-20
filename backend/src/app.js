@@ -20,10 +20,10 @@ app.use(cookieParser())
 
 //routes import
 import userRouter from './routes/user.router.js'
-
+import adminRouter from './routes/admin.route.js'
 //routes decalaration
 app.use("/api/v1/users",userRouter);
 
-
+app.use("/api/v1/admin",adminRouter);
 
 export {app}
