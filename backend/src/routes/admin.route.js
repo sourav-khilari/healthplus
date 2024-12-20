@@ -4,7 +4,7 @@ import {authMiddleware} from '../middlewares/auth.middleaware.js'
 
 const router =Router();
 
-router.post('/add-user', addUser); // Admin can add users
-router.delete('/delete-user', deleteUser); // Admin can delete users
+router.post('/add-user', addUser); 
+router.delete('/delete-user', deleteUser);
 
 export default router
