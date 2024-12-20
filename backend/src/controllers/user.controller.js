@@ -6,7 +6,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js";
 import axios from "axios";
 
-
 //     const { email, password, name, idToken } = req.body;
 
 //     try {
