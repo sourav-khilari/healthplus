@@ -4,7 +4,8 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudnary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js";
-
+import nodemailer from "../utils/sendEmail.js"
+import bcrypt from "bcrypt"
 
 const addUser = asyncHandler(async (req, res) => {
     const { email, password, name, authMethod } = req.body;
@@ -112,6 +113,68 @@ const updateUserStatus = asyncHandler(async (req, res) => {
 
 
 
+
+
+const approveOrDeclineHospital = asyncHandler(async (req, res) => {
+    const { hospitalId, action } = req.body; // action: 'approve' or 'decline'
+
+    try {
+        // Check if requester is an admin
+        if (req.user.role !== 'admin') {
+            throw new ApiError(403, 'Access denied: Admins only');
+        }
+
+        const hospital = await Hospital.findById(hospitalId);
+        if (!hospital) {
+            throw new ApiError(404, 'Hospital not found');
+        }
+
+        if (action === 'approve') {
+            // Generate a password for the hospital
+            const password = Math.random().toString(36).slice(-8);
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // Save password and set status to 'approved'
+            hospital.status = 'approved';
+            hospital.password = hashedPassword;
+
+            // Create hospital account in Firebase
+            const firebaseUser = await admin.auth().createUser({
+                email: hospital.email,
+                password,
+                displayName: hospital.name,
+            });
+            hospital.firebaseUid = firebaseUser.uid;
+
+            await hospital.save();
+
+            // Send email to the hospital with credentials
+            const message = `
+                Congratulations, your registration is approved!
+                Here are your login credentials:
+                Email: ${hospital.email}
+                Password: ${password}
+            `;
+            await nodemailer(hospital.email, 'Registration Approved', message);
+
+            return res.status(200).json(
+                new ApiResponse(200, null, 'Hospital approved and credentials sent')
+            );
+        } else if (action === 'decline') {
+            // Set status to 'rejected'
+            hospital.status = 'rejected';
+            await hospital.save();
+
+            return res.status(200).json(
+                new ApiResponse(200, null, 'Hospital registration declined')
+            );
+        } else {
+            throw new ApiError(400, 'Invalid action');
+        }
+    } catch (error) {
+        throw new ApiError(500, `Failed to process request: ${error.message}`);
+    }
+});
 
 
 
