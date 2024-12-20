@@ -1,6 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
+import { Hospital } from "../models/hospital.model.js";
 import { uploadOnCloudinary } from "../utils/cloudnary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js";
@@ -113,8 +114,6 @@ const updateUserStatus = asyncHandler(async (req, res) => {
 
 
 
-
-
 const approveOrDeclineHospital = asyncHandler(async (req, res) => {
     const { hospitalId, action } = req.body; // action: 'approve' or 'decline'
 
@@ -176,6 +175,56 @@ const approveOrDeclineHospital = asyncHandler(async (req, res) => {
     }
 });
 
+const getPendingHospitals = asyncHandler(async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            throw new ApiError(403, 'Access denied: Admins only');
+        }
+
+        const pendingHospitals = await Hospital.find({ status: 'pending' },'-password');
+
+        return res.status(200).json(
+            new ApiResponse(200, pendingHospitals, 'Pending hospitals retrieved successfully')
+        );
+    } catch (error) {
+        throw new ApiError(500, `Failed to retrieve pending hospitals: ${error.message}`);
+    }
+});
+
+const getRejectedHospitals = asyncHandler(async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            throw new ApiError(403, 'Access denied: Admins only');
+        }
+
+        const rejectedHospitals = await Hospital.find({ status: 'rejected' },'-password');
+
+        return res.status(200).json(
+            new ApiResponse(200, rejectedHospitals, 'Rejected hospitals retrieved successfully')
+        );
+    } catch (error) {
+        throw new ApiError(500, `Failed to retrieve rejected hospitals: ${error.message}`);
+    }
+});
+
+
+const getApprovedHospitals = asyncHandler(async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            throw new ApiError(403, 'Access denied: Admins only');
+        }
+
+        const approvedHospitals = await Hospital.find({ status: 'approved' },'-password');
+
+        return res.status(200).json(
+            new ApiResponse(200, approvedHospitals, 'Approved hospitals retrieved successfully')
+        );
+    } catch (error) {
+        throw new ApiError(500, `Failed to retrieve approved hospitals: ${error.message}`);
+    }
+});
+
+
 
 
 
@@ -184,4 +233,8 @@ export{
     deleteUser,
     getAllUsers,
     updateUserStatus,
+    approveOrDeclineHospital,
+    getPendingHospitals,
+    getRejectedHospitals,
+    getApprovedHospitals,
 }

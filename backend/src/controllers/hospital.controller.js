@@ -82,7 +82,11 @@ const registerHospital = asyncHandler(async (req, res) => {
     }
 });
 
+
+
+
 export {
     registerHospital,
     loginHospital,
+    
 }

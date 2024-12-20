@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudnary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js";
 import axios from "axios";
-
+import { Hospital } from "../models/hospital.model.js";
 
 // const registerUser = asyncHandler(async (req, res) => {
 //     const { email, password, name, idToken } = req.body;
@@ -230,6 +230,24 @@ const login = asyncHandler(async (req, res) => {
 });
 
 
+const getAllHospitals = asyncHandler(async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            throw new ApiError(403, 'Access denied: Admins only');
+        }
+
+        const approvedHospitals = await Hospital.find({ status: 'approved' },'-password','status');
+
+        return res.status(200).json(
+            new ApiResponse(200, approvedHospitals, 'Approved hospitals retrieved successfully')
+        );
+    } catch (error) {
+        throw new ApiError(500, `Failed to retrieve approved hospitals: ${error.message}`);
+    }
+});
+
+
+
 const nearestHospital = asyncHandler(async (req, res) => {
   const { lat, lng } = req.query; // Latitude and Longitude from the query
 
@@ -284,4 +302,5 @@ export {
     registerUser,
     nearestHospital,
     nearestPharmacy,
+    getAllHospitals,
 }
