@@ -1,18 +1,17 @@
 // Import Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, getIdToken } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, getIdToken } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
 // Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyDJ9L91dE5EIVqH2QJNZiNsyObiiBmGuHo",
-  authDomain: "healthplus-a7bd7.firebaseapp.com",
-  projectId: "healthplus-a7bd7",
-  storageBucket: "healthplus-a7bd7.firebasestorage.app",
-  messagingSenderId: "18341081891",
-  appId: "1:18341081891:web:9eedc02c6d5a064ed81296",
-  measurementId: "G-6D223N3RLB"
   
- 
+  
+  apiKey:"AIzaSyB2sKWEJUe8lN3KSaC7Z4SvMVJI8AMvT7U",
+  authDomain: "mychatt-6cf4e.firebaseapp.com",
+  projectId: "mychatt-6cf4e",
+  storageBucket:"mychatt-6cf4e.appspot.com",
+  messagingSenderId: "282770822965",
+  appId: "1:282770822965:web:9875fd3a6c80cd6ed81e7c"
 };
 
 // Initialize Firebase
@@ -33,12 +32,11 @@ document.getElementById("register-email").addEventListener("click", async () => 
   const password = document.getElementById("password").value;
 
   try {
-
    // const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-   // const idToken = await getIdToken(userCredential.user);
+    //const idToken = await getIdToken(userCredential.user);
 
     // Send data to backend
-    const response = await axiosInstance.post("/register", {  email, password, name });
+    const response = await axiosInstance.post("/register", { email, password, name });
     console.log(response.data);
     alert("Registration successful");
   } catch (error) {
@@ -58,7 +56,7 @@ document.getElementById("login-email").addEventListener("click", async () => {
 
     // Send data to backend
     const response = await axiosInstance.post("/login", { idToken });
-    //console.log(response.data);
+    console.log(response.data);
     alert("Login successful");
   } catch (error) {
     console.error("Login Error:", error.message);

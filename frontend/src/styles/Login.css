@@ -1,56 +1,112 @@
 /* Login.css */
 
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+}
+
 .login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f4f7fc;
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 h1 {
-  font-size: 32px;
+  color: #333333;
   margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.email-login-button,
+.google-login-button,
+.register-button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.email-login-button {
+  background-color: #4caf50;
+  color: #ffffff;
 }
 
 .google-login-button {
   background-color: #4285f4;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 10px;
+  color: #ffffff;
+}
+
+.register-button {
+  background-color: #e0e0e0;
+  color: #333333;
+}
+
+.email-login-button:hover {
+  background-color: #45a049;
 }
 
 .google-login-button:hover {
   background-color: #357ae8;
 }
 
-.register-button {
-  background-color: #34a853;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 .register-button:hover {
-  background-color: #2c8c3d;
+  background-color: #d6d6d6;
 }
 
-.user-info {
-  text-align: center;
+.email-login-button:disabled,
+.google-login-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
-.user-photo {
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  margin-bottom: 15px;
+p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666666;
+}
+
+@media (max-width: 500px) {
+  .login-container {
+    margin: 20px;
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .login-input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .email-login-button,
+  .google-login-button,
+  .register-button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  p {
+    font-size: 12px;
+  }
 }
