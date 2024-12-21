@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {registerUser,login,nearestHospital,nearestPharmacy } from '../controllers/user.controller.js'
+import {registerUser,login,nearestHospital,nearestPharmacy,getAllHospitals } from '../controllers/user.controller.js'
 import {authMiddleware,roleMiddleware} from '../middlewares/auth.middleaware.js'
 
 
@@ -10,6 +10,7 @@ router.post('/register', registerUser);
 router.post('/login', login);
 router.get("/hospitals",roleMiddleware("user"),nearestHospital);
 router.get("/pharmacy",roleMiddleware("user"),nearestPharmacy);
+router.get("/pharmacy",roleMiddleware("user"),getAllHospitals);
 //router.get("/hospitals",nearestHospital);
 //router.get("/pharmacy",nearestPharmacy)
 

@@ -1,10 +1,28 @@
 import { Router } from "express";
-import {addUser,deleteUser } from '../controllers/admin.controller.js'
-import {authMiddleware} from '../middlewares/auth.middleaware.js'
+import {
+    addUser,
+    deleteUser,
+    getAllUsers,
+    updateUserStatus,
+    approveOrDeclineHospital,
+    getPendingHospitals,
+    getRejectedHospitals,
+    getApprovedHospitals,
+} from '../controllers/admin.controller.js'
+import { authMiddleware, roleMiddleware } from '../middlewares/auth.middleaware.js'
 
-const router =Router();
+const router = Router();
 
-router.post('/add-user', addUser); 
-router.delete('/delete-user', deleteUser);
+router.get('/getUser', roleMiddleware("admin"), getAllUsers);
+router.post('/updateUserStatus', roleMiddleware("admin"), updateUserStatus);
+
+router.post('/add-user', roleMiddleware("admin"), addUser);
+router.delete('/delete-user', roleMiddleware("admin"), deleteUser);
+
+router.post('/approveOrDeclineHospital', roleMiddleware("admin"), approveOrDeclineHospital);
+
+router.get('/getPendingHospitals', roleMiddleware("admin"), getPendingHospitals);
+router.get('/getRejectedHospitals', roleMiddleware("admin"), getRejectedHospitals);
+router.get('/getApprovedHospitals', roleMiddleware("admin"), getApprovedHospitals);
 
 export default router
