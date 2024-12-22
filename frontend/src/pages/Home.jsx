@@ -23,6 +23,16 @@ const Home = () => {
       description: "Get insights and guidance on your health reports.",
       link: "/services/report-guidance",
     },
+    {
+      title: "Find Hospital Near You",
+      description: "Get the posiible near hospital.",
+      link: "/findHospital",
+    },
+    {
+      title: "Find Pharmacy Near You",
+      description: "Get the posiible near hospital. ",
+      link: "/findPharmacy",
+    },
   ];
 
   return (
@@ -34,7 +44,8 @@ const Home = () => {
         <img
           src="./src/assets/images/h2.jpeg"
           alt="HealthPlus banner showing healthcare excellence"
-          className="hero-image " style={{width:"40%"}}
+          className="hero-image "
+          style={{ width: "40%" }}
         />
       </section>
 
