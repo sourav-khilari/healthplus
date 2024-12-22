@@ -302,97 +302,46 @@ const nearestPharmacy=asyncHandler(async(req,res)=>{
 
 //get-available-slots/:doctorId/:date
 
-
-// Helper function to calculate free slots
-function calculateFreeSlots(availability, bookedSlots, date) {
-    const dayAvailability = availability.find((slot) => slot.day === new Date(date).getDay());
-    if (!dayAvailability) return [];
-
-    const startTime = parseInt(dayAvailability.startTime.split(':')[0]);
-    const endTime = parseInt(dayAvailability.endTime.split(':')[0]);
-
+const calculateFreeSlots = (availability, bookedSlots, slotDuration) => {
     const freeSlots = [];
-    for (let hour = startTime; hour < endTime; hour++) {
-        const slotStart = `${date}T${hour}:00:00Z`;
-        const slotEnd = `${date}T${hour + 1}:00:00Z`;
-        const isBooked = bookedSlots.some(
-            (slot) => slot.start === slotStart || slot.end === slotEnd
-        );
+    // const dayAvailability = availability.find((slot) => slot.day === new Date(date).getDay());
+    // if (!dayAvailability) return [];
+    availability.forEach(({ day, startTime, endTime }) => {
+        
+        const startHour = parseInt(startTime.split(':')[0]);
+        const startMinute = parseInt(startTime.split(':')[1]);
+        const endHour = parseInt(endTime.split(':')[0]);
+        const endMinute = parseInt(endTime.split(':')[1]);
 
-        if (!isBooked) {
-            freeSlots.push({ start: slotStart, end: slotEnd });
+        // Generate all slots within the available time range
+        let current = new Date();
+        current.setHours(startHour, startMinute, 0, 0);
+
+        const end = new Date();
+        end.setHours(endHour, endMinute, 0, 0);
+
+        while (current < end) {
+            const slotStart = new Date(current);
+            current.setMinutes(current.getMinutes() + slotDuration);
+            const slotEnd = new Date(current);
+
+            // Check if the slot overlaps with any booked slot
+            const isBooked = bookedSlots.some((booked) => {
+                const bookedStart = new Date(booked.start);
+                const bookedEnd = new Date(booked.end);
+                return (
+                    (slotStart >= bookedStart && slotStart < bookedEnd) ||
+                    (slotEnd > bookedStart && slotEnd <= bookedEnd)
+                );
+            });
+
+            if (!isBooked) {
+                freeSlots.push({ start: slotStart, end: slotEnd });
+            }
         }
-    }
+    });
+
     return freeSlots;
-}
-
-
-// const calculateFreeSlots = (availability, bookedSlots, slotDuration) => {
-//     const freeSlots = [];
-
-//     availability.forEach(({ day, startTime, endTime }) => {
-//         const startHour = parseInt(startTime.split(':')[0]);
-//         const startMinute = parseInt(startTime.split(':')[1]);
-//         const endHour = parseInt(endTime.split(':')[0]);
-//         const endMinute = parseInt(endTime.split(':')[1]);
-
-//         // Generate all slots within the available time range
-//         let current = new Date();
-//         current.setHours(startHour, startMinute, 0, 0);
-
-//         const end = new Date();
-//         end.setHours(endHour, endMinute, 0, 0);
-
-//         while (current < end) {
-//             const slotStart = new Date(current);
-//             current.setMinutes(current.getMinutes() + slotDuration);
-//             const slotEnd = new Date(current);
-
-//             // Check if the slot overlaps with any booked slot
-//             const isBooked = bookedSlots.some((booked) => {
-//                 const bookedStart = new Date(booked.start);
-//                 const bookedEnd = new Date(booked.end);
-//                 return (
-//                     (slotStart >= bookedStart && slotStart < bookedEnd) ||
-//                     (slotEnd > bookedStart && slotEnd <= bookedEnd)
-//                 );
-//             });
-
-//             if (!isBooked) {
-//                 freeSlots.push({ start: slotStart, end: slotEnd });
-//             }
-//         }
-//     });
-
-//     return freeSlots;
-// };
-
-const getAvailableSlots = async (req, res) => {
-    const { doctorId, date } = req.params;
-
-    try {
-        const doctor = await Doctor.findById(doctorId);
-        if (!doctor) throw new Error('Doctor not found');
-
-        //const calendar = await google.calendar('v3');
-        const events = await calendar.events.list({
-            calendarId: doctor.calendarId,
-            timeMin: new Date(`${date}T00:00:00Z`).toISOString(),
-            timeMax: new Date(`${date}T23:59:59Z`).toISOString(),
-            singleEvents: true,
-        });
-
-        const bookedSlots = events.data.items.map((event) => ({
-            start: event.start.dateTime,
-            end: event.end.dateTime,
-        }));
-
-        const availableSlots = calculateFreeSlots(doctor.availability, bookedSlots, date);
-
-        res.status(200).json({ availableSlots },{bookedSlots});
-    } catch (error) {
-        res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
-    }
 };
 
 // const getAvailableSlots = async (req, res) => {
@@ -400,10 +349,9 @@ const getAvailableSlots = async (req, res) => {
 
 //     try {
 //         const doctor = await Doctor.findById(doctorId);
-//         if (!doctor) return res.status(404).json({ error: 'Doctor not found' });
+//         if (!doctor) throw new Error('Doctor not found');
 
-//         // Fetch booked slots from Google Calendar
-//         const calendar = await google.calendar('v3');
+//         //const calendar = await google.calendar('v3');
 //         const events = await calendar.events.list({
 //             calendarId: doctor.calendarId,
 //             timeMin: new Date(`${date}T00:00:00Z`).toISOString(),
@@ -416,20 +364,74 @@ const getAvailableSlots = async (req, res) => {
 //             end: event.end.dateTime,
 //         }));
 
-//         // Filter availability for the specific day
-//         const dayOfWeek = new Date(date).toLocaleString('en-US', { weekday: 'long' });
-//         const availability = doctor.availability.filter((slot) => slot.day === dayOfWeek);
+//         const availableSlots = calculateFreeSlots(doctor.availability, bookedSlots, date);
 
-//         // Calculate free slots
-//         const freeSlots = calculateFreeSlots(availability, bookedSlots, doctor.slotDuration);
-
-//         res.status(200).json({ freeSlots });
+//         res.status(200).json({ availableSlots },{bookedSlots});
 //     } catch (error) {
 //         res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
 //     }
 // };
 
+const getAvailableSlots = async (req, res) => {
+    const { doctorId, date } = req.params;
+    console.log(doctorId);
+    console.log(date)
+    try {
+        const doctor = await Doctor.findById(doctorId);
+        if (!doctor) return res.status(404).json({ error: 'Doctor not found 1st' });
 
+        // Fetch booked slots from Google Calendar
+        //const calendar = await google.calendar('v3');
+        const events = await calendar.events.list({
+            calendarId: doctor.calendarId,
+            timeMin: new Date(`${date}T00:00:00Z`).toISOString(),
+            timeMax: new Date(`${date}T23:59:59Z`).toISOString(),
+            singleEvents: true,
+        });
+        console.log("after event")
+        const bookedSlots = events.data.items.map((event) => ({
+            start: event.start.dateTime,
+            end: event.end.dateTime,
+        }));
+        console.log("after event1")
+        // Filter availability for the specific day
+        const dayOfWeek = new Date(date).toLocaleString('en-US', { weekday: 'long' });
+        const availability = doctor.availability.filter((slot) => slot.day === dayOfWeek);
+
+        // Calculate free slots
+        const freeSlots = calculateFreeSlots(availability, bookedSlots, doctor.slotDuration);
+
+        return res.status(200).json({ freeSlots });
+    } catch (error) {
+        res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
+    }
+};
+
+const getAllDoctors = async (req, res) => {
+    try {
+        // Fetch all doctors, optionally filtering by query params
+        const filters = {};
+        if (req.query?.department) {
+            filters.department = req.query.department;
+        }
+        if (req.query?.hospitalId) {
+            filters.hospitalId = req.query.hospitalId;
+        }
+
+        //const doctors = await Doctor.find(filters).populate('hospitalId', 'name location');
+        const doctors = await Doctor.find(filters)
+        
+        res.status(200).json({
+            success: true,
+            data: doctors,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: `Failed to fetch doctors: ${error.message}`,
+        });
+    }
+};
 
 
 const checkAvailability = async (doctorId, date, timeSlot) => {
@@ -632,4 +634,6 @@ export {
     bookAppointment,
     updateAppointment,
     deleteAppointment,
+    getAllDoctors,
+
 }

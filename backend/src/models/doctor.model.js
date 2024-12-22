@@ -7,6 +7,7 @@ const doctorSchema = new Schema({
     email: { type: String, required: true, unique: true },
     phone: { type: String },
     hospitalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Hospital', required: true },
+    //hospitalId: { type: String, required: true },
     calendarId: { type: String }, // Google Calendar ID
     availability: [
         {
