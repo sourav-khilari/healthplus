@@ -44,6 +44,9 @@ jspm_packages/
 
 ./src/config/firebase-service-account.json/
 
+/src/config/service-account.json/
+./src/config/service-account.json/
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 

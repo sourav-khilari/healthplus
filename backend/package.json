@@ -10,6 +10,7 @@
     "express": "^4.21.2",
     "firebase": "^11.1.0",
     "firebase-admin": "^13.0.1",
+    "googleapis": "^144.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.1",
     "mongoose-aggregate-paginate-v2": "^1.1.2",

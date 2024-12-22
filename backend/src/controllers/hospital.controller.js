@@ -6,6 +6,8 @@ import { uploadOnCloudinary } from "../utils/cloudnary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js";
 
+import { Doctor } from "../models/doctor.model.js";
+import {calendar} from '../config/googleCalendar.js'
 
 //error not handled properly in decoded token part
 const loginHospital = asyncHandler(async (req, res) => {
@@ -84,9 +86,101 @@ const registerHospital = asyncHandler(async (req, res) => {
 
 
 
+const addDoctor = async (req, res) => {
+    const { name, department, speciality, email, phone, hospitalId, availability,slotDuration } = req.body;
+
+    try {
+        // Create a Google Calendar for the doctor
+        const calendarResponse = await calendar.calendars.insert({
+            requestBody: {
+                summary: `${name} - ${department}`,
+                description: `Calendar for Dr. ${name} (${speciality})`,
+            },
+        });
+
+        // Save doctor details in MongoDB
+        const newDoctor = new Doctor({
+            name,
+            department,
+            speciality,
+            email,
+            phone,
+            hospitalId,
+            calendarId: calendarResponse.data.id,
+            availability,
+            slotDuration
+        });
+
+        await newDoctor.save();
+        res.status(201).json({ message: 'Doctor added successfully', doctor: newDoctor });
+    } catch (error) {
+        res.status(500).json({ error: `Failed to add doctor: ${error.message}` });
+    }
+};
+
+// GET /api/hospitals/:hospitalId/appointments
+const getHospitalAllAppointments = asyncHandler(async (req, res) => {
+    const { hospitalId } = req.params;
+
+    try {
+        // Validate if the hospital exists
+        const hospital = await Hospital.findById(hospitalId);
+        if (!hospital) {
+            return res.status(404).json({ message: 'Hospital not found' });
+        }
+
+        // Retrieve all doctors associated with the hospital
+        const doctors = await Doctor.find({ hospitalId });
+
+        // Get all appointments for these doctors
+        const doctorIds = doctors.map((doctor) => doctor._id);
+        const appointments = await Appointment.find({ doctorId: { $in: doctorIds } })
+            .populate('patientId', 'name email') // Optional: Populate patient details
+            .populate('doctorId', 'name department specialty') // Optional: Populate doctor details
+            .sort({ date: 1 }); // Sort by date for better readability
+
+        res.status(200).json({
+            message: 'Appointments retrieved successfully',
+            data: appointments,
+        });
+    } catch (error) {
+        res.status(500).json({ error: `Failed to retrieve appointments: ${error.message}` });
+    }
+});
+
+// GET /api/doctors/:doctorId/appointments
+const getDoctorAppointments = asyncHandler(async (req, res) => {
+    const { doctorId } = req.params;
+
+    try {
+        // Validate if the doctor exists
+        const doctor = await Doctor.findById(doctorId);
+        if (!doctor) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        // Retrieve all appointments for the doctor
+        const appointments = await Appointment.find({ doctorId })
+            .populate('patientId', 'name email') // Optional: Populate patient details
+            .sort({ date: 1, timeSlot: 1 }); // Sort by date and time
+
+        res.status(200).json({
+            message: 'Doctor appointments retrieved successfully',
+            data: appointments,
+        });
+    } catch (error) {
+        res.status(500).json({ error: `Failed to retrieve doctor appointments: ${error.message}` });
+    }
+});
+
+
+
+
 
 export {
     registerHospital,
     loginHospital,
-    
+    addDoctor,
+    getHospitalAllAppointments,
+    getDoctorAppointments,
 }

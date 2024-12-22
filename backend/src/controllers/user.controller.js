@@ -6,6 +6,10 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js";
 import axios from "axios";
 import { Hospital } from "../models/hospital.model.js";
+import { Doctor } from "../models/doctor.model.js";
+import {calendar} from '../config/googleCalendar.js'
+import {Appointment} from '../models/appointment.model.js'
+
 
 // const registerUser = asyncHandler(async (req, res) => {
 //     const { email, password, name, idToken } = req.body;
@@ -296,6 +300,327 @@ const nearestPharmacy=asyncHandler(async(req,res)=>{
      }
 })
 
+//get-available-slots/:doctorId/:date
+
+
+// Helper function to calculate free slots
+function calculateFreeSlots(availability, bookedSlots, date) {
+    const dayAvailability = availability.find((slot) => slot.day === new Date(date).getDay());
+    if (!dayAvailability) return [];
+
+    const startTime = parseInt(dayAvailability.startTime.split(':')[0]);
+    const endTime = parseInt(dayAvailability.endTime.split(':')[0]);
+
+    const freeSlots = [];
+    for (let hour = startTime; hour < endTime; hour++) {
+        const slotStart = `${date}T${hour}:00:00Z`;
+        const slotEnd = `${date}T${hour + 1}:00:00Z`;
+        const isBooked = bookedSlots.some(
+            (slot) => slot.start === slotStart || slot.end === slotEnd
+        );
+
+        if (!isBooked) {
+            freeSlots.push({ start: slotStart, end: slotEnd });
+        }
+    }
+    return freeSlots;
+}
+
+
+// const calculateFreeSlots = (availability, bookedSlots, slotDuration) => {
+//     const freeSlots = [];
+
+//     availability.forEach(({ day, startTime, endTime }) => {
+//         const startHour = parseInt(startTime.split(':')[0]);
+//         const startMinute = parseInt(startTime.split(':')[1]);
+//         const endHour = parseInt(endTime.split(':')[0]);
+//         const endMinute = parseInt(endTime.split(':')[1]);
+
+//         // Generate all slots within the available time range
+//         let current = new Date();
+//         current.setHours(startHour, startMinute, 0, 0);
+
+//         const end = new Date();
+//         end.setHours(endHour, endMinute, 0, 0);
+
+//         while (current < end) {
+//             const slotStart = new Date(current);
+//             current.setMinutes(current.getMinutes() + slotDuration);
+//             const slotEnd = new Date(current);
+
+//             // Check if the slot overlaps with any booked slot
+//             const isBooked = bookedSlots.some((booked) => {
+//                 const bookedStart = new Date(booked.start);
+//                 const bookedEnd = new Date(booked.end);
+//                 return (
+//                     (slotStart >= bookedStart && slotStart < bookedEnd) ||
+//                     (slotEnd > bookedStart && slotEnd <= bookedEnd)
+//                 );
+//             });
+
+//             if (!isBooked) {
+//                 freeSlots.push({ start: slotStart, end: slotEnd });
+//             }
+//         }
+//     });
+
+//     return freeSlots;
+// };
+
+const getAvailableSlots = async (req, res) => {
+    const { doctorId, date } = req.params;
+
+    try {
+        const doctor = await Doctor.findById(doctorId);
+        if (!doctor) throw new Error('Doctor not found');
+
+        //const calendar = await google.calendar('v3');
+        const events = await calendar.events.list({
+            calendarId: doctor.calendarId,
+            timeMin: new Date(`${date}T00:00:00Z`).toISOString(),
+            timeMax: new Date(`${date}T23:59:59Z`).toISOString(),
+            singleEvents: true,
+        });
+
+        const bookedSlots = events.data.items.map((event) => ({
+            start: event.start.dateTime,
+            end: event.end.dateTime,
+        }));
+
+        const availableSlots = calculateFreeSlots(doctor.availability, bookedSlots, date);
+
+        res.status(200).json({ availableSlots },{bookedSlots});
+    } catch (error) {
+        res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
+    }
+};
+
+// const getAvailableSlots = async (req, res) => {
+//     const { doctorId, date } = req.params;
+
+//     try {
+//         const doctor = await Doctor.findById(doctorId);
+//         if (!doctor) return res.status(404).json({ error: 'Doctor not found' });
+
+//         // Fetch booked slots from Google Calendar
+//         const calendar = await google.calendar('v3');
+//         const events = await calendar.events.list({
+//             calendarId: doctor.calendarId,
+//             timeMin: new Date(`${date}T00:00:00Z`).toISOString(),
+//             timeMax: new Date(`${date}T23:59:59Z`).toISOString(),
+//             singleEvents: true,
+//         });
+
+//         const bookedSlots = events.data.items.map((event) => ({
+//             start: event.start.dateTime,
+//             end: event.end.dateTime,
+//         }));
+
+//         // Filter availability for the specific day
+//         const dayOfWeek = new Date(date).toLocaleString('en-US', { weekday: 'long' });
+//         const availability = doctor.availability.filter((slot) => slot.day === dayOfWeek);
+
+//         // Calculate free slots
+//         const freeSlots = calculateFreeSlots(availability, bookedSlots, doctor.slotDuration);
+
+//         res.status(200).json({ freeSlots });
+//     } catch (error) {
+//         res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
+//     }
+// };
+
+
+
+
+const checkAvailability = async (doctorId, date, timeSlot) => {
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) throw new Error('Doctor not found');
+
+    // Ensure time slot falls within availability
+    const availability = doctor.availability.find((day) => day.day === new Date(date).toLocaleDateString('en-US', { weekday: 'long' }));
+    if (!availability) return false;
+
+    const slotStart = parseInt(timeSlot.split(':')[0]);
+    const availabilityStart = parseInt(availability.startTime.split(':')[0]);
+    const availabilityEnd = parseInt(availability.endTime.split(':')[0]);
+
+    if (slotStart < availabilityStart || slotStart >= availabilityEnd) return false;
+
+    // Ensure time slot is not already booked
+    const appointments = await Appointment.find({
+        doctorId,
+        date,
+        timeSlot,
+    });
+
+    return appointments.length === 0;
+};
+
+
+const bookAppointment = async (req, res) => {
+    const { patientName, patientEmail, doctorId, hospitalId, date, timeSlot } = req.body;
+
+    try {
+        const doctor = await Doctor.findById(doctorId);
+        if (!doctor) throw new Error('Doctor not found');
+        // Check if doctor is available at the given time slot
+        const isAvailable = await checkAvailability(doctorId, date, timeSlot);
+        if (!isAvailable) return res.status(400).json({ error: 'Doctor is not available in given time slot'});
+        // Create event in Google Calendar
+        const event = {
+            summary: `Appointment with ${patientName}`,
+            description: `Patient Email: ${patientEmail}`,
+            start: { dateTime: `${date}T${timeSlot}:00`, timeZone: 'UTC' },
+            end: { dateTime: `${date}T${parseInt(timeSlot) + 1}:00`, timeZone: 'UTC' },
+        };
+
+        const eventResponse = await calendar.events.insert({
+            calendarId: doctor.calendarId,
+            requestBody: event,
+        });
+
+        // Save appointment in MongoDB
+        const newAppointment = new Appointment({
+            patientName,
+            patientEmail,
+            doctorId,
+            hospitalId,
+            date,
+            timeSlot,
+            calendarEventId: eventResponse.data.id,
+        });
+
+        await newAppointment.save();
+        res.status(201).json({ message: 'Appointment booked successfully', appointment: newAppointment });
+    } catch (error) {
+        res.status(500).json({ error: `Failed to book appointment: ${error.message}` });
+    }
+};
+
+// const bookAppointment = async (req, res) => {
+//     const { doctorId, date, timeSlot, patientName } = req.body;
+
+//     try {
+//         const doctor = await Doctor.findById(doctorId);
+//         if (!doctor) return res.status(404).json({ error: 'Doctor not found' });
+
+//         // Fetch booked slots from Google Calendar
+//         const events = await calendar.events.list({
+//             calendarId: doctor.calendarId,
+//             timeMin: new Date(`${date}T00:00:00Z`).toISOString(),
+//             timeMax: new Date(`${date}T23:59:59Z`).toISOString(),
+//             singleEvents: true,
+//         });
+
+//         const bookedSlots = events.data.items.map((event) => ({
+//             start: event.start.dateTime,
+//             end: event.end.dateTime,
+//         }));
+
+//         // Check if the requested slot is free
+//         const requestedStart = new Date(`${date}T${timeSlot}:00Z`);
+//         const requestedEnd = new Date(requestedStart);
+//         requestedEnd.setMinutes(requestedEnd.getMinutes() + doctor.slotDuration);
+
+//         const isSlotAvailable = !bookedSlots.some((slot) => {
+//             const bookedStart = new Date(slot.start);
+//             const bookedEnd = new Date(slot.end);
+//             return (
+//                 (requestedStart >= bookedStart && requestedStart < bookedEnd) ||
+//                 (requestedEnd > bookedStart && requestedEnd <= bookedEnd)
+//             );
+//         });
+
+//         if (!isSlotAvailable) {
+//             return res.status(400).json({ error: 'The requested slot is not available' });
+//         }
+
+//         // Add the event to Google Calendar
+//         const event = await calendar.events.insert({
+//             calendarId: doctor.calendarId,
+//             requestBody: {
+//                 summary: `Appointment with ${patientName}`,
+//                 description: `Appointment for ${doctor.speciality} at ${doctor.department}`,
+//                 start: { dateTime: requestedStart.toISOString(), timeZone: 'UTC' },
+//                 end: { dateTime: requestedEnd.toISOString(), timeZone: 'UTC' },
+//             },
+//         });
+
+//         // Save the appointment in the database
+//         const appointment = new Appointment({
+//             doctorId,
+//             patientName,
+//             date,
+//             timeSlot,
+//             calendarEventId: event.data.id,
+//         });
+
+//         await appointment.save();
+//         res.status(201).json({ message: 'Appointment booked successfully', appointment });
+//     } catch (error) {
+//         res.status(500).json({ error: `Failed to book appointment: ${error.message}` });
+//     }
+// };
+
+
+
+const updateAppointment = async (req, res) => {
+    const { appointmentId } = req.params;
+    const { newDate, newTimeSlot } = req.body;
+
+    try {
+        const appointment = await Appointment.findById(appointmentId);
+        if (!appointment) throw new Error('Appointment not found');
+
+        const doctor = await Doctor.findById(appointment.doctorId);
+        if (!doctor) throw new Error('Doctor not found');
+
+        // Update the event in Google Calendar
+        const updatedEvent = await calendar.events.update({
+            calendarId: doctor.calendarId,
+            eventId: appointment.calendarEventId,
+            requestBody: {
+                start: { dateTime: `${newDate}T${newTimeSlot}:00`, timeZone: 'UTC' },
+                end: { dateTime: `${newDate}T${parseInt(newTimeSlot) + 1}:00`, timeZone: 'UTC' },
+            },
+        });
+
+        // Update appointment in MongoDB
+        appointment.date = newDate;
+        appointment.timeSlot = newTimeSlot;
+        await appointment.save();
+
+        res.status(200).json({ message: 'Appointment rescheduled successfully', appointment });
+    } catch (error) {
+        res.status(500).json({ error: `Failed to update appointment: ${error.message}` });
+    }
+};
+
+const deleteAppointment = async (req, res) => {
+    const { appointmentId } = req.params;
+
+    try {
+        const appointment = await Appointment.findById(appointmentId);
+        if (!appointment) throw new Error('Appointment not found');
+
+        const doctor = await Doctor.findById(appointment.doctorId);
+        if (!doctor) throw new Error('Doctor not found');
+
+        // Delete the event from Google Calendar
+        await calendar.events.delete({
+            calendarId: doctor.calendarId,
+            eventId: appointment.calendarEventId,
+        });
+
+        // Mark as canceled or delete from MongoDB
+        await Appointment.findByIdAndDelete(appointmentId);
+
+        res.status(200).json({ message: 'Appointment canceled successfully' });
+    } catch (error) {
+        res.status(500).json({ error: `Failed to cancel appointment: ${error.message}` });
+    }
+};
+
 
 export {
     login,
@@ -303,4 +628,8 @@ export {
     nearestHospital,
     nearestPharmacy,
     getAllHospitals,
+    getAvailableSlots,
+    bookAppointment,
+    updateAppointment,
+    deleteAppointment,
 }

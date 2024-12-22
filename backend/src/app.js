@@ -24,6 +24,7 @@ import adminRouter from './routes/admin.route.js'
 import hospitalRouter from './routes/hospital.route.js'
 //routes decalaration
 app.use("/api/v1/users",userRouter);
+
 app.use("/api/v1/hospital",hospitalRouter);
 
 app.use("/api/v1/admin",adminRouter);
