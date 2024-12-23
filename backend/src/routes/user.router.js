@@ -29,11 +29,12 @@ router.get("/getAllDoctors",getAllDoctors);
 
 
 //router.get("/getAvailableSlots",getAvailableSlots);
-router.get('/getAvailableSlots/:doctorId/:date', getAvailableSlots);
+router.get('/getAvailableSlots/:doctorId/:date',roleMiddleware("user"), getAvailableSlots);
 
 
-router.post('/bookAppointment', bookAppointment);
-router.delete('/deleteAppointment/:id', deleteAppointment);
+router.post('/bookAppointment',roleMiddleware("user"), bookAppointment);
+router.put('/updateAppointment/:appointmentId',roleMiddleware("user"), updateAppointment);
+router.delete('/deleteAppointment/:appointmentId',roleMiddleware("user"), deleteAppointment);
 
 
 

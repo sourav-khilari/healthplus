@@ -7,11 +7,11 @@ import { admin } from "../config/firebase.js";
 import axios from "axios";
 import { Hospital } from "../models/hospital.model.js";
 import { Doctor } from "../models/doctor.model.js";
-import {calendar} from '../config/googleCalendar.js'
-import {Appointment} from '../models/appointment.model.js'
+import { calendar } from '../config/googleCalendar.js'
+import { Appointment } from '../models/appointment.model.js'
 
 
-// const registerUser = asyncHandler(async (req, res) => {
+
 //     const { email, password, name, idToken } = req.body;
 //     let firebaseUser;
 
@@ -151,40 +151,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
 
-// const login = asyncHandler(async (req, res) => {
-//     const { idToken, email } = req.body;
-    
-//     try {
-//         let decodedToken;
 
-//         if (idToken) {
-//             // Google Login or Email/Password Login (handled via idToken)
-//             decodedToken = await admin.auth().verifyIdToken(idToken);
-//         } else {
-//             throw new ApiError(400, 'Invalid login request');
-//         }
-
-//         const { uid } = decodedToken;
-
-//         // Check if the user exists in MongoDB
-//         const user = await User.findOne({ firebaseUid: uid });
-//         if (!user) {
-//             throw new ApiError(404, 'User not found in the database');
-//         }
-//         const option = {
-//             httpOnly: true,
-//             secure: true, // Set to true in production
-//             maxAge: 24 * 60 * 60 * 1000, // 1 day
-//         }
-//         // Save token in cookies
-//         res.cookie('authToken', idToken, option);
-
-//        return res.status(200).json(new ApiResponse(200, user, 'Login successful'));
-//     } catch (error) {
-//         throw new ApiError(500, `Login failed: ${error.message}`);
-
-//     }
-// });
 
 
 const login = asyncHandler(async (req, res) => {
@@ -240,7 +207,7 @@ const getAllHospitals = asyncHandler(async (req, res) => {
             throw new ApiError(403, 'Access denied: Admins only');
         }
 
-        const approvedHospitals = await Hospital.find({ status: 'approved' },'-password','status');
+        const approvedHospitals = await Hospital.find({ status: 'approved' }, '-password', 'status');
 
         return res.status(200).json(
             new ApiResponse(200, approvedHospitals, 'Approved hospitals retrieved successfully')
@@ -253,51 +220,51 @@ const getAllHospitals = asyncHandler(async (req, res) => {
 
 
 const nearestHospital = asyncHandler(async (req, res) => {
-  const { lat, lng } = req.query; // Latitude and Longitude from the query
+    const { lat, lng } = req.query; // Latitude and Longitude from the query
 
 
-  if (!lat || !lng) {
-    throw new ApiError(400, "Latitude and Longitude are required.");
-  }
-  console.log("lat=" + lat + "\n" + "lan=" + lng);
-  const GEOAPIFY_API_KEY = "1fbb9d4b37744f8086172d1358dba01b";
-  //const url = `https://api.geoapify.com/v2/places?categories=healthcare.hospital&filter=circle:${lng},${lat},15000&limit=10&apiKey=1fbb9d4b37744f8086172d1358dba01b`;
-  const url = `https://api.geoapify.com/v2/places?categories=healthcare.hospital&filter=circle:${lng},${lat},15000&limit=10&apiKey=${GEOAPIFY_API_KEY}`;
-  try {
-    //console.log("\nurl\n");
-    const response = await axios.get(url);
-    //console.log("\nurl\n");
-    //console.log(response);
-    //res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
-    return res.json(response.data.features); // Return hospital data
-  } catch (error) {
-    //console.error("Error fetching hospitals:", error);
-    throw new ApiError(500, "Failed to fetch hospital data.");
-  }
+    if (!lat || !lng) {
+        throw new ApiError(400, "Latitude and Longitude are required.");
+    }
+    console.log("lat=" + lat + "\n" + "lan=" + lng);
+    const GEOAPIFY_API_KEY = "1fbb9d4b37744f8086172d1358dba01b";
+    //const url = `https://api.geoapify.com/v2/places?categories=healthcare.hospital&filter=circle:${lng},${lat},15000&limit=10&apiKey=1fbb9d4b37744f8086172d1358dba01b`;
+    const url = `https://api.geoapify.com/v2/places?categories=healthcare.hospital&filter=circle:${lng},${lat},15000&limit=10&apiKey=${GEOAPIFY_API_KEY}`;
+    try {
+        //console.log("\nurl\n");
+        const response = await axios.get(url);
+        //console.log("\nurl\n");
+        //console.log(response);
+        //res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
+        return res.json(response.data.features); // Return hospital data
+    } catch (error) {
+        //console.error("Error fetching hospitals:", error);
+        throw new ApiError(500, "Failed to fetch hospital data.");
+    }
 });
 
 
 
-const nearestPharmacy=asyncHandler(async(req,res)=>{
+const nearestPharmacy = asyncHandler(async (req, res) => {
     const { lat, lng } = req.query; // Latitude and Longitude from the query
-   
-     if (!lat || !lng) {
-       throw new ApiError(400, "Latitude and Longitude are required.");
-     }
-     const GEOAPIFY_API_KEY = "1fbb9d4b37744f8086172d1358dba01b"; 
-     //console.log("lat="+lat+"\n"+"lan="+lng);
-     //const url = `https://api.geoapify.com/v2/places?categories=healthcare.pharmacy&filter=circle:${lng},${lat},15000&limit=10&apiKey=${process.env.GEOAPIFY_API_KEY}`;
-     const url = `https://api.geoapify.com/v2/places?categories=healthcare.pharmacy&filter=circle:${lng},${lat},15000&limit=10&apiKey=${GEOAPIFY_API_KEY}`;
-     try {
-       const response = await axios.get(url);
-       //console.log(response);
-       //return res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
-       return res.json(response.data.features); // Return hospital data
-     } catch (error) {
-       console.error("Error fetching hospitals:", error);
-       throw new ApiError(500, "Failed to fetch hospital data.",error);
-       
-     }
+
+    if (!lat || !lng) {
+        throw new ApiError(400, "Latitude and Longitude are required.");
+    }
+    const GEOAPIFY_API_KEY = "1fbb9d4b37744f8086172d1358dba01b";
+    //console.log("lat="+lat+"\n"+"lan="+lng);
+    //const url = `https://api.geoapify.com/v2/places?categories=healthcare.pharmacy&filter=circle:${lng},${lat},15000&limit=10&apiKey=${process.env.GEOAPIFY_API_KEY}`;
+    const url = `https://api.geoapify.com/v2/places?categories=healthcare.pharmacy&filter=circle:${lng},${lat},15000&limit=10&apiKey=${GEOAPIFY_API_KEY}`;
+    try {
+        const response = await axios.get(url);
+        //console.log(response);
+        //return res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
+        return res.json(response.data.features); // Return hospital data
+    } catch (error) {
+        console.error("Error fetching hospitals:", error);
+        throw new ApiError(500, "Failed to fetch hospital data.", error);
+
+    }
 })
 
 //get-available-slots/:doctorId/:date
@@ -307,7 +274,7 @@ const calculateFreeSlots = (availability, bookedSlots, slotDuration) => {
     // const dayAvailability = availability.find((slot) => slot.day === new Date(date).getDay());
     // if (!dayAvailability) return [];
     availability.forEach(({ day, startTime, endTime }) => {
-        
+
         const startHour = parseInt(startTime.split(':')[0]);
         const startMinute = parseInt(startTime.split(':')[1]);
         const endHour = parseInt(endTime.split(':')[0]);
@@ -344,35 +311,8 @@ const calculateFreeSlots = (availability, bookedSlots, slotDuration) => {
     return freeSlots;
 };
 
-// const getAvailableSlots = async (req, res) => {
-//     const { doctorId, date } = req.params;
 
-//     try {
-//         const doctor = await Doctor.findById(doctorId);
-//         if (!doctor) throw new Error('Doctor not found');
-
-//         //const calendar = await google.calendar('v3');
-//         const events = await calendar.events.list({
-//             calendarId: doctor.calendarId,
-//             timeMin: new Date(`${date}T00:00:00Z`).toISOString(),
-//             timeMax: new Date(`${date}T23:59:59Z`).toISOString(),
-//             singleEvents: true,
-//         });
-
-//         const bookedSlots = events.data.items.map((event) => ({
-//             start: event.start.dateTime,
-//             end: event.end.dateTime,
-//         }));
-
-//         const availableSlots = calculateFreeSlots(doctor.availability, bookedSlots, date);
-
-//         res.status(200).json({ availableSlots },{bookedSlots});
-//     } catch (error) {
-//         res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
-//     }
-// };
-
-const getAvailableSlots = async (req, res) => {
+const getAvailableSlots = asyncHandler(async (req, res) => {
     const { doctorId, date } = req.params;
     console.log(doctorId);
     console.log(date)
@@ -401,13 +341,15 @@ const getAvailableSlots = async (req, res) => {
         // Calculate free slots
         const freeSlots = calculateFreeSlots(availability, bookedSlots, doctor.slotDuration);
 
-        return res.status(200).json({ freeSlots });
+        
+        return res.status(200).json(new ApiResponse(200, { freeSlots }, 'all free slots for particular doctor'));
     } catch (error) {
-        res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
+        //res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
+        throw new ApiError(500, "Failed to fetch slots", error.message);
     }
-};
+});
 
-const getAllDoctors = async (req, res) => {
+const getAllDoctors =asyncHandler( async (req, res) => {
     try {
         // Fetch all doctors, optionally filtering by query params
         const filters = {};
@@ -420,21 +362,15 @@ const getAllDoctors = async (req, res) => {
 
         //const doctors = await Doctor.find(filters).populate('hospitalId', 'name location');
         const doctors = await Doctor.find(filters)
-        
-        res.status(200).json({
-            success: true,
-            data: doctors,
-        });
+
+        return res.status(200).json(new ApiResponse(200,doctors, 'All doctor'));
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            error: `Failed to fetch doctors: ${error.message}`,
-        });
+        throw new ApiError(500, "Failed to fetch doctor", error.message);
     }
-};
+});
 
 
-const checkAvailability = async (doctorId, date, timeSlot) => {
+const checkAvailability = asyncHandler(async (doctorId, date, timeSlot) => {
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) throw new Error('Doctor not found');
 
@@ -442,131 +378,58 @@ const checkAvailability = async (doctorId, date, timeSlot) => {
     const availability = doctor.availability.find((day) => day.day === new Date(date).toLocaleDateString('en-US', { weekday: 'long' }));
     if (!availability) return false;
 
-    const slotStart = parseInt(timeSlot.split(':')[0]);
-    const availabilityStart = parseInt(availability.startTime.split(':')[0]);
-    const availabilityEnd = parseInt(availability.endTime.split(':')[0]);
+    const slotStart = new Date(timeSlot.start).getTime();
+    const availabilityStart = new Date(availability.startTime).getTime();
+    const availabilityEnd = new Date(availability.endTime).getTime();
 
     if (slotStart < availabilityStart || slotStart >= availabilityEnd) return false;
 
     // Ensure time slot is not already booked
-    const appointments = await Appointment.find({
-        doctorId,
-        date,
-        timeSlot,
-    });
-
+    const appointments = await Appointment.find({ doctorId, date, $or: [{ 'timeSlot.start': { $lte: timeSlot.end } }, { 'timeSlot.end': { $gte: timeSlot.start } }] });
     return appointments.length === 0;
-};
+});
+//timeslot format that i send in frontend
+// "timeSlot": {
+//     "start": "2024-12-23T10:00:00.000Z",
+//     "end": "2024-12-23T11:00:00.000Z"
+//   }
 
 
-const bookAppointment = async (req, res) => {
+
+const bookAppointment = asyncHandler(async (req, res) => {
     const { patientName, patientEmail, doctorId, hospitalId, date, timeSlot } = req.body;
-
     try {
         const doctor = await Doctor.findById(doctorId);
         if (!doctor) throw new Error('Doctor not found');
+
         // Check if doctor is available at the given time slot
         const isAvailable = await checkAvailability(doctorId, date, timeSlot);
-        if (!isAvailable) return res.status(400).json({ error: 'Doctor is not available in given time slot'});
+        if (!isAvailable) return res.status(400).json({ error: 'Doctor is not available in given time slot' });
+
         // Create event in Google Calendar
         const event = {
             summary: `Appointment with ${patientName}`,
             description: `Patient Email: ${patientEmail}`,
-            start: { dateTime: `${date}T${timeSlot}:00`, timeZone: 'UTC' },
-            end: { dateTime: `${date}T${parseInt(timeSlot) + 1}:00`, timeZone: 'UTC' },
+            start: { dateTime: timeSlot.start, timeZone: 'UTC' },
+            end: { dateTime: timeSlot.end, timeZone: 'UTC' },
         };
-
-        const eventResponse = await calendar.events.insert({
-            calendarId: doctor.calendarId,
-            requestBody: event,
-        });
+        const eventResponse = await calendar.events.insert({ calendarId: doctor.calendarId, requestBody: event, });
 
         // Save appointment in MongoDB
         const newAppointment = new Appointment({
-            patientName,
-            patientEmail,
-            doctorId,
-            hospitalId,
-            date,
-            timeSlot,
-            calendarEventId: eventResponse.data.id,
+            patientName, patientEmail, doctorId, hospitalId, date, timeSlot, calendarEventId: eventResponse.data.id,
         });
-
         await newAppointment.save();
-        res.status(201).json({ message: 'Appointment booked successfully', appointment: newAppointment });
+        return res.status(200).json(new ApiResponse(200,{appointment: newAppointment}, 'Appointment booked successfully'));
+        
     } catch (error) {
-        res.status(500).json({ error: `Failed to book appointment: ${error.message}` });
+        throw new ApiError(500, "Failed to book appointment: ", error.message);
+        
     }
-};
-
-// const bookAppointment = async (req, res) => {
-//     const { doctorId, date, timeSlot, patientName } = req.body;
-
-//     try {
-//         const doctor = await Doctor.findById(doctorId);
-//         if (!doctor) return res.status(404).json({ error: 'Doctor not found' });
-
-//         // Fetch booked slots from Google Calendar
-//         const events = await calendar.events.list({
-//             calendarId: doctor.calendarId,
-//             timeMin: new Date(`${date}T00:00:00Z`).toISOString(),
-//             timeMax: new Date(`${date}T23:59:59Z`).toISOString(),
-//             singleEvents: true,
-//         });
-
-//         const bookedSlots = events.data.items.map((event) => ({
-//             start: event.start.dateTime,
-//             end: event.end.dateTime,
-//         }));
-
-//         // Check if the requested slot is free
-//         const requestedStart = new Date(`${date}T${timeSlot}:00Z`);
-//         const requestedEnd = new Date(requestedStart);
-//         requestedEnd.setMinutes(requestedEnd.getMinutes() + doctor.slotDuration);
-
-//         const isSlotAvailable = !bookedSlots.some((slot) => {
-//             const bookedStart = new Date(slot.start);
-//             const bookedEnd = new Date(slot.end);
-//             return (
-//                 (requestedStart >= bookedStart && requestedStart < bookedEnd) ||
-//                 (requestedEnd > bookedStart && requestedEnd <= bookedEnd)
-//             );
-//         });
-
-//         if (!isSlotAvailable) {
-//             return res.status(400).json({ error: 'The requested slot is not available' });
-//         }
-
-//         // Add the event to Google Calendar
-//         const event = await calendar.events.insert({
-//             calendarId: doctor.calendarId,
-//             requestBody: {
-//                 summary: `Appointment with ${patientName}`,
-//                 description: `Appointment for ${doctor.speciality} at ${doctor.department}`,
-//                 start: { dateTime: requestedStart.toISOString(), timeZone: 'UTC' },
-//                 end: { dateTime: requestedEnd.toISOString(), timeZone: 'UTC' },
-//             },
-//         });
-
-//         // Save the appointment in the database
-//         const appointment = new Appointment({
-//             doctorId,
-//             patientName,
-//             date,
-//             timeSlot,
-//             calendarEventId: event.data.id,
-//         });
-
-//         await appointment.save();
-//         res.status(201).json({ message: 'Appointment booked successfully', appointment });
-//     } catch (error) {
-//         res.status(500).json({ error: `Failed to book appointment: ${error.message}` });
-//     }
-// };
+});
 
 
-
-const updateAppointment = async (req, res) => {
+const updateAppointment = asyncHandler(async (req, res) => {
     const { appointmentId } = req.params;
     const { newDate, newTimeSlot } = req.body;
 
@@ -582,8 +445,8 @@ const updateAppointment = async (req, res) => {
             calendarId: doctor.calendarId,
             eventId: appointment.calendarEventId,
             requestBody: {
-                start: { dateTime: `${newDate}T${newTimeSlot}:00`, timeZone: 'UTC' },
-                end: { dateTime: `${newDate}T${parseInt(newTimeSlot) + 1}:00`, timeZone: 'UTC' },
+                start: { dateTime: newTimeSlot.start, timeZone: 'UTC' },
+                end: { dateTime: newTimeSlot.end, timeZone: 'UTC' },
             },
         });
 
@@ -591,14 +454,15 @@ const updateAppointment = async (req, res) => {
         appointment.date = newDate;
         appointment.timeSlot = newTimeSlot;
         await appointment.save();
-
-        res.status(200).json({ message: 'Appointment rescheduled successfully', appointment });
+        return res.status(200).json(new ApiResponse(200,appointment, 'Appointment rescheduled successfully'));
+      
     } catch (error) {
-        res.status(500).json({ error: `Failed to update appointment: ${error.message}` });
+        throw new ApiError(500, "Failed to update appointment: ", error.message);
+       
     }
-};
+});
 
-const deleteAppointment = async (req, res) => {
+const deleteAppointment = asyncHandler(async (req, res) => {
     const { appointmentId } = req.params;
 
     try {
@@ -617,11 +481,11 @@ const deleteAppointment = async (req, res) => {
         // Mark as canceled or delete from MongoDB
         await Appointment.findByIdAndDelete(appointmentId);
 
-        res.status(200).json({ message: 'Appointment canceled successfully' });
+        return res.status(200).json(new ApiResponse(200,appointment, 'AppointmAppointment canceled successfully'));
     } catch (error) {
-        res.status(500).json({ error: `Failed to cancel appointment: ${error.message}` });
+        throw new ApiError(500, "Failed to cancel appointment: ", error.message);
     }
-};
+});
 
 
 export {
