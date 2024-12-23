@@ -112,9 +112,9 @@ const addDoctor = async (req, res) => {
         });
 
         await newDoctor.save();
-        res.status(201).json({ message: 'Doctor added successfully', doctor: newDoctor });
+        return res.status(200).json(new ApiResponse(200,{ doctor: newDoctor}, 'Doctor added successfully'));
     } catch (error) {
-        res.status(500).json({ error: `Failed to add doctor: ${error.message}` });
+        throw new ApiError(500, 'Failed to add doctor:',error.message);
     }
 };
 
