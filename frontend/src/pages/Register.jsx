@@ -3,7 +3,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebas
 import {
   getAuth,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   getIdToken,
@@ -32,7 +31,7 @@ const axiosInstance = axios.create({
   withCredentials: true, // For handling cookies
 });
 
-const RegisterLogin = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -52,19 +51,10 @@ const RegisterLogin = () => {
     const { email, password, name } = formData;
 
     try {
-      // const userCredential = await createUserWithEmailAndPassword(
-      //   auth,
-      //   email,
-      //   password
-      // );
-      // const idToken = await getIdToken(userCredential.user);
-
-      // Send data to backend
       const response = await axiosInstance.post("/register", {
         email,
         password,
         name,
-       // idToken,
       });
       console.log(response.data);
       alert("Registration successful");
@@ -186,4 +176,4 @@ const RegisterLogin = () => {
   );
 };
 
-export default RegisterLogin;
+export default Register;

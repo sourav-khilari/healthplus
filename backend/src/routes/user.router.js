@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
     registerUser,
-    login,
+    loginUser,
     nearestHospital,
     nearestPharmacy,
     getAllHospitals,
@@ -18,7 +18,7 @@ import {authMiddleware,roleMiddleware} from '../middlewares/auth.middleaware.js'
 const router = Router()
 
 router.post('/register', registerUser);
-router.post('/login', login);
+router.post('/login', loginUser);
 router.get("/hospitals",roleMiddleware("user"),nearestHospital);
 router.get("/pharmacy",roleMiddleware("user"),nearestPharmacy);
 router.get("/pharmacy",roleMiddleware("user"),getAllHospitals);

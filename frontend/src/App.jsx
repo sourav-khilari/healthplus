@@ -15,12 +15,13 @@ import MyAppointment from "./pages/Myappointment";
 import Doctor from "./pages/Doctors";
 import Appointment from "./pages/Appointment";
 import LandingPage from "./pages/LandingPage"; // Import the LandingPage component
-import UserLogin from "./pages/UserLogin"; // Import UserLogin
-import UserRegister from "./pages/UserRegister"; // Import UserRegister
+import Login from "./pages/Login"; // Import UserLogin
+import Register from "./pages/Register"; // Import UserRegister
 import HospitalLogin from "./pages/HospitalLogin"; // Import HospitalLogin
 import HospitalRegister from "./pages/HospitalRegister"; // Import HospitalRegister
 import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
+import HospitalDashboard from "./pages/HospitalDashboard";
 import FindPharmacy from "./pages/FindPharmacy";
 import FindHospital from "./pages/FindHospital";
 const App = () => {
@@ -33,8 +34,12 @@ const App = () => {
         <Route path="/user/dashboard" element={<UserDashboard />} />
 
         {/* User Routes */}
-        <Route path="/user/login" element={<UserLogin />} />
-        <Route path="/user/register" element={<UserRegister />} />
+        <Route path="/user/login" element={<Login />} />
+        <Route path="/user/register" element={<Register />} />
+        <Route path="/userdashboard" element={<UserDashboard />} />
+        <Route path="/admindashboard" element={<AdminDashboard />} />
+        <Route path="/userdashboard" element={<UserDashboard />} />
+        <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
 
         {/* Hospital Routes */}
         <Route path="/hospital/login" element={<HospitalLogin />} />

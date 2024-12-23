@@ -58,7 +58,7 @@ document.getElementById("login-email").addEventListener("click", async () => {
 
     // Send data to backend
     const response = await axiosInstance.post("/login", { idToken });
-    //console.log(response.data);
+    console.log(response.data);
     alert("Login successful");
   } catch (error) {
     console.error("Login Error:", error.message);

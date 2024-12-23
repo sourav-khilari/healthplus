@@ -1,19 +1,13 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import "../styles/AdminDashboard.css";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [pendingHospitals, setPendingHospitals] = useState([]);
   const [approvedHospitals, setApprovedHospitals] = useState([]);
   const [rejectedHospitals, setRejectedHospitals] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:8000/api/v1", // Replace with your backend URL
-    withCredentials: true, // Handle cookies
-  });
 
   useEffect(() => {
     fetchData();
@@ -22,125 +16,88 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [usersRes, pendingRes, approvedRes, rejectedRes] =
-        await Promise.all([
-          axiosInstance.get("/users"),
-          axiosInstance.get("/hospitals/pending"),
-          axiosInstance.get("/hospitals/approved"),
-          axiosInstance.get("/hospitals/rejected"),
-        ]);
+      const [
+        usersRes,
+        pendingHospitalsRes,
+        approvedHospitalsRes,
+        rejectedHospitalsRes,
+      ] = await Promise.all([
+        axios.get("/api/v1/users"),
+        axios.get("/api/v1/hospitals/pending"),
+        axios.get("/api/v1/hospitals/approved"),
+        axios.get("/api/v1/hospitals/rejected"),
+      ]);
 
-      setUsers(usersRes.data.data);
-      setPendingHospitals(pendingRes.data.data);
-      setApprovedHospitals(approvedRes.data.data);
-      setRejectedHospitals(rejectedRes.data.data);
+      setUsers(usersRes.data.data || []);
+      setPendingHospitals(pendingHospitalsRes.data.data || []);
+      setApprovedHospitals(approvedHospitalsRes.data.data || []);
+      setRejectedHospitals(rejectedHospitalsRes.data.data || []);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch data");
+      setError("Failed to fetch data");
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUserAction = async (firebaseUid, action) => {
+  const handleUserStatusChange = async (firebaseUid, newStatus) => {
     try {
-      const endpoint =
-        action === "activate" ? "/users/status" : "/users/delete";
-      const payload =
-        action === "activate" ? { firebaseUid, status: true } : { firebaseUid };
-
-      await axiosInstance.put(endpoint, payload);
-      alert(`User ${action}d successfully`);
-      fetchData(); // Refresh data
+      await axios.post("/api/v1/users/update-status", {
+        firebaseUid,
+        status: newStatus,
+      });
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.firebaseUid === firebaseUid
+            ? { ...user, status: newStatus }
+            : user
+        )
+      );
     } catch (err) {
-      alert(`Failed to ${action} user: ${err.response?.data?.message}`);
+      setError("Failed to update user status");
+      console.error(err);
     }
   };
 
-  const handleHospitalAction = async (hospitalId, action) => {
-    try {
-      await axiosInstance.put("/hospitals/action", { hospitalId, action });
-      alert(`Hospital ${action}d successfully`);
-      fetchData(); // Refresh data
-    } catch (err) {
-      alert(`Failed to ${action} hospital: ${err.response?.data?.message}`);
-    }
-  };
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) {
+    return <p className="error">{error}</p>;
+  }
 
   return (
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>
 
+      {/* Users Section */}
       <section>
-        <h2>All Users</h2>
+        <h2>Users</h2>
         <table>
           <thead>
             <tr>
               <th>Name</th>
               <th>Email</th>
               <th>Role</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.firebaseUid}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>
-                  <button
-                    onClick={() =>
-                      handleUserAction(user.firebaseUid, "activate")
-                    }
-                  >
-                    Activate
-                  </button>
-                  <button
-                    onClick={() => handleUserAction(user.firebaseUid, "delete")}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-
-      <section>
-        <h2>Pending Hospitals</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {pendingHospitals.map((hospital) => (
-              <tr key={hospital._id}>
-                <td>{hospital.name}</td>
-                <td>{hospital.email}</td>
-                <td>{hospital.status}</td>
+            {users?.map((user) => (
+              <tr key={user.firebaseUid}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.role}</td>
+                <td>{user.status ? "Active" : "Inactive"}</td>
                 <td>
                   <button
                     onClick={() =>
-                      handleHospitalAction(hospital._id, "approve")
+                      handleUserStatusChange(user.firebaseUid, !user.status)
                     }
                   >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleHospitalAction(hospital._id, "decline")
-                    }
-                  >
-                    Decline
+                    {user.status ? "Deactivate" : "Activate"}
                   </button>
                 </td>
               </tr>
@@ -149,44 +106,34 @@ const AdminDashboard = () => {
         </table>
       </section>
 
+      {/* Pending Hospitals */}
       <section>
-        <h2>Approved Hospitals</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            {approvedHospitals.map((hospital) => (
-              <tr key={hospital._id}>
-                <td>{hospital.name}</td>
-                <td>{hospital.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <h2>Pending Hospitals</h2>
+        <ul>
+          {pendingHospitals?.map((hospital) => (
+            <li key={hospital._id}>{hospital.name}</li>
+          ))}
+        </ul>
       </section>
 
+      {/* Approved Hospitals */}
+      <section>
+        <h2>Approved Hospitals</h2>
+        <ul>
+          {approvedHospitals?.map((hospital) => (
+            <li key={hospital._id}>{hospital.name}</li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Rejected Hospitals */}
       <section>
         <h2>Rejected Hospitals</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rejectedHospitals.map((hospital) => (
-              <tr key={hospital._id}>
-                <td>{hospital.name}</td>
-                <td>{hospital.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ul>
+          {rejectedHospitals?.map((hospital) => (
+            <li key={hospital._id}>{hospital.name}</li>
+          ))}
+        </ul>
       </section>
     </div>
   );

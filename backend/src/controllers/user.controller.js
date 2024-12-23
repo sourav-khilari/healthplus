@@ -12,73 +12,6 @@ import { Appointment } from '../models/appointment.model.js'
 
 
 
-//     const { email, password, name, idToken } = req.body;
-//     let firebaseUser;
-
-//     try {
-//         let createdUser;
-
-//         if (idToken) {
-//             // Google Registration
-//             const decodedToken = await admin.auth().verifyIdToken(idToken);
-//             const { uid, email: firebaseEmail, name: firebaseName } = decodedToken;
-
-//             // Check if the user exists in Firebase
-//             firebaseUser = await admin.auth().getUser(uid);
-//             //console.log("\n\n" + JSON.stringify(firebaseUser, null, 2) + "\n\n");
-
-//             if (!firebaseUser) {
-//                 throw new ApiError(400, 'User not registered');
-//             }
-
-//             // Save to MongoDB if not already present
-//             let user = await User.findOne({ firebaseUid: uid });
-//             if (!user) {
-//                 user = new User({
-//                     firebaseUid: uid,
-//                     email: firebaseEmail,
-//                     name: firebaseName || firebaseEmail.split('@')[0],
-//                     authMethod: 'google',
-//                 });
-//                 createdUser = await user.save();
-//             }
-//             else{
-//                 throw new ApiError(500, `user already exist in mongodb`);
-//             }
-//         } else if (email && password) {
-//             // Email/Password Registration
-//             firebaseUser = await admin.auth().createUser({
-//                 email,
-//                 password,
-//                 displayName: name,
-//             });
-
-//             // Save to MongoDB
-//             let user = new User({
-//                 firebaseUid: firebaseUser.uid,
-//                 email,
-//                 name,
-//                 authMethod: 'email/password',
-//             });
-//             createdUser = await user.save();
-//         } else {
-//             throw new ApiError(400, 'Invalid registration request');
-//         }
-
-//         return res.status(201).json(
-//             new ApiResponse(201, createdUser, 'User registered successfully')
-//         );
-//     } catch (error) {
-//         // Ensure Firebase cleanup on any error
-//         if (firebaseUser && firebaseUser.uid) {
-//             await admin.auth().deleteUser(firebaseUser.uid).catch((cleanupError) => {
-//                 console.error('Error cleaning up Firebase user:', cleanupError.message);
-//             });
-//         }
-//         throw new ApiError(500, `Registration failed: ${error.message}`);
-//     }
-// });
-
 
 const registerUser = asyncHandler(async (req, res) => {
     const { email, password, name, idToken } = req.body;
@@ -147,14 +80,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 });
 
-
-
-
-
-
-
-
-const login = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
     const { idToken } = req.body;
 
     try {
@@ -489,7 +415,7 @@ const deleteAppointment = asyncHandler(async (req, res) => {
 
 
 export {
-    login,
+    loginUser,
     registerUser,
     nearestHospital,
     nearestPharmacy,
