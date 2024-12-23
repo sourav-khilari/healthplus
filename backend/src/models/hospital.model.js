@@ -29,7 +29,10 @@ const hospitalSchema = new Schema({
     password: {
         type: String
     }, // Set only when approved
-
+    role:{
+        type:String,
+        default:"hospital",
+    }
 }, {
     timestamps: true
 });
