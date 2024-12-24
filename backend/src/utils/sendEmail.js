@@ -3,7 +3,7 @@ import { asyncHandler } from "./asyncHandler.js";
 import { ApiError } from "./ApiError.js";
 
 
-const sendEmail = asyncHandler(async ({ email, subject, message }) => {
+const sendEmail = async ( email, subject, message ) => {
   try {
     const transporter = nodeMailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -22,7 +22,7 @@ const sendEmail = asyncHandler(async ({ email, subject, message }) => {
       subject: subject,
       text: message,
     };
-
+    console.log("\n"+"try to sent mail to :"+email+"\n");
     const info = await transporter.sendMail(options);
     console.log("Email sent successfully:", info.response);
 
@@ -31,6 +31,6 @@ const sendEmail = asyncHandler(async ({ email, subject, message }) => {
     throw new ApiError(400, `Error sending email: ${error.message}`);
     //throw new Error(`Error sending email: ${error.message}`);
   }
-});
+};
 
 export default sendEmail;

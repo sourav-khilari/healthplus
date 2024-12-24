@@ -9,7 +9,8 @@ import { Hospital } from "../models/hospital.model.js";
 import { Doctor } from "../models/doctor.model.js";
 import { calendar } from '../config/googleCalendar.js'
 import { Appointment } from '../models/appointment.model.js'
-
+import { Patient } from "../models/patient.model.js";
+import sendMail from "../utils/sendEmail.js"
 
 
 
@@ -267,7 +268,7 @@ const getAvailableSlots = asyncHandler(async (req, res) => {
         // Calculate free slots
         const freeSlots = calculateFreeSlots(availability, bookedSlots, doctor.slotDuration);
 
-        
+
         return res.status(200).json(new ApiResponse(200, { freeSlots }, 'all free slots for particular doctor'));
     } catch (error) {
         //res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
@@ -275,7 +276,7 @@ const getAvailableSlots = asyncHandler(async (req, res) => {
     }
 });
 
-const getAllDoctors =asyncHandler( async (req, res) => {
+const getAllDoctors = asyncHandler(async (req, res) => {
     try {
         // Fetch all doctors, optionally filtering by query params
         const filters = {};
@@ -289,7 +290,7 @@ const getAllDoctors =asyncHandler( async (req, res) => {
         //const doctors = await Doctor.find(filters).populate('hospitalId', 'name location');
         const doctors = await Doctor.find(filters)
 
-        return res.status(200).json(new ApiResponse(200,doctors, 'All doctor'));
+        return res.status(200).json(new ApiResponse(200, doctors, 'All doctor'));
     } catch (error) {
         throw new ApiError(500, "Failed to fetch doctor", error.message);
     }
@@ -318,7 +319,7 @@ const checkAvailability = asyncHandler(async (doctorId, date, timeSlot) => {
 // "timeSlot": {
 //     "start": "2024-12-23T10:00:00.000Z",
 //     "end": "2024-12-23T11:00:00.000Z"
-//   }
+//}
 
 
 
@@ -346,11 +347,11 @@ const bookAppointment = asyncHandler(async (req, res) => {
             patientName, patientEmail, doctorId, hospitalId, date, timeSlot, calendarEventId: eventResponse.data.id,
         });
         await newAppointment.save();
-        return res.status(200).json(new ApiResponse(200,{appointment: newAppointment}, 'Appointment booked successfully'));
-        
+        return res.status(200).json(new ApiResponse(200, { appointment: newAppointment }, 'Appointment booked successfully'));
+
     } catch (error) {
         throw new ApiError(500, "Failed to book appointment: ", error.message);
-        
+
     }
 });
 
@@ -380,11 +381,11 @@ const updateAppointment = asyncHandler(async (req, res) => {
         appointment.date = newDate;
         appointment.timeSlot = newTimeSlot;
         await appointment.save();
-        return res.status(200).json(new ApiResponse(200,appointment, 'Appointment rescheduled successfully'));
-      
+        return res.status(200).json(new ApiResponse(200, appointment, 'Appointment rescheduled successfully'));
+
     } catch (error) {
         throw new ApiError(500, "Failed to update appointment: ", error.message);
-       
+
     }
 });
 
@@ -407,10 +408,128 @@ const deleteAppointment = asyncHandler(async (req, res) => {
         // Mark as canceled or delete from MongoDB
         await Appointment.findByIdAndDelete(appointmentId);
 
-        return res.status(200).json(new ApiResponse(200,appointment, 'AppointmAppointment canceled successfully'));
+        return res.status(200).json(new ApiResponse(200, appointment, 'AppointmAppointment canceled successfully'));
     } catch (error) {
         throw new ApiError(500, "Failed to cancel appointment: ", error.message);
     }
+});
+
+
+
+// const verifyOTP = asyncHandler(async (req, res) => {
+//     const { patientId, otp } = req.body;
+
+//     if (!patientId || !otp) throw new APIError('Patient ID and OTP are required', 400);
+
+//     // Fetch patient data
+//     const patient = await Patient.findOne({ patientId });
+//     if (!patient) throw new APIError('Patient not found', 404);
+
+//     // Validate OTP
+//     if (patient.otp !== otp) throw new APIError('Invalid OTP', 400);
+
+//     const isExpired = Date.now() > patient.otpExpiration;
+//     if (isExpired) throw new APIError('OTP expired', 400);
+
+//     // Clear OTP after successful validation
+//     await Patient.updateOne({ patientId }, { $unset: { otp: 1, otpExpiration: 1 } });
+
+//     res.status(200).json(new APIResponse(true, 'OTP verified successfully', { patientDetails: patient.details }));
+// });
+const generateOTP = () => Math.floor(100000 + Math.random() * 900000);
+
+
+const sendOtpForPatientId = asyncHandler(async (req, res) => {
+    const { patientId } = req.body;
+    if (!patientId) throw new ApiError('Patient ID is required', 400);
+
+    console.log("\n\n" + patientId + "\n\n");
+
+    // Step 1: Fetch patient email from FHIR API or MongoDB
+    let email;
+    try {
+        const apiResponse = await axios.get(`http://hapi.fhir.org/baseR4/Patient/${patientId}`);
+        const patientData = apiResponse.data;
+
+        console.log("\n\n" + patientData + "\n\n");
+
+        email = patientData.telecom?.[0]?.value; // Extract email
+
+        console.log("n\nemail=" + email + "\n\n")
+
+        if (!email) throw new ApiError(500, "Email not found in FHIR API data ");
+
+        // Save data in MongoDB if not already present
+        const existingPatient = await Patient.findOne({ patientId });
+        if (!existingPatient) {
+            await Patient.create({
+                patientId,
+                name: patientData.name?.[0]?.text || 'Unknown',
+                dob: patientData.birthDate || 'N/A',
+                email,
+                details: patientData,
+            });
+        }
+
+        // Step 2: Generate and send OTP
+        const otp = generateOTP();
+        const mailMessage = `Your OTP for Patient ID verification is: ${otp}`;
+        await sendMail(email, 'Patient ID Verification', mailMessage);
+
+        // Save OTP and expiration in MongoDB (temporary storage)
+        await Patient.updateOne(
+            { patientId },
+            { $set: { otp, otpExpiration: Date.now() + 5 * 60 * 1000 } }
+            // OTP valid for 5 minutes
+        );
+
+        res.status(200).json(new ApiResponse(200, { patientId }, 'OTP sent successfully'));
+
+    } catch (error) {
+        console.error('FHIR API Error:', error.message);
+        // Fallback to MongoDB if FHIR API fails
+        const patientFromDb = await Patient.findOne({ patientId });
+        if (!patientFromDb) throw new ApiError(404, "Patient not found in both FHIR API and MongoDB ");
+        email = patientFromDb.email;
+        if (!email) throw new ApiError(400, "Email not found in local database ");
+        // Move the sendMail function call here
+        const otp = generateOTP();
+        const mailMessage = `Your OTP for Patient ID verification is: ${otp}`;
+        await sendMail(email, 'Patient ID Verification', mailMessage);
+    }
+});
+
+
+
+const verifyOtpAndFetchData = asyncHandler(async (req, res) => {
+    const { patientId, otp } = req.body;
+
+    if (!patientId || !otp) throw new ApiError(400,'Patient ID and OTP are required');
+
+    // Fetch patient from MongoDB
+    const patient = await Patient.findOne({ patientId });
+    if (!patient) throw new ApiError(404,'Patient not found');
+
+    // Validate OTP
+    if (patient.otp !== otp) throw new ApiError(400,'Invalid OTP');
+
+    const isExpired = Date.now() > patient.otpExpiration;
+    if (isExpired) throw new ApiError(400,'OTP expired');
+
+    // Clear OTP after successful validation
+    await Patient.updateOne({ patientId }, { $unset: { otp: 1, otpExpiration: 1 } });
+
+    // Fetch patient data (from FHIR API or MongoDB if API is down)
+    let patientData;
+    try {
+        const apiResponse = await axios.get(`http://hapi.fhir.org/baseR4/Patient/${patientId}`);
+        patientData = apiResponse.data;
+    } catch (error) {
+        console.error('FHIR API Error:', error.message);
+        patientData = patient;
+    }
+
+    res.status(200).json(new ApiResponse(200, { patientDetails: patientData }, 'Patient data fetched successfully'));
 });
 
 
@@ -425,5 +544,7 @@ export {
     updateAppointment,
     deleteAppointment,
     getAllDoctors,
+    sendOtpForPatientId,
+    verifyOtpAndFetchData,
 
 }

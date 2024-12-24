@@ -9,7 +9,9 @@ import {
     getAvailableSlots,
     deleteAppointment,
     updateAppointment,
-    getAllDoctors
+    getAllDoctors,
+    sendOtpForPatientId,
+    verifyOtpAndFetchData
     } from '../controllers/user.controller.js'
 import {authMiddleware,roleMiddleware} from '../middlewares/auth.middleaware.js'
 
@@ -36,6 +38,7 @@ router.post('/bookAppointment',roleMiddleware("user"), bookAppointment);
 router.put('/updateAppointment/:appointmentId',roleMiddleware("user"), updateAppointment);
 router.delete('/deleteAppointment/:appointmentId',roleMiddleware("user"), deleteAppointment);
 
-
+router.post('/send-otp', sendOtpForPatientId); // Send OTP when patient ID is entered
+router.post('/verify-otp', verifyOtpAndFetchData); // Verify OTP and fetch patient data
 
 export default router
