@@ -22,10 +22,10 @@ const AdminDashboard = () => {
         approvedHospitalsRes,
         rejectedHospitalsRes,
       ] = await Promise.all([
-        axios.get("/api/v1/users"),
-        axios.get("/api/v1/hospitals/pending"),
-        axios.get("/api/v1/hospitals/approved"),
-        axios.get("/api/v1/hospitals/rejected"),
+        axios.get("/api/v1/admin/getUser"),
+        axios.get("/api/v1/admin/getPendingHospitals"),
+        axios.get("/api/v1/admin/getRejectedHospitals"),
+        axios.get("/api/v1/admin/getApprovedHospitals"),
       ]);
 
       setUsers(usersRes.data.data || []);
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
 
   const handleUserStatusChange = async (firebaseUid, newStatus) => {
     try {
-      await axios.post("/api/v1/users/update-status", {
+      await axios.post("/api/v1/admin/updateUserStatus", {
         firebaseUid,
         status: newStatus,
       });
