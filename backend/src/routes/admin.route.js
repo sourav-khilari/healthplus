@@ -25,4 +25,5 @@ router.get('/getPendingHospitals', roleMiddleware("admin"), getPendingHospitals)
 router.get('/getRejectedHospitals', roleMiddleware("admin"), getRejectedHospitals);
 router.get('/getApprovedHospitals', roleMiddleware("admin"), getApprovedHospitals);
 
+
 export default router
