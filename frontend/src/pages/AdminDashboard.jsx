@@ -133,12 +133,16 @@ const AdminDashboard = () => {
               {hospital.name}
               <div>
                 <button
-                  onClick={() => approveOrDeclineHospital(hospital._id, true)}
+                  onClick={() =>
+                    approveOrDeclineHospital(hospital._id, "approve")
+                  }
                 >
                   Approve
                 </button>
                 <button
-                  onClick={() => approveOrDeclineHospital(hospital._id, false)}
+                  onClick={() =>
+                    approveOrDeclineHospital(hospital._id, "decline")
+                  }
                 >
                   Reject
                 </button>
