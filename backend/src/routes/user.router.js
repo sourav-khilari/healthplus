@@ -11,7 +11,8 @@ import {
     updateAppointment,
     getAllDoctors,
     sendOtpForPatientId,
-    verifyOtpAndFetchData
+    verifyOtpAndFetchData,
+    createPatientId,
     } from '../controllers/user.controller.js'
 import {authMiddleware,roleMiddleware} from '../middlewares/auth.middleaware.js'
 
@@ -40,5 +41,6 @@ router.delete('/deleteAppointment/:appointmentId',roleMiddleware("user"), delete
 
 router.post('/send-otp', sendOtpForPatientId); // Send OTP when patient ID is entered
 router.post('/verify-otp', verifyOtpAndFetchData); // Verify OTP and fetch patient data
+router.post('/create-patient-id', createPatientId); 
 
 export default router

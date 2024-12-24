@@ -297,7 +297,7 @@ const getAllDoctors = asyncHandler(async (req, res) => {
 });
 
 
-const checkAvailability = asyncHandler(async (doctorId, date, timeSlot) => {
+const checkAvailability = async (doctorId, date, timeSlot) => {
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) throw new Error('Doctor not found');
 
@@ -314,7 +314,7 @@ const checkAvailability = asyncHandler(async (doctorId, date, timeSlot) => {
     // Ensure time slot is not already booked
     const appointments = await Appointment.find({ doctorId, date, $or: [{ 'timeSlot.start': { $lte: timeSlot.end } }, { 'timeSlot.end': { $gte: timeSlot.start } }] });
     return appointments.length === 0;
-});
+};
 //timeslot format that i send in frontend
 // "timeSlot": {
 //     "start": "2024-12-23T10:00:00.000Z",
@@ -324,7 +324,7 @@ const checkAvailability = asyncHandler(async (doctorId, date, timeSlot) => {
 
 
 const bookAppointment = asyncHandler(async (req, res) => {
-    const { patientName, patientEmail, doctorId, hospitalId, date, timeSlot } = req.body;
+    const { patientName,patient_id, patientEmail, doctorId, hospitalId, date, timeSlot } = req.body;
     try {
         const doctor = await Doctor.findById(doctorId);
         if (!doctor) throw new Error('Doctor not found');
@@ -344,7 +344,7 @@ const bookAppointment = asyncHandler(async (req, res) => {
 
         // Save appointment in MongoDB
         const newAppointment = new Appointment({
-            patientName, patientEmail, doctorId, hospitalId, date, timeSlot, calendarEventId: eventResponse.data.id,
+            patientName, patientEmail, doctorId,patient_id, hospitalId, date, timeSlot, calendarEventId: eventResponse.data.id,
         });
         await newAppointment.save();
         return res.status(200).json(new ApiResponse(200, { appointment: newAppointment }, 'Appointment booked successfully'));
@@ -366,6 +366,9 @@ const updateAppointment = asyncHandler(async (req, res) => {
 
         const doctor = await Doctor.findById(appointment.doctorId);
         if (!doctor) throw new Error('Doctor not found');
+
+        const isAvailable = await checkAvailability(doctor._id, newDate, newtimeSlot);
+        if (!isAvailable) return res.status(400).json({ error: 'Doctor is not available in given time slot' });
 
         // Update the event in Google Calendar
         const updatedEvent = await calendar.events.update({
@@ -454,7 +457,7 @@ const sendOtpForPatientId = asyncHandler(async (req, res) => {
         console.log("\n\n" + patientData + "\n\n");
 
         email = patientData.telecom?.[0]?.value; // Extract email
-
+        const contact= patientData.telecom?.[1]?.value;
         console.log("n\nemail=" + email + "\n\n")
 
         if (!email) throw new ApiError(500, "Email not found in FHIR API data ");
@@ -464,9 +467,10 @@ const sendOtpForPatientId = asyncHandler(async (req, res) => {
         if (!existingPatient) {
             await Patient.create({
                 patientId,
-                name: patientData.name?.[0]?.text || 'Unknown',
+                name: patientData.name?.[0]?.given+patientData.name?.[0]?.family || 'Unknown',
                 dob: patientData.birthDate || 'N/A',
                 email,
+                contact,
                 details: patientData,
             });
         }
@@ -533,6 +537,57 @@ const verifyOtpAndFetchData = asyncHandler(async (req, res) => {
 });
 
 
+//DOB-FORMAT 1990-01-01
+const createPatientId = asyncHandler(async (req, res) => {
+    const { name, email, dob, contact } = req.body;
+
+    if (!name || !email || !dob || !contact) {
+        throw new APIError('All fields (name, email, dob, contact) are required', 400);
+    }
+
+    let patientId;
+
+    try {
+        const fhirPayload = {
+            resourceType: 'Patient',
+            name: [{ given: [name.split(' ')[0]], family: name.split(' ')[1] || '' }],
+            telecom: [
+                { system: 'email', value: email, use: 'home' },
+                { system: 'phone', value: contact, use: 'mobile' }
+            ],
+            birthDate: dob
+        };
+
+        const fhirResponse = await axios.post('http://hapi.fhir.org/baseR4/Patient', fhirPayload);
+        patientId = fhirResponse.data.id;
+
+        if (!patientId) {
+            throw new ApiError(400, 'Failed to create patient ID in FHIR API');
+        }
+    } catch (error) {
+        console.error('FHIR API Error:', error.response?.data || error.message);
+        throw new ApiError(500, 'Failed to create patient ID in FHIR API');
+    }
+
+    const newPatient = new Patient({
+        patientId,
+        name,
+        email,
+        dob,
+        contact,
+        details: {}
+    });
+
+    await newPatient.save();
+
+    const mailMessage = `Your new Patient ID is: ${patientId}`;
+    await sendMail(email, mailMessage, 'Patient ID Creation Successful');
+
+    res.status(201).json(new ApiResponse(201, { patientId }, 'Patient ID created successfully'));
+});
+
+
+
 export {
     loginUser,
     registerUser,
@@ -546,5 +601,6 @@ export {
     getAllDoctors,
     sendOtpForPatientId,
     verifyOtpAndFetchData,
+    createPatientId,
 
 }
