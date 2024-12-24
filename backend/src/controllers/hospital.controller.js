@@ -8,6 +8,7 @@ import { admin } from "../config/firebase.js";
 
 import { Doctor } from "../models/doctor.model.js";
 import {calendar} from '../config/googleCalendar.js'
+import bcrypt from "bcrypt"
 
 //error not handled properly in decoded token part
 const loginHospital = asyncHandler(async (req, res) => {
