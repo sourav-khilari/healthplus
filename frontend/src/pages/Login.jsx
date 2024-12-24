@@ -73,7 +73,7 @@ const Login = () => {
       console.log(response.data);
 
       alert("Login successful!");
-      navigate("/myprofile"); // Redirect to profile page
+      navigate("/admindashboard"); // Redirect to profile page
     } catch (error) {
       console.error("Email Login Error:", error.message);
       alert("Login failed!");
