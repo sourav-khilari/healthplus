@@ -2,25 +2,64 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { initializeApp } from "firebase/app";
+import { useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword, getIdToken } from "firebase/auth";
 
-// HospitalLogin Component
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDJ9L91dE5EIVqH2QJNZiNsyObiiBmGuHo",
+  authDomain: "healthplus-a7bd7.firebaseapp.com",
+  projectId: "healthplus-a7bd7",
+  storageBucket: "healthplus-a7bd7.firebasestorage.app",
+  messagingSenderId: "18341081891",
+  appId: "1:18341081891:web:9eedc02c6d5a064ed81296",
+  measurementId: "G-6D223N3RLB",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
 const HospitalLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [idToken, setIdToken] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8000", // Change to your backend URL
+    withCredentials: true, // For handling cookies
+  });
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const response = await axios.post("/api/hospital/login", {
+      // Firebase Authentication
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
         email,
-        password,
+        password
+      );
+      const idToken = await getIdToken(userCredential.user); // Get Firebase ID token
+
+      // Send token to backend
+      const response = await axiosInstance.post("/api/hospital/login", {
         idToken,
       });
-      toast.success(response.data.message);
+
+      console.log(response.data);
+
+      // On successful login, notify and redirect
+      toast.success(response.data.message || "Login successful!");
+      navigate("/hospitaldashboard"); // Redirect to hospital dashboard
     } catch (error) {
+      console.error("Login Error:", error);
       toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,6 +74,7 @@ const HospitalLogin = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
@@ -45,20 +85,13 @@ const HospitalLogin = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
-        <div className="form-group">
-          <label>Firebase ID Token:</label>
-          <input
-            type="text"
-            value={idToken}
-            onChange={(e) => setIdToken(e.target.value)}
-            required
-          />
-        </div>
-
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );
