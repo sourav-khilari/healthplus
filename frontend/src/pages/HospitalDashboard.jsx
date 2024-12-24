@@ -20,6 +20,10 @@ const HospitalDashboard = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8000/api/v1/hospital", // Change to your backend URL
+    withCredentials: true, // For handling cookies
+  });
 
   // Fetch doctors and appointments on mount
   useEffect(() => {
@@ -30,9 +34,7 @@ const HospitalDashboard = () => {
   const fetchDoctors = async () => {
     try {
       setLoadingDoctors(true);
-      const response = await axios.get(
-        `/api/v1/doctors?hospitalId=${hospitalId}`
-      );
+      const response = await axiosInstance.get(`/getDoctorAppointments`);
       setDoctors(response.data);
     } catch (err) {
       console.error(err);
@@ -77,9 +79,7 @@ const HospitalDashboard = () => {
   const fetchAppointments = async () => {
     try {
       setLoadingAppointments(true);
-      const response = await axios.get(
-        `/api/hospitals/${hospitalId}/appointments`
-      );
+      const response = await axiosInstance.get(`/getHospitalAllAppointments`);
       setAppointments(response.data.data);
     } catch (err) {
       console.error(err);
@@ -91,7 +91,7 @@ const HospitalDashboard = () => {
 
   const addDoctor = async () => {
     try {
-      const response = await axios.post("/api/v1/doctors", {
+      const response = await axiosInstance.post("/addDoctor", {
         ...newDoctor,
         hospitalId,
       });
