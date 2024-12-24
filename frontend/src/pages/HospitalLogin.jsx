@@ -47,6 +47,8 @@ const HospitalLogin = () => {
 
       // Send token to backend
       const response = await axiosInstance.post("/api/v1/hospital/login", {
+        email,
+        password,
         idToken,
       });
 
