@@ -19,9 +19,9 @@ const loginHospital = asyncHandler(async (req, res) => {
         }
         // Verify Firebase ID token
         const decodedToken = await admin.auth().verifyIdToken(idToken);
-
+        //console.log("\n\n"+email +"\n\n");
         const firebaseEmail = decodedToken?.email;
-
+        //console.log("\n\n"+firebaseEmail +"\n\n");
         if (email !== firebaseEmail) {
             throw new ApiError(401, 'Invalid Firebase ID token for the provided email');
         }
