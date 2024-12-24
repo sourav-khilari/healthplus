@@ -13,6 +13,12 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
+  // Axios Instance
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8000", // Change to your backend URL
+    withCredentials: true, // For handling cookies
+  });
+
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -22,10 +28,10 @@ const AdminDashboard = () => {
         approvedHospitalsRes,
         rejectedHospitalsRes,
       ] = await Promise.all([
-        axios.get("/api/v1/admin/getUser"),
-        axios.get("/api/v1/admin/getPendingHospitals"),
-        axios.get("/api/v1/admin/getRejectedHospitals"),
-        axios.get("/api/v1/admin/getApprovedHospitals"),
+        axiosInstance.get("/api/v1/admin/getUser"),
+        axiosInstance.get("/api/v1/admin/getPendingHospitals"),
+        axiosInstance.get("/api/v1/admin/getRejectedHospitals"),
+        axiosInstance.get("/api/v1/admin/getApprovedHospitals"),
       ]);
 
       setUsers(usersRes.data.data || []);
