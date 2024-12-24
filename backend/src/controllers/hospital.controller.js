@@ -156,7 +156,7 @@ const getDoctorAppointments = asyncHandler(async (req, res) => {
         // Validate if the doctor exists
         const doctor = await Doctor.findById(doctorId);
         if (!doctor) {
-            return res.status(404).json({ message: 'Doctor not found' });
+            throw new ApiError(404, 'Doctor not found');
         }
 
         // Retrieve all appointments for the doctor
@@ -164,12 +164,11 @@ const getDoctorAppointments = asyncHandler(async (req, res) => {
             .populate('patientId', 'name email') // Optional: Populate patient details
             .sort({ date: 1, timeSlot: 1 }); // Sort by date and time
 
-        res.status(200).json({
-            message: 'Doctor appointments retrieved successfully',
-            data: appointments,
-        });
+        
+        return res.status(200).json(new ApiResponse(200,appointments, 'Doctor appointments retrieved successfully'));
     } catch (error) {
-        res.status(500).json({ error: `Failed to retrieve doctor appointments: ${error.message}` });
+       
+        throw new ApiError(500, 'Failed to retrieve doctor appointments: ', error.message);
     }
 });
 
