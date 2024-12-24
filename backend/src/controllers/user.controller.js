@@ -238,7 +238,7 @@ const calculateFreeSlots = (availability, bookedSlots, slotDuration) => {
     return freeSlots;
 };
 
-
+//get doctor 
 const getAvailableSlots = asyncHandler(async (req, res) => {
     const { doctorId, date } = req.params;
     console.log(doctorId);
