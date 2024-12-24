@@ -49,7 +49,7 @@ const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => 
       // Verify Firebase token
       const decodedToken = await admin.auth().verifyIdToken(authToken);
       const { uid } = decodedToken;
-      const user="";
+      let user="";
       // Check user's role in MongoDB
       if(requiredRole === "hospital"){
         user = await Hospital.findOne({ firebaseUid: uid });
