@@ -1,8 +1,8 @@
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { User } from "../models/user.model.js";
+import { User, } from "../models/user.model.js";
 import {admin} from "../config/firebase.js"
-
+import {Hospital} from "../models/hospital.model.js"
 //const admin = require('../config/firebase');
 
 
@@ -49,9 +49,13 @@ const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => 
       // Verify Firebase token
       const decodedToken = await admin.auth().verifyIdToken(authToken);
       const { uid } = decodedToken;
-
+      const user="";
       // Check user's role in MongoDB
-      const user = await User.findOne({ firebaseUid: uid });
+      if(requiredRole===hospital){
+        user = await Hospital.findOne({ firebaseUid: uid });
+      }
+      else
+        user = await User.findOne({ firebaseUid: uid });
       if (!user) {
           throw new ApiError(404, 'User not found');
       }

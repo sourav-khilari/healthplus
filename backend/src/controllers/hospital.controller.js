@@ -88,8 +88,8 @@ const registerHospital = asyncHandler(async (req, res) => {
 
 
 const addDoctor = async (req, res) => {
-    const { name, department, speciality, email, phone, hospitalId, availability,slotDuration } = req.body;
-
+    const { name, department, speciality, email, phone, availability,slotDuration } = req.body;
+    const hospitalId=req.user._id;
     try {
         // Create a Google Calendar for the doctor
         const calendarResponse = await calendar.calendars.insert({
