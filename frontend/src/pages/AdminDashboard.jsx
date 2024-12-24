@@ -49,7 +49,7 @@ const AdminDashboard = () => {
     try {
       await axiosInstance.post(`/api/v1/admin/approveOrDeclineHospital`, {
         hospitalId,
-        approved: isApproved,
+        action: isApproved,
       });
       alert(`Hospital ${isApproved ? "approved" : "rejected"} successfully.`);
       fetchData(); // Re-fetch data to update the UI
