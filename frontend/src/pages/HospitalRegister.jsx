@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Axios Instance
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1/users", // Change to your backend URL
+  baseURL: "http://localhost:8000/api/v1/hospital", // Change to your backend URL
   withCredentials: true, // For handling cookies
 });
 
@@ -20,7 +20,7 @@ const HospitalRegister = () => {
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.post("/api/v1/hospital/register", {
+      const response = await axiosInstance.post("/register", {
         name,
         email,
         address,
