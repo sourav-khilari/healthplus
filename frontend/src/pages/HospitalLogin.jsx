@@ -46,7 +46,7 @@ const HospitalLogin = () => {
       const idToken = await getIdToken(userCredential.user); // Get Firebase ID token
 
       // Send token to backend
-      const response = await axiosInstance.post("/api/hospital/login", {
+      const response = await axiosInstance.post("/api/v1/hospital/login", {
         idToken,
       });
 
