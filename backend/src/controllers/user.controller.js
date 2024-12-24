@@ -269,7 +269,7 @@ const getAvailableSlots = asyncHandler(async (req, res) => {
         const freeSlots = calculateFreeSlots(availability, bookedSlots, doctor.slotDuration);
 
 
-        return res.status(200).json(new ApiResponse(200, { freeSlots }, 'all free slots for particular doctor'));
+        return res.status(200).json(new ApiResponse(200, {bookedSlots, freeSlots }, 'all free slots for particular doctor'));
     } catch (error) {
         //res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
         throw new ApiError(500, "Failed to fetch slots", error.message);
