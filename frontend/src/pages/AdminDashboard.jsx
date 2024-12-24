@@ -32,6 +32,7 @@ const AdminDashboard = () => {
         axiosInstance.get("/api/v1/admin/getPendingHospitals"),
         axiosInstance.get("/api/v1/admin/getRejectedHospitals"),
         axiosInstance.get("/api/v1/admin/getApprovedHospitals"),
+        axiosInstance.post("/api/v1/admin/approveOrDeclineHospital"),
       ]);
 
       setUsers(usersRes.data.data || []);
@@ -45,7 +46,19 @@ const AdminDashboard = () => {
       setLoading(false);
     }
   };
-
+  const approveOrDeclineHospital = async (hospitalId, isApproved) => {
+    try {
+      await axiosInstance.post(`/api/v1/admin/approveOrDeclineHospital`, {
+        hospitalId,
+        approved: isApproved,
+      });
+      alert(`Hospital ${isApproved ? "approved" : "rejected"} successfully.`);
+      fetchData(); // Re-fetch data to update the UI
+    } catch (err) {
+      setError("Failed to update hospital status");
+      console.error(err);
+    }
+  };
   const handleUserStatusChange = async (firebaseUid, newStatus) => {
     try {
       await axios.post("/api/v1/admin/updateUserStatus", {
@@ -117,7 +130,21 @@ const AdminDashboard = () => {
         <h2>Pending Hospitals</h2>
         <ul>
           {pendingHospitals?.map((hospital) => (
-            <li key={hospital._id}>{hospital.name}</li>
+            <li key={hospital._id}>
+              {hospital.name}
+              <div>
+                <button
+                  onClick={() => approveOrDeclineHospital(hospital._id, true)}
+                >
+                  Approve
+                </button>
+                <button
+                  onClick={() => approveOrDeclineHospital(hospital._id, false)}
+                >
+                  Reject
+                </button>
+              </div>
+            </li>
           ))}
         </ul>
       </section>
