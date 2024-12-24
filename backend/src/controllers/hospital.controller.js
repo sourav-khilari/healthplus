@@ -148,6 +148,7 @@ const getHospitalAllAppointments = asyncHandler(async (req, res) => {
     }
 });
 
+
 // GET /api/doctors/:doctorId/appointments
 const getDoctorAppointments = asyncHandler(async (req, res) => {
     const { doctorId } = req.params;
