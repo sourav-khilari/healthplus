@@ -39,8 +39,8 @@ router.post('/bookAppointment',roleMiddleware("user"), bookAppointment);
 router.put('/updateAppointment/:appointmentId',roleMiddleware("user"), updateAppointment);
 router.delete('/deleteAppointment/:appointmentId',roleMiddleware("user"), deleteAppointment);
 
-router.post('/send-otp', sendOtpForPatientId); // Send OTP when patient ID is entered
-router.post('/verify-otp', verifyOtpAndFetchData); // Verify OTP and fetch patient data
-router.post('/create-patient-id', createPatientId); 
+router.post('/send-otp',roleMiddleware("user"), sendOtpForPatientId); // Send OTP when patient ID is entered
+router.post('/verify-otp',roleMiddleware("user"), verifyOtpAndFetchData); // Verify OTP and fetch patient data
+router.post('/create-patient-id',roleMiddleware("user"), createPatientId); 
 
 export default router
