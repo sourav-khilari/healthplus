@@ -17,10 +17,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   }, // e.g., 'email/password', 'google'
-  patient_id: {
+  patient_id: [{
     type: String,
     //unique: true
-  },
+  }],
   role:{
     type:String,
     default:"user",
