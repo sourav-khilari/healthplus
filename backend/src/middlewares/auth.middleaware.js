@@ -39,15 +39,15 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 
 const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => {
-  const { idToken } = req.cookies;
+  const { authToken } = req.cookies;
 
-  if (!idToken) {
+  if (!authToken) {
       throw new ApiError(401, 'Unauthorized: No token provided');
   }
 
   try {
       // Verify Firebase token
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      const decodedToken = await admin.auth().verifyIdToken(authToken);
       const { uid } = decodedToken;
 
       // Check user's role in MongoDB

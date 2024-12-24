@@ -4,15 +4,15 @@ import { User } from "../models/user.model.js";
 import {admin} from "../config/firebase.js"
 
 const adminMiddleware = asyncHandler(async (req, res, next) => {
-    const { idToken } = req.cookies;
+    const { authToken } = req.cookies;
 
-    if (!idToken) {
+    if (!authToken) {
         throw new ApiError(401, 'Unauthorized: No token provided');
     }
 
     try {
         // Verify Firebase token
-        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const decodedToken = await admin.auth().verifyIdToken(authToken);
         const { uid } = decodedToken;
 
         // Check if user is an admin in MongoDB
