@@ -32,7 +32,6 @@ const AdminDashboard = () => {
         axiosInstance.get("/api/v1/admin/getPendingHospitals"),
         axiosInstance.get("/api/v1/admin/getRejectedHospitals"),
         axiosInstance.get("/api/v1/admin/getApprovedHospitals"),
-        axiosInstance.post("/api/v1/admin/approveOrDeclineHospital"),
       ]);
 
       setUsers(usersRes.data.data || []);
