@@ -42,6 +42,38 @@ const HospitalDashboard = () => {
     }
   };
 
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  const handleAvailabilityChange = (index, field, value) => {
+    const updatedAvailability = [...newDoctor.availability];
+    updatedAvailability[index][field] = value;
+    setNewDoctor({ ...newDoctor, availability: updatedAvailability });
+  };
+
+  const handleAddAvailability = () => {
+    setNewDoctor({
+      ...newDoctor,
+      availability: [
+        ...newDoctor.availability,
+        { day: "", startTime: "", endTime: "" },
+      ],
+    });
+  };
+
+  const handleRemoveAvailability = (index) => {
+    const updatedAvailability = newDoctor.availability.filter(
+      (_, i) => i !== index
+    );
+    setNewDoctor({ ...newDoctor, availability: updatedAvailability });
+  };
   const fetchAppointments = async () => {
     try {
       setLoadingAppointments(true);
@@ -133,6 +165,51 @@ const HospitalDashboard = () => {
             setNewDoctor({ ...newDoctor, slotDuration: e.target.value })
           }
         />
+        {/* Availability Input */}
+        <h3>Availability</h3>
+        {newDoctor.availability.map((slot, index) => (
+          <div key={index} className="availability-slot">
+            <select
+              value={slot.day}
+              onChange={(e) =>
+                handleAvailabilityChange(index, "day", e.target.value)
+              }
+            >
+              <option value="">Select Day</option>
+              {daysOfWeek.map((day) => (
+                <option key={day} value={day}>
+                  {day}
+                </option>
+              ))}
+            </select>
+            <input
+              type="time"
+              placeholder="Start Time"
+              value={slot.startTime}
+              onChange={(e) =>
+                handleAvailabilityChange(index, "startTime", e.target.value)
+              }
+            />
+            <input
+              type="time"
+              placeholder="End Time"
+              value={slot.endTime}
+              onChange={(e) =>
+                handleAvailabilityChange(index, "endTime", e.target.value)
+              }
+            />
+            <button
+              type="button"
+              onClick={() => handleRemoveAvailability(index)}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <button type="button" onClick={handleAddAvailability}>
+          Add Availability
+        </button>
+
         <button onClick={addDoctor}>Add Doctor</button>
         {success && <p className="success">{success}</p>}
         {error && <p className="error">{error}</p>}
