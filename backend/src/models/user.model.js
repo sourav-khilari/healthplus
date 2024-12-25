@@ -22,6 +22,7 @@ const userSchema = new Schema(
       type: [String], // Array of verified patient IDs
       default: []
     },
+    
     role: {
       type: String,
       default: "user",
