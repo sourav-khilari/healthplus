@@ -54,7 +54,7 @@ router.put("/:categoryId", roleMiddleware("admin"), updateCategory);
 router.delete("/:categoryId", roleMiddleware("admin"), removeCategory);
 
 router.get("/categories", listCategory);
-router.get("/:id", readCategory);
+router.get("/readCategory/:id", readCategory);
 
 route.get("/getAllOrders", roleMiddleware("admin"), getAllOrders);
 
@@ -98,7 +98,7 @@ router.put(
   ]),
   updateProductDetails,
 ); //
-router.delete("/:id", roleMiddleware("admin"), removeProduct);
+router.delete("/removeProduct/:id", roleMiddleware("admin"), removeProduct);
 
 router.route("/filtered-products").post(filterProducts);
 
