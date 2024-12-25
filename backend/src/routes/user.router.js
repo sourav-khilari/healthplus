@@ -16,6 +16,7 @@ import {
     getCurrentUser,
     logoutUser,
     uploadMedicalDetails,
+    getPatientDetailsId,
 } from '../controllers/user.controller.js'
 import { authMiddleware, roleMiddleware } from '../middlewares/auth.middleaware.js'
 import { upload } from "../middlewares/multer.middleware.js"
@@ -83,6 +84,7 @@ router.post('/create-patient-id', roleMiddleware("user"), createPatientId);
 
 //router.post('/create-patient-id',roleMiddleware("user"), createPatientId);
 router.post('/uploadMedicalDetails', roleMiddleware("user"), upload.single("medical-history"), uploadMedicalDetails);
+router.get("/ getPatientDetailsId/:id",roleMiddleware("user"),  getPatientDetailsId);
 
 
 
