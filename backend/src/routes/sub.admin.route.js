@@ -32,28 +32,45 @@ import {
   markOrderAsDelivered,
 } from "../controllers/medicalstore.controller/orderController.js";
 
-
+import { upload } from "../middlewares/multer.middleware.js"
 
 import { roleMiddleware } from "../middlewares/auth.middleaware.js";
 
 const router = Router()
 
-router.post("createCategory",roleMiddleware("admin"), createCategory);
-router.put("/:categoryId",roleMiddleware("admin"), updateCategory);
-router.delete("/:categoryId",roleMiddleware("admin"), removeCategory);
+router.post("createCategory", roleMiddleware("admin"), createCategory);
+router.put("/:categoryId", roleMiddleware("admin"), updateCategory);
+router.delete("/:categoryId", roleMiddleware("admin"), removeCategory);
 
-router.get("/categories",listCategory);
-router.get("/:id",readCategory);
+router.get("/categories", listCategory);
+router.get("/:id", readCategory);
 
 
 
-route.get("getAllOrders",roleMiddleware("admin"), getAllOrders);
+route.get("getAllOrders", roleMiddleware("admin"), getAllOrders);
 
-router.get("/total-sales",roleMiddleware("admin"),calculateTotalSales);
-router.get("/total-sales-by-date",roleMiddleware("admin"),calcualteTotalSalesByDate);
+router.get("/total-sales", roleMiddleware("admin"), calculateTotalSales);
+router.get("/total-sales-by-date", roleMiddleware("admin"), calcualteTotalSalesByDate);
 
-router.put("/:id/deliver",roleMiddleware("admin"), markOrderAsDelivered);
+router.put("/:id/deliver", roleMiddleware("admin"), markOrderAsDelivered);
 
+
+router.get("/", fetchProducts)
+router.post("/addProduct", roleMiddleware("admin"), formidable(), addProduct);
+
+router.get("/allproducts", fetchAllProducts);
+
+
+router.get("/top", fetchTopProducts);
+router.get("/new", fetchNewProducts);
+
+
+
+router.get("/:id", fetchProductById)
+router.put("/:id", roleMiddleware("admin"), formidable(), updateProductDetails)
+router.delete("/:id", roleMiddleware("admin"), removeProduct);
+
+router.route("/filtered-products").post(filterProducts);
 
 
 export default router;

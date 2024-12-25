@@ -96,4 +96,12 @@ router.put("/:id/pay", roleMiddleware("user"), markOrderAsPaid);
 
 router.post("/createOrder",roleMiddleware("user"), createOrder)
 
+router.get("/top", fetchTopProducts);
+router.get("/new", fetchNewProducts);
+
+router.get("/allproducts",fetchAllProducts);
+router.route("/filtered-products").post(filterProducts);
+router.get("/:id",fetchProductById)
+router.post("/:id/reviews",roleMiddleware("user"), addProductReview);
+
 export default router
