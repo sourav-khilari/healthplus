@@ -10,7 +10,7 @@ app.use(cors({
     credentials:true
 }))
 //accept json
-app.use(express.json({limit: "16kb"}))
+app.use(express.json({limit: "36kb"}))
 //accept url encoded
 app.use(express.urlencoded({extented:true,limit:"16kb"}))
 //file,folder,public folder assets

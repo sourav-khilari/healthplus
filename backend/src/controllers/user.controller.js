@@ -844,15 +844,19 @@ const uploadMedicalDetails = asyncHandler(async (req, res) => {
             const updatedPatient = response.data;
             console.log(updatedPatient);
         } catch (error) {
-            console.error('FHIR API upload failed:', error.message);
-
-            // Save failed upload attempt for retry
-            await FailedUploads.create({
-                patientId,
-                fileUrl,
-                description,
-                retryCount: 0,
-            });
+            if (error.response.status === 500) {
+                console.log('Update successful, but server unable to return updated resource');
+              } else {
+                console.error('FHIR API upload failed:', error.message);
+                // Save failed upload attempt for retry
+                await FailedUploads.create({
+                  patientId,
+                  fileUrl,
+                  description,
+                  retryCount: 0,
+                });
+              }
+            
         }
 
         // Clean up the local file after the upload is done
