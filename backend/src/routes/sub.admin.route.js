@@ -5,7 +5,7 @@ import {
   removeCategory,
   listCategory,
   readCategory,
-} from "../controllers/medicalstore.controller/categoryController.js";
+} from "../controllers/medicalstore.controller/category.controller.js";
 
 import {
   addProduct,
@@ -18,7 +18,7 @@ import {
   fetchTopProducts,
   fetchNewProducts,
   filterProducts,
-} from "../controllers/medicalstore.controller/productController.js";
+} from "../controllers/medicalstore.controller/product.controller.js";
 
 import {
   createOrder,
@@ -30,7 +30,7 @@ import {
   findOrderById,
   markOrderAsPaid,
   markOrderAsDelivered,
-} from "../controllers/medicalstore.controller/orderController.js";
+} from "../controllers/medicalstore.controller/order.controller.js";
 
 import { upload } from "../middlewares/multer.middleware.js";
 
