@@ -45,7 +45,7 @@ router.delete("/:categoryId", roleMiddleware("admin"), removeCategory);
 router.get("/categories", listCategory);
 router.get("/:id", readCategory);
 
-route.get("getAllOrders", roleMiddleware("admin"), getAllOrders);
+route.get("/getAllOrders", roleMiddleware("admin"), getAllOrders);
 
 router.get("/total-sales", roleMiddleware("admin"), calculateTotalSales);
 router.get(

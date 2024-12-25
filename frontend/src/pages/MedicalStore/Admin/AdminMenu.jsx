@@ -67,7 +67,7 @@ const AdminMenu = () => {
             <li>
               <NavLink
                 className="list-item py-2 px-3 block mb-5 hover:bg-[#E0F0FF] rounded-sm"
-                to="/admin/allproductslist"
+                to="/medstore/admin/allproducts"
                 style={({ isActive }) => ({
                   color: isActive ? "#1E90FF" : "#000080",
                 })}
@@ -89,7 +89,7 @@ const AdminMenu = () => {
             <li>
               <NavLink
                 className="list-item py-2 px-3 block mb-5 hover:bg-[#E0F0FF] rounded-sm"
-                to="/medstore/admin/orderlist"
+                to="/medstore/admin/getAllOrders"
                 style={({ isActive }) => ({
                   color: isActive ? "#1E90FF" : "#000080",
                 })}
