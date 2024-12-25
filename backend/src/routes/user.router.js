@@ -82,7 +82,7 @@ router.post('/verify-otp', roleMiddleware("user"), verifyOtpAndFetchData); // Ve
 router.post('/create-patient-id', roleMiddleware("user"), createPatientId);
 
 //router.post('/create-patient-id',roleMiddleware("user"), createPatientId);
-router.post('/uploadMedicalDetails', roleMiddleware("user"), upload.single("avatar"), uploadMedicalDetails);
+router.post('/uploadMedicalDetails', roleMiddleware("user"), upload.single("medical-history"), uploadMedicalDetails);
 
 
 
