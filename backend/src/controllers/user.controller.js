@@ -872,7 +872,7 @@ const uploadMedicalDetails = asyncHandler(async (req, res) => {
     }
 });
 
-export default uploadMedicalDetails;
+
 
 
 
