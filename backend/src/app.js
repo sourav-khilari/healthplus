@@ -29,4 +29,7 @@ app.use("/api/v1/hospital",hospitalRouter);
 
 app.use("/api/v1/admin",adminRouter);
 
+
+
+
 export {app}
