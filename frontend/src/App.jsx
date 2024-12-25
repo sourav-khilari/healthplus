@@ -24,6 +24,32 @@ import UserDashboard from "./pages/UserDashboard";
 import HospitalDashboard from "./pages/HospitalDashboard";
 import FindPharmacy from "./pages/FindPharmacy";
 import FindHospital from "./pages/FindHospital";
+import MedStore from "./pages/MedicalStore/MedStore";
+
+//med store 
+import AdminRoute from "./pages/MedicalStore/Admin/AdminRoute";
+import Profile from "./pages/MedicalStore/User/Profile";
+import UserList from "./pages/MedicalStore/Admin/UserList";
+
+import CategoryList from "./pages/MedicalStore/Admin/CategoryList";
+
+import ProductList from "./pages/MedicalStore/Admin/ProductList";
+import AllProducts from "./pages/MedicalStore/Admin/AllProducts";
+import ProductUpdate from "./pages/MedicalStore/Admin/ProductUpdate";
+
+import Favorites from "./pages/MedicalStore/Products/Favorites.jsx";
+import ProductDetails from "./pages/MedicalStore/Products/ProductDetails.jsx";
+
+import Cart from "./pages/MedicalStore/Cart.jsx";
+import Shop from "./pages/MedicalStore/Shop.jsx";
+
+import Shipping from "./pages/MedicalStore/Orders/Shipping.jsx";
+import PlaceOrder from "./pages/MedicalStore/Orders/PlaceOrder.jsx";
+import Order from "./pages/MedicalStore/Orders/Order.jsx";
+import OrderList from "./pages/MedicalStore/Admin/OrderList.jsx";
+import MedAdminDashboard from "./pages/MedicalStore/Admin/MedAdminDashboard.jsx";
+
+
 const App = () => {
   return (
     <Router>
@@ -67,6 +93,38 @@ const App = () => {
         />
         <Route path="/services/medicine-store" element={<MedicineStore />} />
         <Route path="/services/report-guidance" element={<ReportGuidance />} />
+        {/* MedicalStore */}
+
+        <Route path="/medstore" element={<MedStore />} />
+        <Route path="/medstore/favorite" element={<Favorites />} />
+        <Route path="/medstore/product/:id" element={<ProductDetails />} />
+        <Route path="/medstore/cart" element={<Cart />} />
+        <Route path="/medstore/shop" element={<Shop />} />
+
+        {/* Registered users */}
+        <Route path="" element={<PrivateRoute />}>
+          <Route path="/medstore/profile" element={<Profile />} />
+          <Route path="/medstore/shipping" element={<Shipping />} />
+          <Route path="/medstore/placeorder" element={<PlaceOrder />} />
+          <Route path="/medstore/order/:id" element={<Order />} />
+        </Route>
+
+        <Route path="/medstore/admin" element={<AdminRoute />}>
+          <Route path="/medstore/userlist" element={<UserList />} />
+          <Route path="/medstore/categorylist" element={<CategoryList />} />
+          <Route path="/medstore/productlist" element={<ProductList />} />
+          <Route path="/medstore/allproductslist" element={<AllProducts />} />
+          <Route
+            path="/medstore/productlist/:pageNumber"
+            element={<ProductList />}
+          />
+          <Route
+            path="/medstore/product/update/:_id"
+            element={<ProductUpdate />}
+          />
+          <Route path="/medstore/orderlist" element={<OrderList />} />
+          <Route path="/medstore/dashboard" element={<MedAdminDashboard />} />
+        </Route>
       </Routes>
       <Footer />
     </Router>
