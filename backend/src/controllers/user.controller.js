@@ -128,6 +128,42 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 
+const getCurrentUser = asyncHandler(async(req, res) => {
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200,
+        req.user,
+        "User fetched successfully"
+    ))
+})
+
+const logoutUser = asyncHandler(async(req, res) => {
+    // await User.findByIdAndUpdate(
+    //     req.user._id,
+    //     {
+    //         $unset: {
+    //             refreshToken: 1 // this removes the field from document
+    //         }
+    //     },
+    //     {
+    //         new: true
+    //     }
+    // )
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+    .status(200)
+    .clearCookie("authToken", options)
+    .json(new ApiResponse(200, {}, "User logged Out"))
+    //.clearCookie("refreshToken", options)
+})
+
+
 const getAllHospitals = asyncHandler(async (req, res) => {
     try {
         if (req.user.role !== 'admin') {
@@ -315,6 +351,8 @@ const checkAvailability = async (doctorId, date, timeSlot) => {
     const appointments = await Appointment.find({ doctorId, date, $or: [{ 'timeSlot.start': { $lte: timeSlot.end } }, { 'timeSlot.end': { $gte: timeSlot.start } }] });
     return appointments.length === 0;
 };
+
+
 //timeslot format that i send in frontend
 // "timeSlot": {
 //     "start": "2024-12-23T10:00:00.000Z",
@@ -505,23 +543,70 @@ const sendOtpForPatientId = asyncHandler(async (req, res) => {
 
 
 
-const verifyOtpAndFetchData = asyncHandler(async (req, res) => {
-    const { patientId, otp } = req.body;
+// const verifyOtpAndFetchData = asyncHandler(async (req, res) => {
+//     const { patientId, otp } = req.body;
 
-    if (!patientId || !otp) throw new ApiError(400,'Patient ID and OTP are required');
+//     if (!patientId || !otp) throw new ApiError(400,'Patient ID and OTP are required');
+
+//     // Fetch patient from MongoDB
+//     const patient = await Patient.findOne({ patientId });
+//     if (!patient) throw new ApiError(404,'Patient not found');
+
+//     // Validate OTP
+//     if (patient.otp !== otp) throw new ApiError(400,'Invalid OTP');
+
+//     const isExpired = Date.now() > patient.otpExpiration;
+//     if (isExpired) throw new ApiError(400,'OTP expired');
+
+//     // Clear OTP after successful validation
+//     await Patient.updateOne({ patientId }, { $unset: { otp: 1, otpExpiration: 1 } });
+
+//     // Fetch patient data (from FHIR API or MongoDB if API is down)
+//     let patientData;
+//     try {
+//         const apiResponse = await axios.get(`http://hapi.fhir.org/baseR4/Patient/${patientId}`);
+//         patientData = apiResponse.data;
+//     } catch (error) {
+//         console.error('FHIR API Error:', error.message);
+//         patientData = patient;
+//     }
+
+//     res.status(200).json(new ApiResponse(200, { patientDetails: patientData }, 'Patient data fetched successfully'));
+// });
+
+
+//DOB-FORMAT 1990-01-01
+
+const verifyOtpAndFetchData = asyncHandler(async (req, res) => {
+    
+    const { patientId, otp } = req.body;
+    let userId=req.user._id;
+    if (!patientId || !otp || !userId) throw new ApiError(400, 'Patient ID, OTP, and User ID are required');
 
     // Fetch patient from MongoDB
     const patient = await Patient.findOne({ patientId });
-    if (!patient) throw new ApiError(404,'Patient not found');
+    if (!patient) throw new ApiError(404, 'Patient not found');
 
     // Validate OTP
-    if (patient.otp !== otp) throw new ApiError(400,'Invalid OTP');
+    if (patient.otp !== otp) throw new ApiError(400, 'Invalid OTP');
 
     const isExpired = Date.now() > patient.otpExpiration;
-    if (isExpired) throw new ApiError(400,'OTP expired');
+    if (isExpired) throw new ApiError(400, 'OTP expired');
 
     // Clear OTP after successful validation
     await Patient.updateOne({ patientId }, { $unset: { otp: 1, otpExpiration: 1 } });
+
+    // Fetch user from MongoDB
+    const user = await User.findById(userId);
+    if (!user) throw new ApiError(404, 'User not found');
+
+    // Add patientId to user's patient_ids array if not already present
+    if (!user.patient_ids.includes(patientId)) {
+        await User.updateOne(
+            { _id: userId },
+            { $addToSet: { patient_ids: patientId } } // Ensures no duplicates
+        );
+    }
 
     // Fetch patient data (from FHIR API or MongoDB if API is down)
     let patientData;
@@ -533,16 +618,17 @@ const verifyOtpAndFetchData = asyncHandler(async (req, res) => {
         patientData = patient;
     }
 
-    res.status(200).json(new ApiResponse(200, { patientDetails: patientData }, 'Patient data fetched successfully'));
+    res.status(200).json(new ApiResponse(200, { patientDetails: patientData }, 'Patient data fetched and verified successfully'));
 });
 
 
-//DOB-FORMAT 1990-01-01
+
+
 const createPatientId = asyncHandler(async (req, res) => {
     const { name, email, dob, contact } = req.body;
 
     if (!name || !email || !dob || !contact) {
-        throw new APIError('All fields (name, email, dob, contact) are required', 400);
+        throw new ApiError('All fields (name, email, dob, contact) are required', 400);
     }
 
     let patientId;
@@ -588,6 +674,7 @@ const createPatientId = asyncHandler(async (req, res) => {
 
 
 
+
 export {
     loginUser,
     registerUser,
@@ -602,5 +689,7 @@ export {
     sendOtpForPatientId,
     verifyOtpAndFetchData,
     createPatientId,
+    getCurrentUser,
+    logoutUser,
 
 }

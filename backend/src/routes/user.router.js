@@ -13,6 +13,8 @@ import {
     sendOtpForPatientId,
     verifyOtpAndFetchData,
     createPatientId,
+    getCurrentUser,
+    logoutUser,
     } from '../controllers/user.controller.js'
 import {authMiddleware,roleMiddleware} from '../middlewares/auth.middleaware.js'
 
@@ -25,8 +27,8 @@ router.post('/login', loginUser);
 router.get("/hospitals",roleMiddleware("user"),nearestHospital);
 router.get("/pharmacy",roleMiddleware("user"),nearestPharmacy);
 router.get("/pharmacy",roleMiddleware("user"),getAllHospitals);
-//router.get("/hospitals",nearestHospital);
-//router.get("/pharmacy",nearestPharmacy)
+router.get("/getCurrentUser",roleMiddleware("user"),getCurrentUser);
+router.get("/logoutUser",roleMiddleware("user"),logoutUser)
 
 router.get("/getAllDoctors",getAllDoctors);
 

@@ -85,6 +85,40 @@ const registerHospital = asyncHandler(async (req, res) => {
     }
 });
 
+const getCurrentUser = asyncHandler(async(req, res) => {
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200,
+        req.user,
+        "User fetched successfully"
+    ))
+})
+
+const logoutUser = asyncHandler(async(req, res) => {
+    // await User.findByIdAndUpdate(
+    //     req.user._id,
+    //     {
+    //         $unset: {
+    //             refreshToken: 1 // this removes the field from document
+    //         }
+    //     },
+    //     {
+    //         new: true
+    //     }
+    // )
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+    .status(200)
+    .clearCookie("authToken", options)
+    .json(new ApiResponse(200, {}, "User logged Out"))
+    //.clearCookie("refreshToken", options)
+})
 
 
 const addDoctor = async (req, res) => {
@@ -109,7 +143,7 @@ const addDoctor = async (req, res) => {
             hospitalId,
             calendarId: calendarResponse.data.id,
             availability,
-            slotDuration
+            slotDuration,
         });
 
         await newDoctor.save();
@@ -184,4 +218,6 @@ export {
     addDoctor,
     getHospitalAllAppointments,
     getDoctorAppointments,
+    getCurrentUser,
+    logoutUser,
 }

@@ -18,12 +18,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     }, // e.g., 'email/password', 'google'
-    patient_id: [
-      {
-        type: String,
-        //unique: true
-      },
-    ],
+    patient_ids: {
+      type: [String], // Array of verified patient IDs
+      default: []
+    },
     role: {
       type: String,
       default: "user",
