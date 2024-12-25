@@ -1,5 +1,5 @@
 import Category from "../../models/medical.store.model/categoryModel.js";
-import {asyncHandler} from "../../utils/middlewares/asyncHandler.js";
+import {asyncHandler} from "../../utils/asyncHandler.js";
 
 const createCategory = asyncHandler(async (req, res) => {
   try {
