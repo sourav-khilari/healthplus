@@ -1,7 +1,7 @@
-import User from "../models/userModel.js";
-import asyncHandler from "../middlewares/asyncHandler.js";
+import User from "../../models/medical.store.model/models/userModel.js";
+import asyncHandler from "../../models/medical.store.model/middlewares/asyncHandler.js";
 import bcrypt from "bcryptjs";
-import createToken from "../utils/createToken.js";
+import createToken from "../../models/medical.store.model/utils/createToken.js";
 
 const createUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;

@@ -1,5 +1,5 @@
-import Order from "../models/orderModel.js";
-import Product from "../models/productModel.js";
+import Order from "../../models/medical.store.model/models/orderModel.js";
+import Product from "../../models/medical.store.model/models/productModel.js";
 
 // Utility Function
 function calcPrices(orderItems) {
