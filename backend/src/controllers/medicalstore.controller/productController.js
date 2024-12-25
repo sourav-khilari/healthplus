@@ -1,5 +1,5 @@
-import asyncHandler from "../../models/medical.store.model/middlewares/asyncHandler.js";
-import Product from "../../models/medical.store.model/models/productModel.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
+import Product from "../../models/medical.store.model/productModel.js";
 
 const addProduct = asyncHandler(async (req, res) => {
   try {

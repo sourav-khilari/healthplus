@@ -20,3 +20,9 @@ connectDB()
   .catch((err) => {
     console.log("Mongo Db connection failed!!!", err);
   });
+
+
+  app.get("/api/config/paypal", (req, res) => {
+    res.send({ clientId: process.env.PAYPAL_CLIENT_ID });
+  });
+  

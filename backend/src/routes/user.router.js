@@ -21,6 +21,41 @@ import { authMiddleware, roleMiddleware } from '../middlewares/auth.middleaware.
 import { upload } from "../middlewares/multer.middleware.js"
 
 
+import {
+    createOrder,
+    getAllOrders,
+    getUserOrders,
+    countTotalOrders,
+    calculateTotalSales,
+    calcualteTotalSalesByDate,
+    findOrderById,
+    markOrderAsPaid,
+    markOrderAsDelivered,
+  } from "../controllers/medicalstore.controller/orderController.js";
+
+
+  import {
+    createCategory,
+    updateCategory,
+    removeCategory,
+    listCategory,
+    readCategory,
+  } from "../controllers/medicalstore.controller/categoryController.js";
+
+
+  import {
+    addProduct,
+    updateProductDetails,
+    removeProduct,
+    fetchProducts,
+    fetchProductById,
+    fetchAllProducts,
+    addProductReview,
+    fetchTopProducts,
+    fetchNewProducts,
+    filterProducts,
+  } from "../controllers/medicalstore.controller/productController.js";
+
 const router = Router()
 
 router.post('/register', registerUser);
@@ -47,6 +82,18 @@ router.post('/verify-otp', roleMiddleware("user"), verifyOtpAndFetchData); // Ve
 router.post('/create-patient-id', roleMiddleware("user"), createPatientId);
 
 //router.post('/create-patient-id',roleMiddleware("user"), createPatientId);
-router.post('/uploadMedicalDetails', upload.single("avatar"), uploadMedicalDetails);
+router.post('/uploadMedicalDetails', roleMiddleware("user"), upload.single("avatar"), uploadMedicalDetails);
+
+
+
+
+
+
+router.get("/mine", roleMiddleware("user"), getUserOrders);
+router.get("/:id", roleMiddleware("user"),readCategory);
+router.get("/:id", roleMiddleware("user"), findOrderById);
+router.put("/:id/pay", roleMiddleware("user"), markOrderAsPaid);
+
+router.post("/createOrder",roleMiddleware("user"), createOrder)
 
 export default router
