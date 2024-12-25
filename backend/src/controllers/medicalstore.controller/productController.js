@@ -84,9 +84,46 @@ const addProduct = asyncHandler(async (req, res) => {
 
 
 
+// const updateProductDetails = asyncHandler(async (req, res) => {
+//   try {
+//     const { name, description, price, category, quantity, brand } = req.fields;
+
+//     // Validation
+//     switch (true) {
+//       case !name:
+//         return res.json({ error: "Name is required" });
+//       case !brand:
+//         return res.json({ error: "Brand is required" });
+//       case !description:
+//         return res.json({ error: "Description is required" });
+//       case !price:
+//         return res.json({ error: "Price is required" });
+//       case !category:
+//         return res.json({ error: "Category is required" });
+//       case !quantity:
+//         return res.json({ error: "Quantity is required" });
+//     }
+
+//     const product = await Product.findByIdAndUpdate(
+//       req.params.id,
+//       { ...req.fields },
+//       { new: true }
+//     );
+
+//     await product.save();
+
+//     res.json(product);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(400).json(error.message);
+//   }
+// });
+
+
 const updateProductDetails = asyncHandler(async (req, res) => {
   try {
     const { name, description, price, category, quantity, brand } = req.fields;
+    const files = req.files;
 
     // Validation
     switch (true) {
@@ -104,18 +141,53 @@ const updateProductDetails = asyncHandler(async (req, res) => {
         return res.json({ error: "Quantity is required" });
     }
 
-    const product = await Product.findByIdAndUpdate(
+    // Find the existing product
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Handle updated files
+    const updatedImages = [...product.image]; // Start with existing images (URLs and public_ids)
+    const imageKeys = ["image1", "image2", "image3", "image4"]; // Defined fields for images
+
+    for (const key of imageKeys) {
+      if (files[key]) {
+        // Upload the new image to Cloudinary
+        const uploadedImage = await uploadOnCloudinary(files[key][0].path);
+
+        // Replace the corresponding image in the array
+        const index = imageKeys.indexOf(key); // Find index to replace
+        if (index !== -1) {
+          // Delete old image from Cloudinary
+          const oldImage = updatedImages[index];
+          if (oldImage?.public_id) {
+            await deleteFromCloudinary(oldImage.public_id); // Function to delete image from Cloudinary
+          }
+
+          // Update the image array with new image details
+          updatedImages[index] = {
+            secure_url: uploadedImage.secure_url,
+            //public_id: uploadedImage.public_id,
+          };
+        }
+      }
+    }
+
+    // Update the product fields and images
+    const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      { ...req.fields },
+      {
+        ...req.fields,
+        image: updatedImages,
+      },
       { new: true }
     );
 
-    await product.save();
-
-    res.json(product);
+    res.json(updatedProduct);
   } catch (error) {
     console.error(error);
-    res.status(400).json(error.message);
+    res.status(400).json({ error: error.message });
   }
 });
 
