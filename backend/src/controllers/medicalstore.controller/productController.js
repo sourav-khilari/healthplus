@@ -1,5 +1,34 @@
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import Product from "../../models/medical.store.model/productModel.js";
+import { uploadOnCloudinary } from "../../utils/cloudnary.js";
+// const addProduct = asyncHandler(async (req, res) => {
+//   try {
+//     const { name, description, price, category, quantity, brand } = req.fields;
+
+//     // Validation
+//     switch (true) {
+//       case !name:
+//         return res.json({ error: "Name is required" });
+//       case !brand:
+//         return res.json({ error: "Brand is required" });
+//       case !description:
+//         return res.json({ error: "Description is required" });
+//       case !price:
+//         return res.json({ error: "Price is required" });
+//       case !category:
+//         return res.json({ error: "Category is required" });
+//       case !quantity:
+//         return res.json({ error: "Quantity is required" });
+//     }
+
+//     const product = new Product({ ...req.fields });
+//     await product.save();
+//     res.json(product);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(400).json(error.message);
+//   }
+// });
 
 const addProduct = asyncHandler(async (req, res) => {
   try {
@@ -21,7 +50,30 @@ const addProduct = asyncHandler(async (req, res) => {
         return res.json({ error: "Quantity is required" });
     }
 
-    const product = new Product({ ...req.fields });
+    // Upload images to Cloudinary
+    // const images = [
+    //   req.files.image1,
+    //   req.files.image2,
+    //   req.files.image3,
+    //   req.files.image4,
+    // ].filter((image) => image);
+
+    const images = [
+      ...req.files
+    ].filter((image) => image);
+
+    if (images.length > 4) {
+      return res.json({ error: "You can upload up to 4 images" });
+    }
+
+    const imageUrls = await Promise.all(images.map((image) => uploadOnCloudinary(image.path)));
+
+    // Create product
+    const product = new Product({
+      ...req.fields,
+      image: imageUrls.map((url) => url.secure_url),
+    });
+
     await product.save();
     res.json(product);
   } catch (error) {
@@ -29,6 +81,8 @@ const addProduct = asyncHandler(async (req, res) => {
     res.status(400).json(error.message);
   }
 });
+
+
 
 const updateProductDetails = asyncHandler(async (req, res) => {
   try {
