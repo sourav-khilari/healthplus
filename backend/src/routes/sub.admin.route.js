@@ -8,6 +8,17 @@ import {
 } from "../controllers/medicalstore.controller/category.controller.js";
 
 import {
+  addUser,
+  deleteUser,
+  getAllUsers,
+  updateUserStatus,
+  approveOrDeclineHospital,
+  getPendingHospitals,
+  getRejectedHospitals,
+  getApprovedHospitals,
+} from '../controllers/admin.controller.js'
+
+import {
   addProduct,
   updateProductDetails,
   removeProduct,
@@ -45,7 +56,7 @@ router.delete("/:categoryId", roleMiddleware("admin"), removeCategory);
 router.get("/categories", listCategory);
 router.get("/:id", readCategory);
 
-route.get("getAllOrders", roleMiddleware("admin"), getAllOrders);
+route.get("/getAllOrders", roleMiddleware("admin"), getAllOrders);
 
 router.get("/total-sales", roleMiddleware("admin"), calculateTotalSales);
 router.get(
@@ -90,5 +101,19 @@ router.put(
 router.delete("/:id", roleMiddleware("admin"), removeProduct);
 
 router.route("/filtered-products").post(filterProducts);
+
+
+
+
+
+
+
+
+router.get('/getUser', roleMiddleware("admin"), getAllUsers);
+router.post('/updateUserStatus', roleMiddleware("admin"), updateUserStatus);
+
+router.post('/add-user', roleMiddleware("admin"), addUser);
+router.delete('/delete-user', roleMiddleware("admin"), deleteUser);
+
 
 export default router;

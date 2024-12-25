@@ -61,25 +61,49 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 
 
+// const getAllUsers = asyncHandler(async (req, res) => {
+//     try {
+//         // Check if the requester is an admin
+//         if (req.user.role !== 'admin') {
+//             throw new ApiError(403, 'Access denied: Admins only');
+//         }
+
+//         // Fetch all users from MongoDB
+//         const users = await User.find({}) 
+//             .select('name email role createdAt')       // Select only required fields
+//             .sort({ createdAt: -1 });                  // Sort users by creation date (newest first)
+
+//         return res.status(200).json(
+//             new ApiResponse(200, users, 'Users fetched successfully')
+//         );
+//     } catch (error) {
+//         throw new ApiError(500, `Failed to fetch users: ${error.message}`);
+//     }
+// });
+
+
+
 const getAllUsers = asyncHandler(async (req, res) => {
     try {
-        // Check if the requester is an admin
-        if (req.user.role !== 'admin') {
-            throw new ApiError(403, 'Access denied: Admins only');
-        }
-
-        // Fetch all users from MongoDB
-        const users = await User.find({}) 
-            .select('name email role createdAt')       // Select only required fields
-            .sort({ createdAt: -1 });                  // Sort users by creation date (newest first)
-
-        return res.status(200).json(
-            new ApiResponse(200, users, 'Users fetched successfully')
-        );
+      // Check if the requester is an admin or subadmin
+      if (req.user.role !== 'admin' && req.user.role !== 'subadmin') {
+        throw new ApiError(403, 'Access denied: Admins and Subadmins only');
+      }
+  
+      // Fetch all users from MongoDB, excluding admins and subadmins
+      const users = await User.find({ role: { $ne: 'admin' }, role: { $ne: 'subadmin' } })
+        .select('name email role createdAt')
+        .sort({ createdAt: -1 });
+  
+      return res.status(200).json(
+        new ApiResponse(200, users, 'Users fetched successfully')
+      );
     } catch (error) {
-        throw new ApiError(500, `Failed to fetch users: ${error.message}`);
+      throw new ApiError(500, `Failed to fetch users: ${error.message}`);
     }
-});
+  });
+  
+  
 
 const updateUserStatus = asyncHandler(async (req, res) => {
     const { firebaseUid, status } = req.body; // firebaseUid: Firebase UID, status: true/false
