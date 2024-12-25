@@ -109,7 +109,7 @@ const ProductDetails = () => {
                   </h1>
                   <h1 className="flex items-center mb-6 w-[20rem]">
                     <FaClock className="mr-2 text-white" /> Added:{" "}
-                    {moment(product.createAt).fromNow()}
+                    {moment(product.createdAt).fromNow()}
                   </h1>
                   <h1 className="flex items-center mb-6">
                     <FaStar className="mr-2 text-white" /> Reviews:{" "}
@@ -119,7 +119,8 @@ const ProductDetails = () => {
 
                 <div className="two">
                   <h1 className="flex items-center mb-6">
-                    <FaStar className="mr-2 text-white" /> Ratings: {rating}
+                    <FaStar className="mr-2 text-white" /> Ratings:{" "}
+                    {product.rating}
                   </h1>
                   <h1 className="flex items-center mb-6">
                     <FaShoppingCart className="mr-2 text-white" /> Quantity:{" "}
@@ -158,7 +159,9 @@ const ProductDetails = () => {
               <div className="btn-container">
                 <button
                   onClick={addToCartHandler}
-                  disabled={product.countInStock === 0}
+                  disabled={
+                    product.countInStock === 0 || qty > product.countInStock
+                  }
                   className="bg-pink-600 text-white py-2 px-4 rounded-lg mt-4 md:mt-0"
                 >
                   Add To Cart

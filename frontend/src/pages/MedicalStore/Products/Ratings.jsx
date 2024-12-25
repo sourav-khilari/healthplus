@@ -6,19 +6,17 @@ const Ratings = ({ value, text, color }) => {
   const emptyStar = 5 - fullStars - halfStars;
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center space-x-1">
       {[...Array(fullStars)].map((_, index) => (
-        <FaStar key={index} className={`text-${color} ml-1`} />
+        <FaStar key={index} className={`text-${color}`} />
       ))}
 
-      {halfStars === 1 && <FaStarHalfAlt className={`text-${color} ml-1`} />}
+      {halfStars === 1 && <FaStarHalfAlt className={`text-${color}`} />}
       {[...Array(emptyStar)].map((_, index) => (
-        <FaRegStar key={index} className={`text-${color} ml-1`} />
+        <FaRegStar key={index} className={`text-${color}`} />
       ))}
 
-      <span className={`rating-text ml-{2rem} text-${color}`}>
-        {text && text}
-      </span>
+      <span className={`text-${color} ml-2`}>{text || ""}</span>
     </div>
   );
 };

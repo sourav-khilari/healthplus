@@ -15,12 +15,16 @@ const ProductTabs = ({
   setComment,
   product,
 }) => {
-  const { data, isLoading } = useGetTopProductsQuery();
+  const { data, isLoading, isError } = useGetTopProductsQuery();
 
   const [activeTab, setActiveTab] = useState(1);
 
   if (isLoading) {
     return <Loader />;
+  }
+
+  if (isError) {
+    return <div>Error loading top products. Please try again later.</div>;
   }
 
   const handleTabClick = (tabNumber) => {
@@ -29,34 +33,26 @@ const ProductTabs = ({
 
   return (
     <div className="flex flex-col md:flex-row">
+      {/* Tab Navigation */}
       <section className="mr-[5rem]">
-        <div
-          className={`flex-1 p-4 cursor-pointer text-lg ${
-            activeTab === 1 ? "font-bold" : ""
-          }`}
-          onClick={() => handleTabClick(1)}
-        >
-          Write Your Review
-        </div>
-        <div
-          className={`flex-1 p-4 cursor-pointer text-lg ${
-            activeTab === 2 ? "font-bold" : ""
-          }`}
-          onClick={() => handleTabClick(2)}
-        >
-          All Reviews
-        </div>
-        <div
-          className={`flex-1 p-4 cursor-pointer text-lg ${
-            activeTab === 3 ? "font-bold" : ""
-          }`}
-          onClick={() => handleTabClick(3)}
-        >
-          Related Products
-        </div>
+        {["Write Your Review", "All Reviews", "Related Products"].map(
+          (tab, index) => (
+            <div
+              key={index}
+              className={`flex-1 p-4 cursor-pointer text-lg ${
+                activeTab === index + 1
+                  ? "font-bold border-b-2 border-pink-600"
+                  : ""
+              }`}
+              onClick={() => handleTabClick(index + 1)}
+            >
+              {tab}
+            </div>
+          )
+        )}
       </section>
 
-      {/* Second Part */}
+      {/* Tab Content */}
       <section>
         {activeTab === 1 && (
           <div className="mt-4">
@@ -107,7 +103,11 @@ const ProductTabs = ({
               </form>
             ) : (
               <p>
-                Please <Link to="/login">sign in</Link> to write a review
+                Please{" "}
+                <Link to="/login" className="text-blue-500">
+                  sign in
+                </Link>{" "}
+                to write a review
               </p>
             )}
           </div>

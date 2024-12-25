@@ -27,7 +27,7 @@ const Product = () => {
   const navigate = useNavigate();
 
   const [qty, setQty] = useState(1);
-  const [rating, setRating] = useState(0);
+  const [reviewRating, setReviewRating] = useState(0); // separate state for review rating
   const [comment, setComment] = useState("");
 
   const {
@@ -50,10 +50,15 @@ const Product = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    if (!userInfo) {
+      toast.error("Please log in to submit a review.");
+      return;
+    }
+
     try {
       await createReview({
         productId,
-        rating,
+        rating: reviewRating,
         comment,
       }).unwrap();
       refetch();
@@ -86,7 +91,7 @@ const Product = () => {
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full  xl:w-[50rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] mr-[2rem]"
+                className="w-full xl:w-[50rem] lg:w-[45rem] md:w-[30rem] sm:w-[20rem] mr-[2rem]"
               />
               <HeartIcon product={product} />
             </div>
@@ -97,7 +102,6 @@ const Product = () => {
                 {product.description}
               </p>
               <p className="text-5xl my-4 font-extrabold">${product.price}</p>
-              {/* --------------------------------------------------- */}
 
               <div className="flex items-center justify-between w-[20rem]">
                 <div className="one">
@@ -117,7 +121,8 @@ const Product = () => {
 
                 <div className="two">
                   <h1 className="flex items-center mb-6">
-                    <FaStar className="mr-2 text-white" /> Ratings: {rating}
+                    <FaStar className="mr-2 text-white" /> Ratings:{" "}
+                    {product.rating}
                   </h1>
                   <h1 className="flex items-center mb-6">
                     <FaShoppingCart className="mr-2 text-white" /> Quantity:{" "}
@@ -137,10 +142,14 @@ const Product = () => {
                 />
 
                 {product.countInStock > 0 && (
-                  <div className="">
+                  <div>
                     <select
                       value={qty}
-                      onChange={(e) => setQty(Number(e.target.value))}
+                      onChange={(e) =>
+                        setQty(
+                          Math.min(Number(e.target.value), product.countInStock)
+                        )
+                      }
                       className="p-2 w-[6rem] rounded-lg text-black"
                     >
                       {[...Array(product.countInStock).keys()].map((x) => (
@@ -162,7 +171,6 @@ const Product = () => {
                   Add To Cart
                 </button>
               </div>
-              {/* --------------------------------------------------- */}
             </div>
           </div>
 
@@ -171,8 +179,8 @@ const Product = () => {
               loadingProductReview={loadingProductReview}
               userInfo={userInfo}
               submitHandler={submitHandler}
-              rating={rating}
-              setRating={setRating}
+              rating={reviewRating}
+              setRating={setReviewRating}
               comment={comment}
               setComment={setComment}
               product={product}

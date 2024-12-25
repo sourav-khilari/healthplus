@@ -14,29 +14,29 @@ const AdminMenu = () => {
       <button
         className={`${
           isMenuOpen ? "top-2 right-2" : "top-5 right-7"
-        } bg-[#151515] p-2 fixed rounded-lg`}
+        } bg-white p-2 fixed rounded-lg shadow-lg border border-blue-200`}
         onClick={toggleMenu}
       >
         {isMenuOpen ? (
-          <FaTimes color="white" />
+          <FaTimes color="#000080" />
         ) : (
           <>
-            <div className="w-6 h-0.5 bg-gray-200 my-1"></div>
-            <div className="w-6 h-0.5 bg-gray-200 my-1"></div>
-            <div className="w-6 h-0.5 bg-gray-200 my-1"></div>
+            <div className="w-6 h-0.5 bg-blue-800 my-1"></div>
+            <div className="w-6 h-0.5 bg-blue-800 my-1"></div>
+            <div className="w-6 h-0.5 bg-blue-800 my-1"></div>
           </>
         )}
       </button>
 
       {isMenuOpen && (
-        <section className="bg-[#151515] p-4 fixed right-7 top-5">
+        <section className="bg-white p-4 fixed right-7 top-5 shadow-lg border border-blue-200 rounded-lg">
           <ul className="list-none mt-2">
             <li>
               <NavLink
-                className="list-item py-2 px-3 block mb-5 hover:bg-[#2E2D2D] rounded-sm"
+                className="list-item py-2 px-3 block mb-5 hover:bg-[#E0F0FF] rounded-sm"
                 to="/medstore/admin/dashboard"
                 style={({ isActive }) => ({
-                  color: isActive ? "greenyellow" : "white",
+                  color: isActive ? "#1E90FF" : "#000080",
                 })}
               >
                 Admin Dashboard
@@ -44,10 +44,10 @@ const AdminMenu = () => {
             </li>
             <li>
               <NavLink
-                className="list-item py-2 px-3 block mb-5 hover:bg-[#2E2D2D] rounded-sm"
+                className="list-item py-2 px-3 block mb-5 hover:bg-[#E0F0FF] rounded-sm"
                 to="/medstore/admin/categorylist"
                 style={({ isActive }) => ({
-                  color: isActive ? "greenyellow" : "white",
+                  color: isActive ? "#1E90FF" : "#000080",
                 })}
               >
                 Create Category
@@ -55,10 +55,10 @@ const AdminMenu = () => {
             </li>
             <li>
               <NavLink
-                className="list-item py-2 px-3 block mb-5 hover:bg-[#2E2D2D] rounded-sm"
+                className="list-item py-2 px-3 block mb-5 hover:bg-[#E0F0FF] rounded-sm"
                 to="/medstore/admin/productlist"
                 style={({ isActive }) => ({
-                  color: isActive ? "greenyellow" : "white",
+                  color: isActive ? "#1E90FF" : "#000080",
                 })}
               >
                 Create Product
@@ -66,10 +66,10 @@ const AdminMenu = () => {
             </li>
             <li>
               <NavLink
-                className="list-item py-2 px-3 block mb-5 hover:bg-[#2E2D2D] rounded-sm"
+                className="list-item py-2 px-3 block mb-5 hover:bg-[#E0F0FF] rounded-sm"
                 to="/admin/allproductslist"
                 style={({ isActive }) => ({
-                  color: isActive ? "greenyellow" : "white",
+                  color: isActive ? "#1E90FF" : "#000080",
                 })}
               >
                 All Products
@@ -77,10 +77,10 @@ const AdminMenu = () => {
             </li>
             <li>
               <NavLink
-                className="list-item py-2 px-3 block mb-5 hover:bg-[#2E2D2D] rounded-sm"
+                className="list-item py-2 px-3 block mb-5 hover:bg-[#E0F0FF] rounded-sm"
                 to="/medstore/admin/userlist"
                 style={({ isActive }) => ({
-                  color: isActive ? "greenyellow" : "white",
+                  color: isActive ? "#1E90FF" : "#000080",
                 })}
               >
                 Manage Users
@@ -88,10 +88,10 @@ const AdminMenu = () => {
             </li>
             <li>
               <NavLink
-                className="list-item py-2 px-3 block mb-5 hover:bg-[#2E2D2D] rounded-sm"
+                className="list-item py-2 px-3 block mb-5 hover:bg-[#E0F0FF] rounded-sm"
                 to="/medstore/admin/orderlist"
                 style={({ isActive }) => ({
-                  color: isActive ? "greenyellow" : "white",
+                  color: isActive ? "#1E90FF" : "#000080",
                 })}
               >
                 Manage Orders

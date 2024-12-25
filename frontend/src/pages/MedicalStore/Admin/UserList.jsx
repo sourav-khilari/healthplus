@@ -58,8 +58,8 @@ const UserList = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-semibold mb-4">Users</h1>
+    <div className="p-4 bg-white text-blue-900">
+      <h1 className="text-2xl font-semibold mb-4 text-blue-600">Users</h1>
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -69,8 +69,8 @@ const UserList = () => {
       ) : (
         <div className="flex flex-col md:flex-row">
           {/* <AdminMenu /> */}
-          <table className="w-full md:w-4/5 mx-auto">
-            <thead>
+          <table className="w-full md:w-4/5 mx-auto table-auto">
+            <thead className="bg-blue-100">
               <tr>
                 <th className="px-4 py-2 text-left">ID</th>
                 <th className="px-4 py-2 text-left">NAME</th>
@@ -81,7 +81,7 @@ const UserList = () => {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user._id}>
+                <tr key={user._id} className="border-b">
                   <td className="px-4 py-2">{user._id}</td>
                   <td className="px-4 py-2">
                     {editableUserId === user._id ? (
@@ -106,8 +106,9 @@ const UserList = () => {
                           onClick={() =>
                             toggleEdit(user._id, user.username, user.email)
                           }
+                          className="ml-2 text-blue-500"
                         >
-                          <FaEdit className="ml-[1rem]" />
+                          <FaEdit />
                         </button>
                       </div>
                     )}
@@ -130,13 +131,19 @@ const UserList = () => {
                       </div>
                     ) : (
                       <div className="flex items-center">
-                        <a href={`mailto:${user.email}`}>{user.email}</a>{" "}
+                        <a
+                          href={`mailto:${user.email}`}
+                          className="text-blue-600 hover:underline"
+                        >
+                          {user.email}
+                        </a>{" "}
                         <button
                           onClick={() =>
-                            toggleEdit(user._id, user.name, user.email)
+                            toggleEdit(user._id, user.username, user.email)
                           }
+                          className="ml-2 text-blue-500"
                         >
-                          <FaEdit className="ml-[1rem]" />
+                          <FaEdit />
                         </button>
                       </div>
                     )}

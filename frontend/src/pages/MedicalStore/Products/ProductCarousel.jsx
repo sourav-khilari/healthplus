@@ -26,16 +26,18 @@ const ProductCarousel = () => {
     autoplaySpeed: 3000,
   };
 
+  if (isLoading) return <Message variant="info">Loading...</Message>;
+  if (error)
+    return (
+      <Message variant="danger">{error?.data?.message || error.error}</Message>
+    );
+
   return (
     <div className="mb-4 lg:block xl:block md:block">
-      {isLoading ? null : error ? (
-        <Message variant="danger">
-          {error?.data?.message || error.error}
-        </Message>
-      ) : (
+      {products && products.length > 0 ? (
         <Slider
           {...settings}
-          className="xl:w-[50rem]  lg:w-[50rem] md:w-[56rem] sm:w-[40rem] sm:block"
+          className="xl:w-[50rem] lg:w-[50rem] md:w-[56rem] sm:w-[40rem] sm:block"
         >
           {products.map(
             ({
@@ -60,40 +62,37 @@ const ProductCarousel = () => {
 
                 <div className="mt-4 flex justify-between">
                   <div className="one">
-                    <h2>{name}</h2>
-                    <p> $ {price}</p> <br /> <br />
-                    <p className="w-[25rem]">
+                    <h2 className="text-white">{name}</h2>
+                    <p className="text-pink-500">${price}</p> <br /> <br />
+                    <p className="w-[25rem] text-gray-300">
                       {description.substring(0, 170)} ...
                     </p>
                   </div>
 
                   <div className="flex justify-between w-[20rem]">
-                    <div className="one">
+                    <div className="one text-white">
                       <h1 className="flex items-center mb-6">
-                        <FaStore className="mr-2 text-white" /> Brand: {brand}
+                        <FaStore className="mr-2" /> Brand: {brand}
                       </h1>
                       <h1 className="flex items-center mb-6">
-                        <FaClock className="mr-2 text-white" /> Added:{" "}
+                        <FaClock className="mr-2" /> Added:{" "}
                         {moment(createdAt).fromNow()}
                       </h1>
                       <h1 className="flex items-center mb-6">
-                        <FaStar className="mr-2 text-white" /> Reviews:
-                        {numReviews}
+                        <FaStar className="mr-2" /> Reviews: {numReviews}
                       </h1>
                     </div>
 
-                    <div className="two">
+                    <div className="two text-white">
                       <h1 className="flex items-center mb-6">
-                        <FaStar className="mr-2 text-white" /> Ratings:{" "}
+                        <FaStar className="mr-2" /> Ratings:{" "}
                         {Math.round(rating)}
                       </h1>
                       <h1 className="flex items-center mb-6">
-                        <FaShoppingCart className="mr-2 text-white" /> Quantity:{" "}
-                        {quantity}
+                        <FaShoppingCart className="mr-2" /> Quantity: {quantity}
                       </h1>
                       <h1 className="flex items-center mb-6">
-                        <FaBox className="mr-2 text-white" /> In Stock:{" "}
-                        {countInStock}
+                        <FaBox className="mr-2" /> In Stock: {countInStock}
                       </h1>
                     </div>
                   </div>
@@ -102,6 +101,8 @@ const ProductCarousel = () => {
             )
           )}
         </Slider>
+      ) : (
+        <Message variant="info">No products available.</Message>
       )}
     </div>
   );

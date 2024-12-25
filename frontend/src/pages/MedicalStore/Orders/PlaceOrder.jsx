@@ -10,9 +10,7 @@ import { clearCartItems } from "../../redux/features/cart/cartSlice";
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
-
   const cart = useSelector((state) => state.cart);
-
   const [createOrder, { isLoading, error }] = useCreateOrderMutation();
 
   useEffect(() => {
@@ -51,7 +49,7 @@ const PlaceOrder = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <thead>
+              <thead className="bg-blue-500 text-white">
                 <tr>
                   <td className="px-1 py-2 text-left align-top">Image</td>
                   <td className="px-1 py-2 text-left">Product</td>
@@ -63,7 +61,7 @@ const PlaceOrder = () => {
 
               <tbody>
                 {cart.cartItems.map((item, index) => (
-                  <tr key={index}>
+                  <tr key={index} className="border-b">
                     <td className="p-2">
                       <img
                         src={item.image}
@@ -73,7 +71,12 @@ const PlaceOrder = () => {
                     </td>
 
                     <td className="p-2">
-                      <Link to={`/product/${item.product}`}>{item.name}</Link>
+                      <Link
+                        to={`/product/${item.product}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {item.name}
+                      </Link>
                     </td>
                     <td className="p-2">{item.qty}</td>
                     <td className="p-2">{item.price.toFixed(2)}</td>
@@ -88,8 +91,10 @@ const PlaceOrder = () => {
         )}
 
         <div className="mt-8">
-          <h2 className="text-2xl font-semibold mb-5">Order Summary</h2>
-          <div className="flex justify-between flex-wrap p-8 bg-[#181818]">
+          <h2 className="text-2xl font-semibold mb-5 text-blue-600">
+            Order Summary
+          </h2>
+          <div className="flex justify-between flex-wrap p-8 bg-white border border-gray-300 shadow-sm">
             <ul className="text-lg">
               <li>
                 <span className="font-semibold mb-4">Items:</span> $
@@ -112,7 +117,9 @@ const PlaceOrder = () => {
             {error && <Message variant="danger">{error.data.message}</Message>}
 
             <div>
-              <h2 className="text-2xl font-semibold mb-4">Shipping</h2>
+              <h2 className="text-xl font-semibold mb-4 text-blue-600">
+                Shipping
+              </h2>
               <p>
                 <strong>Address:</strong> {cart.shippingAddress.address},{" "}
                 {cart.shippingAddress.city} {cart.shippingAddress.postalCode},{" "}
@@ -121,14 +128,16 @@ const PlaceOrder = () => {
             </div>
 
             <div>
-              <h2 className="text-2xl font-semibold mb-4">Payment Method</h2>
+              <h2 className="text-xl font-semibold mb-4 text-blue-600">
+                Payment Method
+              </h2>
               <strong>Method:</strong> {cart.paymentMethod}
             </div>
           </div>
 
           <button
             type="button"
-            className="bg-pink-500 text-white py-2 px-4 rounded-full text-lg w-full mt-4"
+            className="bg-blue-500 text-white py-2 px-4 rounded-full text-lg w-full mt-4 hover:bg-blue-600"
             disabled={cart.cartItems === 0}
             onClick={placeOrderHandler}
           >

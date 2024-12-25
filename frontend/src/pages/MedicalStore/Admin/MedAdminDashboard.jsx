@@ -25,7 +25,7 @@ const MedAdminDashboard = () => {
       tooltip: {
         theme: "dark",
       },
-      colors: ["#00E396"],
+      colors: ["#1E3A8A"], // Blue color
       dataLabels: {
         enabled: true,
       },
@@ -92,49 +92,57 @@ const MedAdminDashboard = () => {
     <>
       <AdminMenu />
 
-      <section className="xl:ml-[4rem] md:ml-[0rem]">
-        <div className="w-[80%] flex justify-around flex-wrap">
-          <div className="rounded-lg bg-black p-5 w-[20rem] mt-5">
-            <div className="font-bold rounded-full w-[3rem] bg-pink-500 text-center p-3">
+      <section className="xl:ml-[4rem] md:ml-[0rem] px-4 py-6">
+        {/* Dashboard Stats */}
+        <div className="w-full flex justify-between flex-wrap">
+          {/* Sales Card */}
+          <div className="rounded-lg bg-blue-800 p-5 w-[20rem] mt-5 text-white">
+            <div className="font-bold rounded-full w-[3rem] bg-blue-500 text-center p-3">
               $
             </div>
 
             <p className="mt-5">Sales</p>
             <h1 className="text-xl font-bold">
-              $ {isLoading ? <Loader /> : sales.totalSales.toFixed(2)}
+              {isLoading ? <Loader /> : `$${sales?.totalSales.toFixed(2)}`}
             </h1>
           </div>
-          <div className="rounded-lg bg-black p-5 w-[20rem] mt-5">
-            <div className="font-bold rounded-full w-[3rem] bg-pink-500 text-center p-3">
-              $
+
+          {/* Customers Card */}
+          <div className="rounded-lg bg-blue-800 p-5 w-[20rem] mt-5 text-white">
+            <div className="font-bold rounded-full w-[3rem] bg-blue-500 text-center p-3">
+              C
             </div>
 
             <p className="mt-5">Customers</p>
             <h1 className="text-xl font-bold">
-              $ {isLoading ? <Loader /> : customers?.length}
+              {loading ? <Loader /> : customers?.length}
             </h1>
           </div>
-          <div className="rounded-lg bg-black p-5 w-[20rem] mt-5">
-            <div className="font-bold rounded-full w-[3rem] bg-pink-500 text-center p-3">
-              $
+
+          {/* Orders Card */}
+          <div className="rounded-lg bg-blue-800 p-5 w-[20rem] mt-5 text-white">
+            <div className="font-bold rounded-full w-[3rem] bg-blue-500 text-center p-3">
+              O
             </div>
 
             <p className="mt-5">All Orders</p>
             <h1 className="text-xl font-bold">
-              $ {isLoading ? <Loader /> : orders?.totalOrders}
+              {loadingTwo ? <Loader /> : orders?.totalOrders}
             </h1>
           </div>
         </div>
 
-        <div className="ml-[10rem] mt-[4rem]">
+        {/* Sales Chart */}
+        <div className="w-full mt-[4rem] flex justify-center">
           <Chart
             options={state.options}
             series={state.series}
-            type="bar"
-            width="70%"
+            type="line" // Changed to 'line' for a better trend view
+            width="90%" // Adjusted for responsiveness
           />
         </div>
 
+        {/* Orders List */}
         <div className="mt-[4rem]">
           <OrderList />
         </div>

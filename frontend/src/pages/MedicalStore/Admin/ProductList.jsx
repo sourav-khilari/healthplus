@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
 
 const ProductList = () => {
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -18,14 +18,22 @@ const ProductList = () => {
   const [brand, setBrand] = useState("");
   const [stock, setStock] = useState(0);
   const [imageUrl, setImageUrl] = useState(null);
+  const [loadingImage, setLoadingImage] = useState(false); // Added loading state
   const navigate = useNavigate();
 
   const [uploadProductImage] = useUploadProductImageMutation();
   const [createProduct] = useCreateProductMutation();
-  const { data: categories } = useFetchCategoriesQuery();
+  const { data: categories, isLoading: categoriesLoading } =
+    useFetchCategoriesQuery();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    if (!name || !price || !category || !quantity || !image) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
 
     try {
       const productData = new FormData();
@@ -41,18 +49,19 @@ const ProductList = () => {
       const { data } = await createProduct(productData);
 
       if (data.error) {
-        toast.error("Product create failed. Try Again.");
+        toast.error("Product creation failed. Try again.");
       } else {
-        toast.success(`${data.name} is created`);
+        toast.success(`${data.name} is created successfully.`);
         navigate("/");
       }
     } catch (error) {
       console.error(error);
-      toast.error("Product create failed. Try Again.");
+      toast.error("Product creation failed. Please try again.");
     }
   };
 
   const uploadFileHandler = async (e) => {
+    setLoadingImage(true); // Show loading state when uploading
     const formData = new FormData();
     formData.append("image", e.target.files[0]);
 
@@ -63,6 +72,8 @@ const ProductList = () => {
       setImageUrl(res.image);
     } catch (error) {
       toast.error(error?.data?.message || error.error);
+    } finally {
+      setLoadingImage(false); // Hide loading state after upload
     }
   };
 
@@ -78,7 +89,7 @@ const ProductList = () => {
               <img
                 src={imageUrl}
                 alt="product"
-                className="block mx-auto max-h-[200px]"
+                className="block mx-auto max-h-[200px] rounded-md"
               />
             </div>
           )}
@@ -95,6 +106,10 @@ const ProductList = () => {
                 className={!image ? "hidden" : "text-white"}
               />
             </label>
+            {loadingImage && (
+              <div className="text-center mt-2 text-pink-600">Uploading...</div>
+            )}{" "}
+            {/* Loading indicator */}
           </div>
 
           <div className="p-3">
@@ -108,8 +123,8 @@ const ProductList = () => {
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div className="two ml-10 ">
-                <label htmlFor="name block">Price</label> <br />
+              <div className="two ml-10">
+                <label htmlFor="price">Price</label> <br />
                 <input
                   type="number"
                   className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
@@ -118,9 +133,10 @@ const ProductList = () => {
                 />
               </div>
             </div>
+
             <div className="flex flex-wrap">
               <div className="one">
-                <label htmlFor="name block">Quantity</label> <br />
+                <label htmlFor="quantity">Quantity</label> <br />
                 <input
                   type="number"
                   className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
@@ -128,8 +144,8 @@ const ProductList = () => {
                   onChange={(e) => setQuantity(e.target.value)}
                 />
               </div>
-              <div className="two ml-10 ">
-                <label htmlFor="name block">Brand</label> <br />
+              <div className="two ml-10">
+                <label htmlFor="brand">Brand</label> <br />
                 <input
                   type="text"
                   className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
@@ -139,11 +155,10 @@ const ProductList = () => {
               </div>
             </div>
 
-            <label htmlFor="" className="my-5">
+            <label htmlFor="description" className="my-5">
               Description
             </label>
             <textarea
-              type="text"
               className="p-2 mb-3 bg-[#101011] border rounded-lg w-[95%] text-white"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -151,9 +166,9 @@ const ProductList = () => {
 
             <div className="flex justify-between">
               <div>
-                <label htmlFor="name block">Count In Stock</label> <br />
+                <label htmlFor="stock">Count In Stock</label> <br />
                 <input
-                  type="text"
+                  type="number"
                   className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
                   value={stock}
                   onChange={(e) => setStock(e.target.value)}
@@ -161,17 +176,21 @@ const ProductList = () => {
               </div>
 
               <div>
-                <label htmlFor="">Category</label> <br />
+                <label htmlFor="category">Category</label> <br />
                 <select
-                  placeholder="Choose Category"
                   className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
                   onChange={(e) => setCategory(e.target.value)}
+                  disabled={categoriesLoading} // Disable select during loading
                 >
-                  {categories?.map((c) => (
-                    <option key={c._id} value={c._id}>
-                      {c.name}
-                    </option>
-                  ))}
+                  {categoriesLoading ? (
+                    <option>Loading...</option>
+                  ) : (
+                    categories?.map((c) => (
+                      <option key={c._id} value={c._id}>
+                        {c.name}
+                      </option>
+                    ))
+                  )}
                 </select>
               </div>
             </div>
