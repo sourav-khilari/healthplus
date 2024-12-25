@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetFilteredProductsQuery } from "../redux/api/productApiSlice";
+import { useGetFilteredProductsQuery } from "./redux/api/productApiSlice";
 import { useFetchCategoriesQuery } from "../redux/api/categoryApiSlice";
 
 import {
@@ -9,7 +9,7 @@ import {
   setChecked,
   setPriceFilter,
 } from "../redux/features/shop/shopSlice";
-import Loader from "../components/Loader";
+import Loader from "../Components/Loader";
 import ProductCard from "./Products/ProductCard";
 
 const Shop = () => {

@@ -1,15 +1,15 @@
 import Chart from "react-apexcharts";
-import { useGetUsersQuery } from "../../redux/api/usersApiSlice";
+import { useGetUsersQuery } from "../redux/api/usersApiSlice";
 import {
   useGetTotalOrdersQuery,
   useGetTotalSalesByDateQuery,
   useGetTotalSalesQuery,
-} from "../../redux/api/orderApiSlice";
+} from "../redux/api/orderApiSlice";
 
 import { useState, useEffect } from "react";
 import AdminMenu from "./AdminMenu";
 import OrderList from "./OrderList";
-import Loader from "../../components/Loader";
+import Loader from "../components/Loader";
 
 const MedAdminDashboard = () => {
   const { data: sales, isLoading } = useGetTotalSalesQuery();

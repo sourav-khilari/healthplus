@@ -3,14 +3,14 @@ import { Link, useParams } from "react-router-dom";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import Messsage from "../../components/Message";
-import Loader from "../../components/Loader";
+import Messsage from "../components/Message";
+import Loader from "../components/Loader";
 import {
   useDeliverOrderMutation,
   useGetOrderDetailsQuery,
   useGetPaypalClientIdQuery,
   usePayOrderMutation,
-} from "../../redux/api/orderApiSlice";
+} from "../redux/api/orderApiSlice";
 
 const Order = () => {
   const { id: orderId } = useParams();
@@ -121,7 +121,7 @@ const Order = () => {
                       </td>
                       <td className="p-2">
                         <Link
-                          to={`/product/${item.product}`}
+                          to={`/fetchProductById/${item.product}`}
                           className="text-blue-600 hover:underline"
                         >
                           {item.name}

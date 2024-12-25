@@ -26,7 +26,7 @@ const AllProducts = () => {
               {products.map((product) => (
                 <Link
                   key={product._id}
-                  to={`/medstore/admin/product/${product._id}`}
+                  to={`/medstore/admin/fetchProductById/${product._id}`}
                   className="block mb-4 overflow-hidden shadow-md rounded-lg bg-white hover:shadow-lg"
                 >
                   <div className="flex">
@@ -52,7 +52,7 @@ const AllProducts = () => {
 
                       <div className="flex justify-between items-center">
                         <Link
-                          to={`/medstore/admin/update/${product._id}`}
+                          to={`/medstore/admin/${product._id}`}
                           className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                         >
                           Update Product
