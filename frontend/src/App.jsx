@@ -24,18 +24,18 @@ import UserDashboard from "./pages/UserDashboard";
 import HospitalDashboard from "./pages/HospitalDashboard";
 import FindPharmacy from "./pages/FindPharmacy";
 import FindHospital from "./pages/FindHospital";
-import MedStore from "./pages/MedicalStore/MedStore";
+import MedStore from "./pages/MedicalStore/MedStore.jsx";
 
 //med store 
-import AdminRoute from "./pages/MedicalStore/Admin/AdminRoute";
-import Profile from "./pages/MedicalStore/User/Profile";
-import UserList from "./pages/MedicalStore/Admin/UserList";
+import AdminRoute from "./pages/MedicalStore/Admin/AdminRoute.jsx";
+import Profile from "./pages/MedicalStore/User/Profile.jsx";
+import UserList from "./pages/MedicalStore/Admin/UserList.jsx";
 
-import CategoryList from "./pages/MedicalStore/Admin/CategoryList";
+import CategoryList from "./pages/MedicalStore/Admin/CategoryList.jsx";
 
-import ProductList from "./pages/MedicalStore/Admin/ProductList";
-import AllProducts from "./pages/MedicalStore/Admin/AllProducts";
-import ProductUpdate from "./pages/MedicalStore/Admin/ProductUpdate";
+import ProductList from "./pages/MedicalStore/Admin/ProductList.jsx";
+import AllProducts from "./pages/MedicalStore/Admin/AllProducts.jsx";
+import ProductUpdate from "./pages/MedicalStore/Admin/ProductUpdate.jsx";
 
 import Favorites from "./pages/MedicalStore/Products/Favorites.jsx";
 import ProductDetails from "./pages/MedicalStore/Products/ProductDetails.jsx";

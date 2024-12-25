@@ -5,7 +5,7 @@ import { addToCart } from "../../redux/features/cart/cartSlice";
 import { toast } from "react-toastify";
 import HeartIcon from "./HeartIcon";
 
-const ProductCard = ({ p }) => {
+const ProductCard = ({ pr }) => {
   const dispatch = useDispatch();
 
   const addToCartHandler = (product, qty) => {
@@ -19,14 +19,14 @@ const ProductCard = ({ p }) => {
   return (
     <div className="max-w-sm relative bg-[#1A1A1A] rounded-lg shaodw dark:bg-gray-800 dark:border-gray-700">
       <section className="relative">
-        <Link to={`/product/${p._id}`}>
+        <Link to={`/product/${pr._id}`}>
           <span className="absolute bottom-3 right-3 bg-pink-100 text-pink-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-pink-900 dark:text-pink-300">
-            {p?.brand}
+            {pr?.brand}
           </span>
           <img
             className="cursor-pointer w-full"
-            src={p.image}
-            alt={p.name}
+            src={pr.image}
+            alt={pr.name}
             style={{ height: "170px", objectFit: "cover" }}
           />
         </Link>
@@ -38,7 +38,7 @@ const ProductCard = ({ p }) => {
           <h5 className="mb-2 text-xl text-whiet dark:text-white">{p?.name}</h5>
 
           <p className="text-black font-semibold text-pink-500">
-            {p?.price?.toLocaleString("en-US", {
+            {pr?.price?.toLocaleString("en-US", {
               style: "currency",
               currency: "USD",
             })}
@@ -46,7 +46,7 @@ const ProductCard = ({ p }) => {
         </div>
 
         <p className="mb-3 font-normal text-[#CFCFCF]">
-          {p?.description?.substring(0, 60)} ...
+          {pr?.description?.substring(0, 60)} ...
         </p>
 
         <section className="flex justify-between items-center">
