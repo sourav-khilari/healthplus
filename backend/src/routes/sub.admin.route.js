@@ -56,7 +56,11 @@ router.put("/:id/deliver", roleMiddleware("admin"), markOrderAsDelivered);
 
 
 router.get("/", fetchProducts)
-router.post("/addProduct", roleMiddleware("admin"), formidable(), addProduct);
+//router.post("/addProduct", roleMiddleware("admin"),, addProduct);//
+
+router.post("/addProduct", roleMiddleware("admin"), upload.fields([{ name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }, { name: 'image3', maxCount: 1 }, { name: 'image4', maxCount: 1 }]), addProduct);
+
+
 
 router.get("/allproducts", fetchAllProducts);
 
@@ -67,7 +71,8 @@ router.get("/new", fetchNewProducts);
 
 
 router.get("/:id", fetchProductById)
-router.put("/:id", roleMiddleware("admin"), formidable(), updateProductDetails)
+router.put("/:id", roleMiddleware("admin"), upload.fields([{ name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }, { name: 'image3', maxCount: 1 }, { name: 'image4', maxCount: 1 }])
+  , updateProductDetails)//
 router.delete("/:id", roleMiddleware("admin"), removeProduct);
 
 router.route("/filtered-products").post(filterProducts);
