@@ -1,5 +1,6 @@
-import Category from "../../models/medical.store.model/categoryModel.js";
-import { asyncHandler } from "../../utils/asyncHandler.js";
+import Category from "../../models/medical.store.model/category.model.js";
+import {asyncHandler} from "../../utils/asyncHandler.js";
+import { ApiError } from "../../utils/ApiError.js";
 
 const createCategory = asyncHandler(async (req, res) => {
   try {

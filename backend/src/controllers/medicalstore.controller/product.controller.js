@@ -1,5 +1,5 @@
 import { asyncHandler } from "../../utils/asyncHandler.js";
-import Product from "../../models/medical.store.model/productModel.js";
+import Product from "../../models/medical.store.model/product.model.js";
 import { uploadOnCloudinary } from "../../utils/cloudnary.js";
 // const addProduct = asyncHandler(async (req, res) => {
 //   try {
