@@ -5,10 +5,18 @@ const patientSchema = mongoose.Schema({
     name: { type: String, required: true },
     dob: { type: String },
     email: { type: String },
-    contact: { type:String } ,
+    contact: { type: String },
     details: { type: Object },
+    medicalDetails: [
+        {
+            patientId: String,
+            fileUrl: String,
+            description: String,
+            uploadedAt: Date,
+        },
+    ],
     otp: { type: String },
     otpExpiration: { type: Date },
 }, { timestamps: true });
 
-export const Patient= mongoose.model('Patient', patientSchema);
+export const Patient = mongoose.model('Patient', patientSchema);
