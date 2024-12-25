@@ -86,7 +86,7 @@ router.get("/allproducts", fetchAllProducts);
 router.get("/top", fetchTopProducts);
 router.get("/new", fetchNewProducts);
 
-router.get("/:id", fetchProductById);
+router.get("/fetchProductById/:id", fetchProductById);
 router.put(
   "/:id",
   roleMiddleware("admin"),
