@@ -90,8 +90,8 @@ router.post('/uploadMedicalDetails', roleMiddleware("user"), upload.single("medi
 
 
 router.get("/mine", roleMiddleware("user"), getUserOrders);
-router.get("/:id", roleMiddleware("user"),readCategory);
-router.get("/:id", roleMiddleware("user"), findOrderById);
+router.get("/readCategory/:id", roleMiddleware("user"),readCategory);
+router.get("/findOrderById/:id", roleMiddleware("user"), findOrderById);
 router.put("/:id/pay", roleMiddleware("user"), markOrderAsPaid);
 
 router.post("/createOrder",roleMiddleware("user"), createOrder)
@@ -101,7 +101,7 @@ router.get("/new", fetchNewProducts);
 
 router.get("/allproducts",fetchAllProducts);
 router.route("/filtered-products").post(filterProducts);
-router.get("/:id",fetchProductById)
+router.get("/fetchProductById/:id",fetchProductById)
 router.post("/:id/reviews",roleMiddleware("user"), addProductReview);
 
 export default router
