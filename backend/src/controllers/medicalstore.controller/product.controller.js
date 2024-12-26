@@ -32,6 +32,7 @@ import { uploadOnCloudinary } from "../../utils/cloudnary.js";
 
 const addProduct = asyncHandler(async (req, res) => {
   try {
+    console.log("\n add product \n");
     const { name, description, price, category, quantity, brand } = req.fields;
 
     // Validation
@@ -73,7 +74,7 @@ const addProduct = asyncHandler(async (req, res) => {
       ...req.fields,
       image: imageUrls.map((url) => url.secure_url),
     });
-
+    console.log("\n add product \n");
     await product.save();
     res.json(product);
   } catch (error) {

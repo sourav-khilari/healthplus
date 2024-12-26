@@ -7,6 +7,7 @@ import {
 import { useFetchCategoriesQuery } from "../redux/api/categoryApiSlice";
 import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
+import axios from "axios"
 
 const ProductList = () => {
   const [image, setImage] = useState([]);
@@ -27,6 +28,10 @@ const ProductList = () => {
     useFetchCategoriesQuery();
 
 
+    const axiosInstance = axios.create({
+      baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+      withCredentials: true, // For handling cookies
+    });
 
   const uploadFileHandler = async (e) => {
     setLoadingImage(true);
@@ -41,6 +46,7 @@ const ProductList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("123");
     // Basic validation
     if (!name || !price || !category || !quantity || !image) {
       toast.error("Please fill in all fields.");
@@ -58,13 +64,15 @@ const ProductList = () => {
       productData.append("quantity", quantity);
       productData.append("brand", brand);
       productData.append("countInStock", stock);
-      const { data } = await createProduct(productData);
-      if (data.error) {
-        toast.error("Product creation failed. Try again.");
-      } else {
-        toast.success(`${data.name} is created successfully.`);
-        navigate("/");
-      }
+      //const { data } = await createProduct(productData).unwrap();
+      const pr=await axiosInstance.post("/admin/addProduct",productData)
+      // if (pr.response.error) {
+      //   toast.error("Product creation failed. Try again.");
+      // } else {
+      //   toast.success(`${data.name} is created successfully.`);
+      //   navigate("/");
+      // }
+      toast.success(` is created successfully.`);
     } catch (error) {
       console.error(error);
       toast.error("Product creation failed. Please try again.");
@@ -79,15 +87,7 @@ const ProductList = () => {
         <div className="md:w-3/4 p-3">
           <div className="h-12">Create Product</div>
 
-          {/* {imageUrl && (
-            <div className="text-center">
-              <img
-                src={imageUrl}
-                alt="product"
-                className="block mx-auto max-h-[200px] rounded-md"
-              />
-            </div>
-          )} */}
+          
 
 
           {imageUrl.length > 0 && (
@@ -105,23 +105,7 @@ const ProductList = () => {
 
 
 
-          {/* <div className="mb-3">
-            <label className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
-              {image ? image.name : "Upload Image"}
-
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={uploadFileHandler}
-                className={!image ? "hidden" : "text-white"}
-              />
-            </label>
-            {loadingImage && (
-              <div className="text-center mt-2 text-pink-600">Uploading...</div>
-            )}{" "}
-            Loading indicator
-          </div>  */}
+         
           <label
             className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11"
           >
