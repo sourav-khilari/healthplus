@@ -102,7 +102,7 @@ router.get("/top", fetchTopProducts);
 router.get("/new", fetchNewProducts);
 
 router.get("/allproducts",fetchAllProducts);
-router.route("/filtered-products").post(filterProducts);
+router.post("/filtered-products",filterProducts);
 router.get("/fetchProductById/:id",fetchProductById)
 router.post("/:id/reviews",roleMiddleware("user"), addProductReview);
 
