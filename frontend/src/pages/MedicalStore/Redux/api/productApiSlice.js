@@ -1,11 +1,11 @@
-import { PRODUCT_URL, UPLOAD_URL } from "../constants";
+import { USERS_URL, ADMIN_URL } from "../constants";
 import { apiSlice } from "./apiSlice";
 
 export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: ({ keyword }) => ({
-        url: `${PRODUCT_URL}/user/allproducts`,
+        url: `${USERS_URL}/allproducts`,
         params: { keyword },
       }),
       keepUnusedDataFor: 5,
@@ -13,33 +13,32 @@ export const productApiSlice = apiSlice.injectEndpoints({
     }),
 
     getProductById: builder.query({
-      query: (productId) => `${PRODUCT_URL}/admin/${productId}`,
+      query: (productId) => `${ADMIN_URL}/fetchProductById/${productId}`,
       providesTags: (result, error, productId) => [
         { type: "Product", id: productId },
       ],
     }),
 
     allProducts: builder.query({
-      query: () => `${PRODUCT_URL}/admin/allProducts`,
+      query: () => `${ADMIN_URL}/allProducts`,
     }),
 
     getProductDetails: builder.query({
       query: (productId) => ({
-        url: `${PRODUCT_URL}/admin/fetchProductById/${productId}`,
+        url: `${ADMIN_URL}/fetchProductById/${productId}`,
       }),
       keepUnusedDataFor: 5,
     }),
     //doubt1
     getProductDetail: builder.query({
       query: (productId) => ({
-        url: `${PRODUCT_URL}/user/fetchProductById/${productId}`,
+        url: `${USERS_URL}/fetchProductById/${productId}`,
       }),
       keepUnusedDataFor: 5,
     }),
-    //doubt
     createProduct: builder.mutation({
       query: (productData) => ({
-        url: `${PRODUCT_URL}/admin`,
+        url: `${ADMIN_URL}/addProduct`,
         method: "POST",
         body: productData,
       }),
@@ -48,7 +47,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     updateProduct: builder.mutation({
       query: ({ productId, formData }) => ({
-        url: `${PRODUCT_URL}/admin/${productId}`,
+        url: `${ADMIN_URL}/${productId}`,
         method: "PUT",
         body: formData,
       }),
@@ -56,7 +55,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     uploadProductImage: builder.mutation({
       query: (data) => ({
-        url: `${UPLOAD_URL}/admin/${data}`,
+        url: `${ADMIN_URL}/${data}`,
         method: "POST",
         body: data,
       }),
@@ -64,7 +63,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     deleteProduct: builder.mutation({
       query: (productId) => ({
-        url: `${PRODUCT_URL}/admin/removeProduct/${productId}`,
+        url: `${ADMIN_URL}/removeProduct/${productId}`,
         method: "DELETE",
       }),
       providesTags: ["Product"],
@@ -72,25 +71,25 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     createReview: builder.mutation({
       query: (data) => ({
-        url: `${PRODUCT_URL}/user/${data.productId}/reviews`,
+        url: `${USERS_URL}/${data.productId}/reviews`,
         method: "POST",
         body: data,
       }),
     }),
 
     getTopProducts: builder.query({
-      query: () => `${PRODUCT_URL}/top`,
+      query: () => `api/v1/top`,
       keepUnusedDataFor: 5,
     }),
 
     getNewProducts: builder.query({
-      query: () => `${PRODUCT_URL}/new`,
+      query: () => `api/v1/new`,
       keepUnusedDataFor: 5,
     }),
 
     getFilteredProducts: builder.query({
       query: ({ checked, radio }) => ({
-        url: `${PRODUCT_URL}/filtered-products`,
+        url: `api/v1/filtered-products`,
         method: "POST",
         body: { checked, radio },
       }),
