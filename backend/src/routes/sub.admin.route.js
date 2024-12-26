@@ -51,7 +51,7 @@ const router = Router();
 
 //healthplus medstore
 
-router.post("createCategory", roleMiddleware("admin"), createCategory);
+router.post("/createCategory", roleMiddleware("admin"), createCategory);
 router.put("/:categoryId", roleMiddleware("admin"), updateCategory);
 router.delete("/:categoryId", roleMiddleware("admin"), removeCategory);
 
