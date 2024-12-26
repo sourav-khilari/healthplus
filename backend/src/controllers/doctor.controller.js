@@ -74,6 +74,8 @@ const getPatientDetailsId = asyncHandler(async (req, res) => {
 });
 
 
+
+
 export {
     loginDoctor,
     getPatientDetailsId,
