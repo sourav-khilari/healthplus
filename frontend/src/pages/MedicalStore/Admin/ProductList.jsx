@@ -52,6 +52,7 @@ const ProductList = () => {
       toast.error("Please fill in all fields.");
       return;
     }
+    console.log("fill123");
     try {
       const productData = new FormData();
       image.forEach((img, index) => {
@@ -65,7 +66,9 @@ const ProductList = () => {
       productData.append("brand", brand);
       productData.append("countInStock", stock);
       //const { data } = await createProduct(productData).unwrap();
-      const pr=await axiosInstance.post("/admin/addProduct",productData)
+      console.log("before pr123");
+      const pr=await axiosInstance.post("/admin/addProduct",productData);
+      console.log("after pr123");
       // if (pr.response.error) {
       //   toast.error("Product creation failed. Try again.");
       // } else {
