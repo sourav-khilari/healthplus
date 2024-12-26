@@ -5,7 +5,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: ({ keyword }) => ({
-        url: `${PRODUCT_URL}`,
+        url: `${PRODUCT_URL}/user/allproducts`,
         params: { keyword },
       }),
       keepUnusedDataFor: 5,
@@ -13,23 +13,30 @@ export const productApiSlice = apiSlice.injectEndpoints({
     }),
 
     getProductById: builder.query({
-      query: (productId) => `${PRODUCT_URL}/${productId}`,
+      query: (productId) => `${PRODUCT_URL}/admin/${productId}`,
       providesTags: (result, error, productId) => [
         { type: "Product", id: productId },
       ],
     }),
 
     allProducts: builder.query({
-      query: () => `${PRODUCT_URL}/allProducts`,
+      query: () => `${PRODUCT_URL}/admin/allProducts`,
     }),
 
     getProductDetails: builder.query({
       query: (productId) => ({
-        url: `${PRODUCT_URL}/fetchProductById/${productId}`,
+        url: `${PRODUCT_URL}/admin/fetchProductById/${productId}`,
       }),
       keepUnusedDataFor: 5,
     }),
-
+    //doubt1
+    getProductDetail: builder.query({
+      query: (productId) => ({
+        url: `${PRODUCT_URL}/user/fetchProductById/${productId}`,
+      }),
+      keepUnusedDataFor: 5,
+    }),
+    //doubt
     createProduct: builder.mutation({
       query: (productData) => ({
         url: `${PRODUCT_URL}/admin`,
@@ -57,7 +64,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     deleteProduct: builder.mutation({
       query: (productId) => ({
-        url: `${PRODUCT_URL}/admin/${productId}`,
+        url: `${PRODUCT_URL}/admin/removeProduct/${productId}`,
         method: "DELETE",
       }),
       providesTags: ["Product"],
@@ -65,7 +72,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     createReview: builder.mutation({
       query: (data) => ({
-        url: `${PRODUCT_URL}/${data.productId}/reviews`,
+        url: `${PRODUCT_URL}/user/${data.productId}/reviews`,
         method: "POST",
         body: data,
       }),

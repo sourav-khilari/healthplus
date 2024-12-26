@@ -13,7 +13,7 @@ export const orderApiSlice = apiSlice.injectEndpoints({
 
     getOrderDetails: builder.query({
       query: (id) => ({
-        url: `${ORDERS_URL}/admin/${id}`,
+        url: `${ORDERS_URL}/user/fetchProductById/${id}`,
       }),
     }),
 
@@ -40,7 +40,7 @@ export const orderApiSlice = apiSlice.injectEndpoints({
 
     getOrders: builder.query({
       query: () => ({
-        url: `${ORDERS_URL}/admin`,
+        url: `${ORDERS_URL}/admin/getAllOrders`,
       }),
     }),
 
