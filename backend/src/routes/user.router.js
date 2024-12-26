@@ -89,7 +89,7 @@ router.get("/ getPatientDetailsId/:id",roleMiddleware("user"),  getPatientDetail
 
 
 
-
+//health medstore
 
 router.get("/mine", roleMiddleware("user"), getUserOrders);
 router.get("/readCategory/:id", roleMiddleware("user"),readCategory);
