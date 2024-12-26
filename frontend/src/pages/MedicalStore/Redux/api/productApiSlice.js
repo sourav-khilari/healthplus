@@ -25,14 +25,14 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     getProductDetails: builder.query({
       query: (productId) => ({
-        url: `${PRODUCT_URL}/${productId}`,
+        url: `${PRODUCT_URL}/fetchProductById/${productId}`,
       }),
       keepUnusedDataFor: 5,
     }),
 
     createProduct: builder.mutation({
       query: (productData) => ({
-        url: `${PRODUCT_URL}`,
+        url: `${PRODUCT_URL}/admin`,
         method: "POST",
         body: productData,
       }),
@@ -41,7 +41,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     updateProduct: builder.mutation({
       query: ({ productId, formData }) => ({
-        url: `${PRODUCT_URL}/${productId}`,
+        url: `${PRODUCT_URL}/admin/${productId}`,
         method: "PUT",
         body: formData,
       }),
@@ -49,7 +49,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     uploadProductImage: builder.mutation({
       query: (data) => ({
-        url: `${UPLOAD_URL}`,
+        url: `${UPLOAD_URL}/admin/${data}`,
         method: "POST",
         body: data,
       }),
@@ -57,7 +57,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
     deleteProduct: builder.mutation({
       query: (productId) => ({
-        url: `${PRODUCT_URL}/${productId}`,
+        url: `${PRODUCT_URL}/admin/${productId}`,
         method: "DELETE",
       }),
       providesTags: ["Product"],
