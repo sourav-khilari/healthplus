@@ -110,7 +110,7 @@ const loginUser = asyncHandler(async (req, res) => {
         // Save token in cookies
         const options = {
             httpOnly: true,
-            secure: true, // Set to true in production
+            secure: false, // Set to true in production
             maxAge: 24 * 60 * 60 * 1000, // 1 day
         };
         res.cookie('authToken', idToken, options);

@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import CategoryForm from "../components/CategoryForm";
 import Modal from "../components/Modal";
 import AdminMenu from "./AdminMenu";
+import axios from "axios"
 
 const CategoryList = () => {
   const { data: categories } = useFetchCategoriesQuery();
@@ -21,7 +22,10 @@ const CategoryList = () => {
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
   const [deleteCategory] = useDeleteCategoryMutation();
-
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+    withCredentials: true, // For handling cookies
+  });
   const handleCreateCategory = async (e) => {
     e.preventDefault();
 
@@ -29,15 +33,16 @@ const CategoryList = () => {
       toast.error("Category name is required");
       return;
     }
-
+    
     try {
       const result = await createCategory({ name }).unwrap();
-      if (result.error) {
-        toast.error(result.error);
-      } else {
-        setName("");
-        toast.success(`${result.name} is created.`);
-      }
+      await axiosInstance.post("/admin/createCategory", name);
+      // if (result.error) {
+      //   toast.error(result.error);
+      // } else {
+      //   setName("");
+      //   toast.success(`${result.name} is created.`);
+      // }
     } catch (error) {
       console.error(error);
       toast.error("Creating category failed, try again.");
