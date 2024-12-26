@@ -26,7 +26,7 @@ import FindPharmacy from "./pages/FindPharmacy";
 import FindHospital from "./pages/FindHospital";
 import MedStore from "./pages/MedicalStore/MedStore.jsx";
 
-//med store
+// Medical store related imports
 import AdminRoute from "./pages/MedicalStore/Admin/AdminRoute.jsx";
 import Profile from "./pages/MedicalStore/User/Profile.jsx";
 import UserList from "./pages/MedicalStore/Admin/UserList.jsx";
@@ -52,35 +52,27 @@ const App = () => {
       <Routes>
         {/* Landing Page for Role Selection */}
         <Route path="/login" element={<LandingPage />} />
-        <Route path="/user/dashboard" element={<UserDashboard />} />
 
-        {/* User Routes */}
+        {/* User Authentication Routes */}
         <Route path="/user/login" element={<Login />} />
         <Route path="/user/register" element={<Register />} />
-        <Route path="/userdashboard" element={<UserDashboard />} />
+        <Route path="/user/dashboard" element={<UserDashboard />} />
         <Route path="/admindashboard" element={<AdminDashboard />} />
-        <Route path="/userdashboard" element={<UserDashboard />} />
-        <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
-
-        {/* Hospital Routes */}
         <Route path="/hospital/login" element={<HospitalLogin />} />
         <Route path="/hospital/register" element={<HospitalRegister />} />
+        <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
 
-        {/* Existing Routes */}
+        {/* General Pages */}
         <Route path="/" element={<Home />} />
-        <Route path="/findPharmacy" element={<FindPharmacy />} />
-        <Route path="/findHospital" element={<FindHospital />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/doctors" element={<Doctor />} />
-        <Route path="/doctors/:speciality" element={<Doctor />} />
-        <Route path="/myappointment" element={<MyAppointment />} />
-        <Route path="/myprofile" element={<MyProfile />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/learn" element={<Learn />} />
-        <Route path="/AdminDashboard" element={<AdminDashboard />} />
         <Route path="/appointment/:docId" element={<Appointment />} />
+        <Route path="/doctors" element={<Doctor />} />
+        <Route path="/doctors/:speciality" element={<Doctor />} />
+        <Route path="/myappointment" element={<MyAppointment />} />
+        <Route path="/myprofile" element={<MyProfile />} />
         <Route path="/services/ayurveda" element={<Ayurveda />} />
         <Route
           path="/services/doctor-consultation"
@@ -88,22 +80,21 @@ const App = () => {
         />
         <Route path="/services/medicine-store" element={<MedicineStore />} />
         <Route path="/services/report-guidance" element={<ReportGuidance />} />
-        {/* MedicalStore */}
 
+        {/* MedicalStore Routes */}
         <Route path="/medstore" element={<MedStore />} />
-        <Route path="/medstore/favorite" element={<Favorites />} />
-        <Route path="/medstore/product/:id" element={<ProductDetails />} />
-        <Route path="/medstore/cart" element={<Cart />} />
-        <Route path="/medstore/shop" element={<Shop />} />
-        {/* Registered users */}
-        <Route path="/medstore" element={<PrivateRoute />}>
-          <Route path="/medstore/profile" element={<Profile />} />
-          <Route path="/medstore/shipping" element={<Shipping />} />
-          <Route path="/medstore/placeorder" element={<PlaceOrder />} />
-          <Route path="/medstore/order/:id" element={<Order />} />
+        <Route path="/medstore/user" element={<PrivateRoute />}>
+          <Route path="favorite" element={<Favorites />} />
+          <Route path="product/:id" element={<ProductDetails />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="shop" element={<Shop />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="shipping" element={<Shipping />} />
+          <Route path="placeorder" element={<PlaceOrder />} />
+          <Route path="order/:id" element={<Order />} />
         </Route>
         <Route path="/medstore/admin" element={<AdminRoute />}>
-          <Route path="userlist" element={<UserList />} /> {/* Relative path */}
+          <Route path="userlist" element={<UserList />} />
           <Route path="categorylist" element={<CategoryList />} />
           <Route path="productlist" element={<ProductList />} />
           <Route path="allproductslist" element={<AllProducts />} />
@@ -112,6 +103,10 @@ const App = () => {
           <Route path="orderlist" element={<OrderList />} />
           <Route path="dashboard" element={<MedAdminDashboard />} />
         </Route>
+
+        {/* Other routes */}
+        <Route path="/findPharmacy" element={<FindPharmacy />} />
+        <Route path="/findHospital" element={<FindHospital />} />
       </Routes>
       <Footer />
     </Router>
