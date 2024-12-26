@@ -23,6 +23,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    //user should also be allowed to see himself
     getUserDetails: builder.query({
       query: (id) => ({
         url: `${USERS_URL}/${id}`,
@@ -31,7 +32,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     updateUser: builder.mutation({
       query: (data) => ({
-        url: `${USERS_URL}/${data.userId}`,
+        url: `${USERS_URL}/updateUserStatus/${data.userId}`,
         method: "PUT",
         body: data,
       }),
