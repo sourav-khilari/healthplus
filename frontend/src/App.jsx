@@ -57,7 +57,7 @@ const App = () => {
         {/* User Authentication Routes */}
         <Route path="/user/login" element={<Login />} />
         <Route path="/user/register" element={<Register />} />
-        <Route path="/user/dashboard" element={<UserDashboard />} />
+        <Route path="/userdashboard" element={<UserDashboard />} />
         <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/hospital/login" element={<HospitalLogin />} />
         <Route path="/hospital/register" element={<HospitalRegister />} />
@@ -96,7 +96,6 @@ const App = () => {
         </Route>
         <Route path="/medstore/admin" element={<AdminRoute />}>
           <Route path="menu" element={<AdminMenu />} />
-
           <Route path="userlist" element={<UserList />} />
           <Route path="categorylist" element={<CategoryList />} />
           <Route path="productlist" element={<ProductList />} />
