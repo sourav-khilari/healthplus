@@ -20,7 +20,7 @@ app.use(cookieParser())
 
 //routes import
 import userRouter from './routes/user.router.js'
-import adminRouter from './routes/admin.route.js'
+import adminRouter from './routes/sub.admin.route.js'
 import hospitalRouter from './routes/hospital.route.js'
 //routes decalaration
 app.use("/api/v1/users",userRouter);

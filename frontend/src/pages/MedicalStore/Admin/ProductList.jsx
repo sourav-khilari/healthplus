@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu";
 
 const ProductList = () => {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -17,7 +17,7 @@ const ProductList = () => {
   const [quantity, setQuantity] = useState("");
   const [brand, setBrand] = useState("");
   const [stock, setStock] = useState(0);
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState([]);
   const [loadingImage, setLoadingImage] = useState(false); // Added loading state
   const navigate = useNavigate();
 
@@ -26,18 +26,31 @@ const ProductList = () => {
   const { data: categories, isLoading: categoriesLoading } =
     useFetchCategoriesQuery();
 
+
+
+  const uploadFileHandler = async (e) => {
+    setLoadingImage(true);
+    const files = e.target.files;
+    setImage((prevImage) => [...prevImage, ...files]);
+    setImageUrl((prevImageUrl) => [
+      ...prevImageUrl,
+      ...Array.from(files).map((file) => URL.createObjectURL(file)),
+    ]);
+    setLoadingImage(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // Basic validation
     if (!name || !price || !category || !quantity || !image) {
       toast.error("Please fill in all fields.");
       return;
     }
-
     try {
       const productData = new FormData();
-      productData.append("image", image);
+      image.forEach((img, index) => {
+        productData.append(`image${index + 1}`, img);
+      });
       productData.append("name", name);
       productData.append("description", description);
       productData.append("price", price);
@@ -45,9 +58,7 @@ const ProductList = () => {
       productData.append("quantity", quantity);
       productData.append("brand", brand);
       productData.append("countInStock", stock);
-
       const { data } = await createProduct(productData);
-
       if (data.error) {
         toast.error("Product creation failed. Try again.");
       } else {
@@ -60,22 +71,6 @@ const ProductList = () => {
     }
   };
 
-  const uploadFileHandler = async (e) => {
-    setLoadingImage(true); // Show loading state when uploading
-    const formData = new FormData();
-    formData.append("image", e.target.files[0]);
-
-    try {
-      const res = await uploadProductImage(formData).unwrap();
-      toast.success(res.message);
-      setImage(res.image);
-      setImageUrl(res.image);
-    } catch (error) {
-      toast.error(error?.data?.message || error.error);
-    } finally {
-      setLoadingImage(false); // Hide loading state after upload
-    }
-  };
 
   return (
     <div className="container xl:mx-[9rem] sm:mx-[0]">
@@ -84,7 +79,7 @@ const ProductList = () => {
         <div className="md:w-3/4 p-3">
           <div className="h-12">Create Product</div>
 
-          {imageUrl && (
+          {/* {imageUrl && (
             <div className="text-center">
               <img
                 src={imageUrl}
@@ -92,9 +87,25 @@ const ProductList = () => {
                 className="block mx-auto max-h-[200px] rounded-md"
               />
             </div>
+          )} */}
+
+
+          {imageUrl.length > 0 && (
+            <div className="flex flex-wrap gap-3 mt-3">
+              {imageUrl.map((url, index) => (
+                <img
+                  src={url}
+                  alt="product"
+                  key={index}
+                  className="block w-20 h-20 rounded-md"
+                />
+              ))}
+            </div>
           )}
 
-          <div className="mb-3">
+
+
+          {/* <div className="mb-3">
             <label className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
               {image ? image.name : "Upload Image"}
 
@@ -109,8 +120,26 @@ const ProductList = () => {
             {loadingImage && (
               <div className="text-center mt-2 text-pink-600">Uploading...</div>
             )}{" "}
-            {/* Loading indicator */}
-          </div>
+            Loading indicator
+          </div>  */}
+          <label
+            className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11"
+          >
+
+            {image.length < 4 ? "Upload Images" : "Max 4 images allowed"}
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              multiple
+              onChange={uploadFileHandler}
+              className={!image ? "hidden" : "text-white"}
+            />
+          </label>
+          {loadingImage && (
+            <div className="text-center mt-2 text-pink-600">Uploading...</div>
+          )}
+
 
           <div className="p-3">
             <div className="flex flex-wrap">
@@ -204,7 +233,7 @@ const ProductList = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
