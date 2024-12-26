@@ -16,7 +16,7 @@ const Home = () => {
     {
       title: "Medicine Store",
       description: "Order your prescription and over-the-counter medicines.",
-      link: "/services/medicine-store",
+      link: "/medstore",
     },
     {
       title: "Report Guidance",
