@@ -70,7 +70,7 @@ router.get(
 router.put("/:id/deliver", roleMiddleware("admin"), markOrderAsDelivered);
 
 router.get("/fetchProducts", fetchProducts);
-router.post("/addProduct", roleMiddleware("admin"), addProduct);
+//router.post("/addProduct", roleMiddleware("admin"), addProduct);
 
 router.post(
   "/addProduct",
@@ -102,7 +102,7 @@ router.put(
 ); //
 router.delete("/removeProduct/:id", roleMiddleware("admin"), removeProduct);
 
-router.route("/filtered-products").post(filterProducts);
+router.post("/filtered-products",roleMiddleware("admin"),filterProducts);
 
 
 
