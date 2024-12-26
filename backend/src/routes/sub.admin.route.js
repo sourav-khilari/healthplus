@@ -69,8 +69,8 @@ router.get(
 
 router.put("/:id/deliver", roleMiddleware("admin"), markOrderAsDelivered);
 
-router.get("/", fetchProducts);
-//router.post("/addProduct", roleMiddleware("admin"),, addProduct);//
+router.get("/fetchProducts", fetchProducts);
+//router.post("/addProduct", roleMiddleware("admin"), addProduct);//
 
 router.post(
   "/addProduct",
