@@ -92,7 +92,7 @@ router.get("/ getPatientDetailsId/:id",roleMiddleware("user"),  getPatientDetail
 //health medstore
 
 router.get("/mine", roleMiddleware("user"), getUserOrders);
-router.get("/readCategory/:id", roleMiddleware("user"),readCategory);
+router.get("/readCategory/:id",readCategory);
 router.get("/findOrderById/:id", roleMiddleware("user"), findOrderById);
 router.put("/:id/pay", roleMiddleware("user"), markOrderAsPaid);
 
@@ -105,5 +105,6 @@ router.get("/allproducts",fetchAllProducts);
 router.post("/filtered-products",filterProducts);
 router.get("/fetchProductById/:id",fetchProductById)
 router.post("/:id/reviews",roleMiddleware("user"), addProductReview);
+
 
 export default router
