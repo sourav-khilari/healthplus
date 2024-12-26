@@ -72,7 +72,7 @@ const Login = () => {
 
       if (response.data.message === "Admin login successful") {
         alert("Login successful! Welcome, Admin.");
-        navigate("/admindashboard"); // Redirect to admin dashboard
+        navigate("/medstore/admin/menu"); // Redirect to admin dashboard
       } else if (response.data.message === "User login successful") {
         alert("Login successful! Welcome, User.");
         navigate("/userdashboard"); // Redirect to user dashboard

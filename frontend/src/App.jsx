@@ -27,6 +27,7 @@ import FindHospital from "./pages/FindHospital";
 import MedStore from "./pages/MedicalStore/MedStore.jsx";
 
 // Medical store related imports
+import AdminMenu from "./pages/MedicalStore/Admin/AdminMenu.jsx";
 import AdminRoute from "./pages/MedicalStore/Admin/AdminRoute.jsx";
 import Profile from "./pages/MedicalStore/User/Profile.jsx";
 import UserList from "./pages/MedicalStore/Admin/UserList.jsx";
@@ -94,6 +95,8 @@ const App = () => {
           <Route path="order/:id" element={<Order />} />
         </Route>
         <Route path="/medstore/admin" element={<AdminRoute />}>
+          <Route path="menu" element={<AdminMenu />} />
+
           <Route path="userlist" element={<UserList />} />
           <Route path="categorylist" element={<CategoryList />} />
           <Route path="productlist" element={<ProductList />} />
