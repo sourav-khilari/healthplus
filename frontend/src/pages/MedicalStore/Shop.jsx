@@ -9,52 +9,53 @@ import {
   setChecked,
   setPriceFilter,
 } from "./redux/features/shop/shopSlice";
+
 import Loader from "./Components/Loader";
 import ProductCard from "./Products/ProductCard";
 
 const Shop = () => {
   const dispatch = useDispatch();
-  const { categories, products, checked, radio, priceFilter } = useSelector(
+  const { categories, products, checked, priceFilter } = useSelector(
     (state) => state.shop
   );
 
   const categoriesQuery = useFetchCategoriesQuery();
-  const [priceRange, setPriceRange] = useState([0, 1000]); // Setting default range for price
-
   const filteredProductsQuery = useGetFilteredProductsQuery({
     checked,
-    radio,
     priceFilter,
   });
 
+  const [priceRange, setPriceRange] = useState([0, 1000]); // Default price range
+  const [selectedBrand, setSelectedBrand] = useState("All Brands");
+
+  // Fetch categories and update state
   useEffect(() => {
-    if (!categoriesQuery.isLoading) {
+    if (categoriesQuery.isSuccess) {
       dispatch(setCategories(categoriesQuery.data));
     }
-  }, [categoriesQuery.data, dispatch]);
+  }, [categoriesQuery, dispatch]);
 
+  // Filter products based on categories, brand, and price range
   useEffect(() => {
-    if (!checked.length || !radio.length) {
-      if (!filteredProductsQuery.isLoading) {
-        const filteredProducts = filteredProductsQuery.data.filter(
-          (product) => {
-            return (
-              product.price >= priceRange[0] && product.price <= priceRange[1]
-            );
-          }
-        );
-        dispatch(setProducts(filteredProducts));
-      }
+    if (filteredProductsQuery.isSuccess) {
+      const filtered = filteredProductsQuery.data.filter((product) => {
+        const matchesPrice =
+          product.price >= priceRange[0] && product.price <= priceRange[1];
+        const matchesBrand =
+          selectedBrand === "All Brands" || product.brand === selectedBrand;
+        return matchesPrice && matchesBrand;
+      });
+      dispatch(setProducts(filtered));
     }
-  }, [checked, radio, filteredProductsQuery.data, dispatch, priceRange]);
+  }, [
+    checked,
+    priceRange,
+    selectedBrand,
+    filteredProductsQuery.data,
+    dispatch,
+  ]);
 
-  const handleBrandClick = (brand) => {
-    const productsByBrand = filteredProductsQuery.data?.filter(
-      (product) => product.brand === brand
-    );
-    dispatch(setProducts(productsByBrand));
-  };
-
+  // Handle category selection
   const handleCheck = (value, id) => {
     const updatedChecked = value
       ? [...checked, id]
@@ -62,31 +63,38 @@ const Shop = () => {
     dispatch(setChecked(updatedChecked));
   };
 
-  const uniqueBrands = [
-    "All Brands",
-    ...Array.from(
-      new Set(
-        filteredProductsQuery.data
-          ?.map((product) => product.brand)
-          .filter((brand) => brand !== undefined)
-      )
-    ),
-  ];
-
-  const handlePriceChange = (e) => {
-    setPriceRange(e.target.value.split(",").map((val) => parseInt(val, 10)));
-    dispatch(setPriceFilter(priceRange));
+  // Handle brand selection
+  const handleBrandClick = (brand) => {
+    setSelectedBrand(brand);
   };
 
+  // Handle price range change
+  const handlePriceChange = (e) => {
+    const newRange = e.target.value.split(",").map((val) => parseInt(val, 10));
+    setPriceRange(newRange);
+    dispatch(setPriceFilter(newRange));
+  };
+
+  // Reset all filters
   const handleResetFilters = () => {
     setPriceRange([0, 1000]);
+    setSelectedBrand("All Brands");
     dispatch(setChecked([]));
-    dispatch(setProducts(filteredProductsQuery.data));
+    dispatch(setPriceFilter([0, 1000]));
+    if (filteredProductsQuery.isSuccess) {
+      dispatch(setProducts(filteredProductsQuery.data));
+    }
   };
+
+  const uniqueBrands = [
+    "All Brands",
+    ...new Set(filteredProductsQuery.data?.map((p) => p.brand).filter(Boolean)),
+  ];
 
   return (
     <div className="container mx-auto">
       <div className="flex md:flex-row">
+        {/* Sidebar */}
         <div className="bg-[#151515] p-3 mt-2 mb-2 w-full md:w-1/4">
           <h2 className="h4 text-center py-2 bg-black rounded-full mb-2">
             Filter by Categories
@@ -118,6 +126,7 @@ const Shop = () => {
                   type="radio"
                   id={brand}
                   name="brand"
+                  checked={selectedBrand === brand}
                   onChange={() => handleBrandClick(brand)}
                   className="w-4 h-4 text-pink-400"
                 />
@@ -152,10 +161,11 @@ const Shop = () => {
           </div>
         </div>
 
+        {/* Main Content */}
         <div className="p-3 w-full md:w-3/4">
           <h2 className="h4 text-center mb-2">{products?.length} Products</h2>
           <div className="flex flex-wrap">
-            {products.length === 0 ? (
+            {filteredProductsQuery.isLoading ? (
               <Loader />
             ) : (
               products?.map((p) => (

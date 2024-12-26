@@ -26,7 +26,7 @@ import FindPharmacy from "./pages/FindPharmacy";
 import FindHospital from "./pages/FindHospital";
 import MedStore from "./pages/MedicalStore/MedStore.jsx";
 
-//med store 
+//med store
 import AdminRoute from "./pages/MedicalStore/Admin/AdminRoute.jsx";
 import Profile from "./pages/MedicalStore/User/Profile.jsx";
 import UserList from "./pages/MedicalStore/Admin/UserList.jsx";
@@ -48,7 +48,7 @@ import PlaceOrder from "./pages/MedicalStore/Orders/PlaceOrder.jsx";
 import Order from "./pages/MedicalStore/Orders/Order.jsx";
 import OrderList from "./pages/MedicalStore/Admin/OrderList.jsx";
 import MedAdminDashboard from "./pages/MedicalStore/Admin/MedAdminDashboard.jsx";
-
+import PrivateRoute from "./pages/MedicalStore/Components/PrivateRoute.jsx";
 
 const App = () => {
   return (
@@ -102,7 +102,7 @@ const App = () => {
         <Route path="/medstore/shop" element={<Shop />} />
 
         {/* Registered users */}
-        <Route path="" element={<PrivateRoute />}>
+        <Route path="/medstore" element={<PrivateRoute />}>
           <Route path="/medstore/profile" element={<Profile />} />
           <Route path="/medstore/shipping" element={<Shipping />} />
           <Route path="/medstore/placeorder" element={<PlaceOrder />} />
@@ -110,20 +110,14 @@ const App = () => {
         </Route>
 
         <Route path="/medstore/admin" element={<AdminRoute />}>
-          <Route path="/medstore/userlist" element={<UserList />} />
-          <Route path="/medstore/categorylist" element={<CategoryList />} />
-          <Route path="/medstore/productlist" element={<ProductList />} />
-          <Route path="/medstore/allproductslist" element={<AllProducts />} />
-          <Route
-            path="/medstore/productlist/:pageNumber"
-            element={<ProductList />}
-          />
-          <Route
-            path="/medstore/product/update/:_id"
-            element={<ProductUpdate />}
-          />
-          <Route path="/medstore/orderlist" element={<OrderList />} />
-          <Route path="/medstore/dashboard" element={<MedAdminDashboard />} />
+          <Route path="userlist" element={<UserList />} /> {/* Relative path */}
+          <Route path="categorylist" element={<CategoryList />} />
+          <Route path="productlist" element={<ProductList />} />
+          <Route path="allproductslist" element={<AllProducts />} />
+          <Route path="productlist/:pageNumber" element={<ProductList />} />
+          <Route path="productupdate/:_id" element={<ProductUpdate />} />
+          <Route path="orderlist" element={<OrderList />} />
+          <Route path="dashboard" element={<MedAdminDashboard />} />
         </Route>
       </Routes>
       <Footer />
