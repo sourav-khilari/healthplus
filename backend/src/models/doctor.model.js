@@ -7,7 +7,6 @@ const doctorSchema = new Schema({
     email: { type: String, required: true, unique: true },
     phone: { type: String },
     hospitalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Hospital', required: true },
-    //hospitalId: { type: String, required: true },
     calendarId: { type: String }, // Google Calendar ID
     availability: [
         {
@@ -17,6 +16,12 @@ const doctorSchema = new Schema({
         },
     ],
     slotDuration: Number, // In minutes, e.g., 30
+    password: { type: String, required: true }, // Store the password
+    firebaseUid: { type: String, required: true }, // Store the Firebase UID
+    role: {
+        type: String,
+        default: "doctor",
+      },
 });
 
 export const Doctor = mongoose.model('Doctor', doctorSchema);

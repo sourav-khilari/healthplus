@@ -9,6 +9,8 @@ import { admin } from "../config/firebase.js";
 import { Doctor } from "../models/doctor.model.js";
 import {calendar} from '../config/googleCalendar.js'
 import bcrypt from "bcrypt"
+import sendEmail from '../utils/sendEmail.js'; 
+
 
 //error not handled properly in decoded token part
 const loginHospital = asyncHandler(async (req, res) => {
@@ -121,16 +123,66 @@ const logoutUser = asyncHandler(async(req, res) => {
 })
 
 
+// const addDoctor = async (req, res) => {
+//     const { name, department, speciality, email, phone, availability,slotDuration } = req.body;
+//     const hospitalId=req.user._id;
+//     try {
+//         // Create a Google Calendar for the doctor
+//         const calendarResponse = await calendar.calendars.insert({
+//             requestBody: {
+//                 summary: `${name} - ${department}`,
+//                 description: `Calendar for Dr. ${name} (${speciality})`,
+//             },
+//         });
+
+//         // Save doctor details in MongoDB
+//         const newDoctor = new Doctor({
+//             name,
+//             department,
+//             speciality,
+//             email,
+//             phone,
+//             hospitalId,
+//             calendarId: calendarResponse.data.id,
+//             availability,
+//             slotDuration,
+//         });
+
+//         await newDoctor.save();
+//         return res.status(200).json(new ApiResponse(200,{ doctor: newDoctor}, 'Doctor added successfully'));
+//     } catch (error) {
+//         throw new ApiError(500, 'Failed to add doctor:',error.message);
+//     }
+// };
+
+// GET /api/hospitals/:hospitalId/appointments
+
+const generateRandomPassword = (length = 12) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+    return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+};
+
 const addDoctor = async (req, res) => {
-    const { name, department, speciality, email, phone, availability,slotDuration } = req.body;
-    const hospitalId=req.user._id;
+    const { name, department, speciality, email, phone, availability, slotDuration } = req.body;
+    const hospitalId = req.user._id;
+
     try {
+        // Generate a random password for the doctor
+        const password = generateRandomPassword();
+
         // Create a Google Calendar for the doctor
         const calendarResponse = await calendar.calendars.insert({
             requestBody: {
                 summary: `${name} - ${department}`,
                 description: `Calendar for Dr. ${name} (${speciality})`,
             },
+        });
+
+        // Save doctor details in Firebase for authentication
+        const firebaseUser = await admin.auth().createUser({
+            email,
+            password,
+            displayName: `Dr. ${name}`,
         });
 
         // Save doctor details in MongoDB
@@ -144,16 +196,43 @@ const addDoctor = async (req, res) => {
             calendarId: calendarResponse.data.id,
             availability,
             slotDuration,
+            password, // Save the password
+            firebaseUid: firebaseUser.uid, // Save the Firebase UID
         });
 
         await newDoctor.save();
-        return res.status(200).json(new ApiResponse(200,{ doctor: newDoctor}, 'Doctor added successfully'));
+
+        // Send an email to the doctor with their credentials
+        const emailSubject = `Welcome to Our Hospital Platform`;
+        const emailMessage = `
+            Dear Dr. ${name},
+
+            Congratulations on joining our hospital team as a specialist in ${speciality}.
+            
+            Here are your login credentials for our platform:
+            Email: ${email}
+            Password: ${password}
+            
+            Please log in to the platform to set up your profile and manage your appointments.
+
+            Best Regards,
+            Hospital Admin Team
+        `;
+
+        await sendEmail(email, emailSubject, emailMessage);
+
+        return res.status(200).json(new ApiResponse(200, { doctor: newDoctor }, 'Doctor added successfully'));
     } catch (error) {
-        throw new ApiError(500, 'Failed to add doctor:',error.message);
+        console.error(error);
+        throw new ApiError(500, 'Failed to add doctor:', error.message);
     }
 };
 
-// GET /api/hospitals/:hospitalId/appointments
+
+
+
+
+
 const getHospitalAllAppointments = asyncHandler(async (req, res) => {
     const { hospitalId } = req.params;
 
