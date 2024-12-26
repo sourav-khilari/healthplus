@@ -78,18 +78,18 @@ export const productApiSlice = apiSlice.injectEndpoints({
     }),
 
     getTopProducts: builder.query({
-      query: () => `api/v1/top`,
+      query: () => `${USERS_URL}/top`,
       keepUnusedDataFor: 5,
     }),
 
     getNewProducts: builder.query({
-      query: () => `api/v1/new`,
+      query: () => `${USERS_URL}/new`,
       keepUnusedDataFor: 5,
     }),
 
     getFilteredProducts: builder.query({
       query: ({ checked, radio }) => ({
-        url: `api/v1/filtered-products`,
+        url: `${USERS_URL}/filtered-products`,
         method: "POST",
         body: { checked, radio },
       }),
