@@ -5,7 +5,7 @@ export const orderApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createOrder: builder.mutation({
       query: (order) => ({
-        url: ORDERS_URL,
+        url: `${ORDERS_URL}/user`,
         method: "POST",
         body: order,
       }),
@@ -40,27 +40,27 @@ export const orderApiSlice = apiSlice.injectEndpoints({
 
     getOrders: builder.query({
       query: () => ({
-        url: `${ORDERS_URL}/user`,
+        url: `${ORDERS_URL}/admin`,
       }),
     }),
 
     deliverOrder: builder.mutation({
       query: (orderId) => ({
-        url: `${ORDERS_URL}/${orderId}/deliver`,
+        url: `${ORDERS_URL}/admin/${orderId}/deliver`,
         method: "PUT",
       }),
     }),
 
     getTotalOrders: builder.query({
-      query: () => `${ORDERS_URL}/total-orders`,
+      query: () => `${ORDERS_URL}/admin/total-orders`,
     }),
 
     getTotalSales: builder.query({
-      query: () => `${ORDERS_URL}/total-sales`,
+      query: () => `${ORDERS_URL}/admin/total-sales`,
     }),
 
     getTotalSalesByDate: builder.query({
-      query: () => `${ORDERS_URL}/total-sales-by-date`,
+      query: () => `${ORDERS_URL}/admin/total-sales-by-date`,
     }),
   }),
 });
