@@ -95,7 +95,6 @@ const App = () => {
         <Route path="/medstore/product/:id" element={<ProductDetails />} />
         <Route path="/medstore/cart" element={<Cart />} />
         <Route path="/medstore/shop" element={<Shop />} />
-
         {/* Registered users */}
         <Route path="/medstore" element={<PrivateRoute />}>
           <Route path="/medstore/profile" element={<Profile />} />
@@ -103,7 +102,6 @@ const App = () => {
           <Route path="/medstore/placeorder" element={<PlaceOrder />} />
           <Route path="/medstore/order/:id" element={<Order />} />
         </Route>
-
         <Route path="/medstore/admin" element={<AdminRoute />}>
           <Route path="userlist" element={<UserList />} /> {/* Relative path */}
           <Route path="categorylist" element={<CategoryList />} />

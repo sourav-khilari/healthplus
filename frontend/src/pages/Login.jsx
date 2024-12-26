@@ -57,7 +57,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-
   const handleEmailLogin = async () => {
     try {
       setLoading(true);
@@ -68,15 +67,21 @@ const Login = () => {
       );
       const idToken = await getIdToken(userCredential.user);
 
-      // Send token to backend
       const response = await axiosInstance.post("/login", { idToken });
       console.log(response.data);
 
-      alert("Login successful!");
-      navigate("/admindashboard"); // Redirect to profile page
+      if (response.message === "Admin login successful") {
+        alert("Login successful! Welcome, Admin.");
+        navigate("/admindashboard"); // Redirect to admin dashboard
+      } else if (response.message === "User login successful") {
+        alert("Login successful! Welcome, User.");
+        navigate("/userdashboard"); // Redirect to user dashboard
+      } else {
+        alert("Unexpected response from server.");
+      }
     } catch (error) {
       console.error("Email Login Error:", error.message);
-      alert("Login failed!");
+      alert("Login failed! Please try again.");
     } finally {
       setLoading(false);
     }
