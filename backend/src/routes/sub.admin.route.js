@@ -70,7 +70,7 @@ router.get(
 router.put("/:id/deliver", roleMiddleware("admin"), markOrderAsDelivered);
 
 router.get("/fetchProducts", fetchProducts);
-//router.post("/addProduct", roleMiddleware("admin"), addProduct);//
+router.post("/addProduct", roleMiddleware("admin"), addProduct);
 
 router.post(
   "/addProduct",
@@ -84,13 +84,13 @@ router.post(
   addProduct,
 );
 
-router.get("/allproducts", fetchAllProducts);
-router.get("/top", fetchTopProducts);
-router.get("/new", fetchNewProducts);
+router.get("/allproducts", roleMiddleware("admin"),fetchAllProducts);
+router.get("/top", roleMiddleware("admin"),fetchTopProducts);
+router.get("/new", roleMiddleware("admin"),fetchNewProducts);
 
 router.get("/fetchProductById/:id", fetchProductById);
 router.put(
-  "/:id",
+  "/updateProductDetails/:id",
   roleMiddleware("admin"),
   upload.fields([
     { name: "image1", maxCount: 1 },
