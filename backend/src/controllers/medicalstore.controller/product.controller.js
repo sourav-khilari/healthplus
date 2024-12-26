@@ -30,10 +30,18 @@ import { uploadOnCloudinary } from "../../utils/cloudnary.js";
 //   }
 // });
 
+
 const addProduct = asyncHandler(async (req, res) => {
   try {
     console.log("\n add product \n");
-    const { name, description, price, category, quantity, brand } = req.fields;
+    const {
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      brand,
+    } = req.body;
 
     // Validation
     switch (true) {
@@ -52,28 +60,38 @@ const addProduct = asyncHandler(async (req, res) => {
     }
 
     // Upload images to Cloudinary
-    // const images = [
-    //   req.files.image1,
-    //   req.files.image2,
-    //   req.files.image3,
-    //   req.files.image4,
-    // ].filter((image) => image);
-
-    const images = [
-      ...req.files
-    ].filter((image) => image);
-
+    const images = Object.values(req.files);
+    console.log(images);
     if (images.length > 4) {
       return res.json({ error: "You can upload up to 4 images" });
     }
 
-    const imageUrls = await Promise.all(images.map((image) => uploadOnCloudinary(image.path)));
+    const imageUrls = await Promise.all(
+      images.map(async (image) => {
+        try {
+          const url = await uploadOnCloudinary(image.path);
+          return url;
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      })
+    );
+
+    // Filter out any null values
+    const filteredImageUrls = imageUrls.filter((url) => url !== null);
 
     // Create product
     const product = new Product({
-      ...req.fields,
-      image: imageUrls.map((url) => url.secure_url),
+      name,
+      description,
+      price,
+      category,
+      quantity,
+      brand,
+      image: filteredImageUrls.map((url) => url.url),
     });
+
     console.log("\n add product \n");
     await product.save();
     res.json(product);
@@ -82,6 +100,7 @@ const addProduct = asyncHandler(async (req, res) => {
     res.status(400).json(error.message);
   }
 });
+
 
 
 

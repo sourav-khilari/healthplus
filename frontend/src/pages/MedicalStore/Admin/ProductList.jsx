@@ -28,10 +28,10 @@ const ProductList = () => {
     useFetchCategoriesQuery();
 
 
-    const axiosInstance = axios.create({
-      baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
-      withCredentials: true, // For handling cookies
-    });
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+    withCredentials: true, // For handling cookies
+  });
 
   const uploadFileHandler = async (e) => {
     setLoadingImage(true);
@@ -47,8 +47,18 @@ const ProductList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("123");
+    console.log("123");
+
+    console.log("Name:",  name); // true if name is not empty, false otherwise
+    console.log("Price:",  price); // true if price is not empty, false otherwise
+    console.log("Category:",  category); // true if category is not empty, false otherwise
+    console.log("Quantity:",  quantity); // true if quantity is not empty, false otherwise
+    console.log("Image length:", image.length); // true if image length is greater than 0, false otherwise
+
+
+
     // Basic validation
-    if (!name || !price || !category || !quantity || !image) {
+    if (!name || !price || !category || !quantity || image.length <= 0) {
       toast.error("Please fill in all fields.");
       return;
     }
@@ -67,7 +77,7 @@ const ProductList = () => {
       productData.append("countInStock", stock);
       //const { data } = await createProduct(productData).unwrap();
       console.log("before pr123");
-      const pr=await axiosInstance.post("/admin/addProduct",productData);
+      const pr = await axiosInstance.post("/admin/addProduct", productData);
       console.log("after pr123");
       // if (pr.response.error) {
       //   toast.error("Product creation failed. Try again.");
@@ -90,7 +100,7 @@ const ProductList = () => {
         <div className="md:w-3/4 p-3">
           <div className="h-12">Create Product</div>
 
-          
+
 
 
           {imageUrl.length > 0 && (
@@ -108,7 +118,7 @@ const ProductList = () => {
 
 
 
-         
+
           <label
             className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11"
           >
