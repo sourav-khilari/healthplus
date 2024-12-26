@@ -5,11 +5,11 @@ import { toast } from "react-toastify";
 import {
   useGetProductDetailsQuery,
   useCreateReviewMutation,
-} from "../../redux/api/productApiSlice";
+} from "../redux/api/productApiSlice";
 import Rating from "./Rating";
-import Loader from "../../components/Loader";
-import Message from "../../components/Message";
-import { addToCart } from "../../redux/features/cart/cartSlice";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
+import { addToCart } from "../redux/features/cart/cartSlice";
 import {
   FaBox,
   FaClock,

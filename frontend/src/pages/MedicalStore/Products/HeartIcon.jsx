@@ -5,12 +5,12 @@ import {
   addToFavorites,
   removeFromFavorites,
   setFavorites,
-} from "../../redux/features/favorites/favoriteSlice";
+} from "../redux/features/favorites/favoriteSlice";
 import {
   addFavoriteToLocalStorage,
   getFavoritesFromLocalStorage,
   removeFavoriteFromLocalStorage,
-} from "../../Utils/localStorage";
+} from "../Utils/localStorage";
 
 const HeartIcon = ({ product }) => {
   const dispatch = useDispatch();

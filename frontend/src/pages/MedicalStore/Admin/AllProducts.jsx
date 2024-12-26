@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { useAllProductsQuery } from "../../redux/api/productApiSlice";
+import { useAllProductsQuery } from "../redux/api/productApiSlice";
 import AdminMenu from "./AdminMenu";
 
 const AllProducts = () => {

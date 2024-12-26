@@ -4,11 +4,11 @@ import {
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
   useFetchCategoriesQuery,
-} from "../../redux/api/categoryApiSlice";
+} from "../redux/api/categoryApiSlice";
 
 import { toast } from "react-toastify";
-import CategoryForm from "../../components/CategoryForm";
-import Modal from "../../components/Modal";
+import CategoryForm from "../components/CategoryForm";
+import Modal from "../components/Modal";
 import AdminMenu from "./AdminMenu";
 
 const CategoryList = () => {

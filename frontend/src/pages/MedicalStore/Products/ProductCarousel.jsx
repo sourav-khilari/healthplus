@@ -1,5 +1,5 @@
-import { useGetTopProductsQuery } from "../../redux/api/productApiSlice";
-import Message from "../../components/Message";
+import { useGetTopProductsQuery } from "../redux/api/productApiSlice";
+import Message from "../components/Message";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";

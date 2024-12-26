@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetFilteredProductsQuery } from "./redux/api/productApiSlice";
-import { useFetchCategoriesQuery } from "../redux/api/categoryApiSlice";
+import { useFetchCategoriesQuery } from "./redux/api/categoryApiSlice";
 
 import {
   setCategories,
   setProducts,
   setChecked,
   setPriceFilter,
-} from "../redux/features/shop/shopSlice";
-import Loader from "../Components/Loader";
+} from "./redux/features/shop/shopSlice";
+import Loader from "./Components/Loader";
 import ProductCard from "./Products/ProductCard";
 
 const Shop = () => {
