@@ -56,6 +56,7 @@ const loginDoctor = async (req, res) => {
     }
 };
 
+
 const getPatientDetailsId = asyncHandler(async (req, res) => {
     try {
       const { patientId } = req.params; // Extract patient ID from the route parameter
@@ -72,6 +73,7 @@ const getPatientDetailsId = asyncHandler(async (req, res) => {
       res.status(400).json({ error: "Unable to fetch patient details" });
     }
 });
+
 
 
 
