@@ -149,7 +149,7 @@ const addProduct = asyncHandler(async (req, res) => {
 
 const updateProductDetails = asyncHandler(async (req, res) => {
   try {
-    const { name, description, price, category, quantity, brand } = req.fields;
+    const { name, description, price, category, quantity, brand } = req.body;
     const files = req.files;
 
     // Validation
@@ -194,7 +194,7 @@ const updateProductDetails = asyncHandler(async (req, res) => {
 
           // Update the image array with new image details
           updatedImages[index] = {
-            secure_url: uploadedImage.secure_url,
+            secure_url: uploadedImage.url,
             //public_id: uploadedImage.public_id,
           };
         }
@@ -217,6 +217,12 @@ const updateProductDetails = asyncHandler(async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+
+
+
+
+
 
 const removeProduct = asyncHandler(async (req, res) => {
   try {
