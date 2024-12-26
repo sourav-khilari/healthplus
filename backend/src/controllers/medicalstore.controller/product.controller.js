@@ -1,6 +1,9 @@
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import Product from "../../models/medical.store.model/product.model.js";
+//import { uploadOnCloudinary } from "../../utils/cloudnary.js";
 import { uploadOnCloudinary } from "../../utils/cloudnary.js";
+
+
 // const addProduct = asyncHandler(async (req, res) => {
 //   try {
 //     const { name, description, price, category, quantity, brand } = req.fields;
@@ -69,9 +72,13 @@ const addProduct = asyncHandler(async (req, res) => {
     const imageUrls = await Promise.all(
       images.map(async (image) => {
         try {
-          const url = await uploadOnCloudinary(image.path);
+          //console.log("\n\n\npath="+image)
+          console.log("\n\n\npath=" + JSON.stringify(image));
+          const url = await uploadOnCloudinary(image[0].path);
+          console.error("cloud"+url);
           return url;
         } catch (error) {
+          console.error("error");
           console.error(error);
           return null;
         }
