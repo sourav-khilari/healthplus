@@ -171,6 +171,12 @@ const AdminDashboard = () => {
           ))}
         </ul>
       </section>
+      <section>
+        <h2>Medical Store</h2>
+        <ul>
+          
+        </ul>
+      </section>
     </div>
   );
 };
