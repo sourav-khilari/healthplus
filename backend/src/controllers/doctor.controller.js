@@ -11,7 +11,7 @@ import {calendar} from '../config/googleCalendar.js'
 import bcrypt from "bcrypt"
 import sendEmail from '../utils/sendEmail.js'; 
 
-const loginDoctor = async (req, res) => {
+const loginDoctor = asyncHandler(async (req, res) => {
     const { idToken, password } = req.body;
 
     try {
@@ -54,7 +54,7 @@ const loginDoctor = async (req, res) => {
         console.error(error);
         throw new ApiError(500, 'Failed to login doctor', error.message);
     }
-};
+});
 
 
 const getPatientDetailsId = asyncHandler(async (req, res) => {
@@ -74,11 +74,70 @@ const getPatientDetailsId = asyncHandler(async (req, res) => {
     }
 });
 
+const getDoctorAppointments =asyncHandler( async (req, res) => {
+    const doctorId = req.params.doctorId; // Doctor ID from request params
+    const currentTime = new Date();
+    const next24Hours = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000);
 
+    // Get today's date range (start and end)
+    const todayStart = new Date(currentTime);
+    todayStart.setHours(0, 0, 0, 0); // Midnight of the current day
+    const todayEnd = new Date(currentTime);
+    todayEnd.setHours(23, 59, 59, 999); // End of the current day
+
+    try {
+        // Fetch appointments for today
+        const todayAppointments = await Appointment.find({
+            doctorId,
+            "timeSlot.start": {
+                $gte: todayStart, // From midnight today
+                $lte: todayEnd,   // To end of today
+            },
+        })
+            .populate('doctorId', 'name department speciality') // Optionally populate doctor details
+            .populate('hospitalId', 'name location') // Optionally populate hospital details
+            .sort({ 'timeSlot.start': 1 }); // Sort by time
+
+        // Fetch appointments for the next 24 hours
+        const next24HourAppointments = await Appointment.find({
+            doctorId,
+            "timeSlot.start": {
+                $gte: currentTime, // From current time
+                $lte: next24Hours, // Up to 24 hours from now
+            },
+        })
+            .populate('doctorId', 'name department speciality') // Optionally populate doctor details
+            .populate('hospitalId', 'name location') // Optionally populate hospital details
+            .sort({ 'timeSlot.start': 1 }); // Sort by time
+
+        // Combine both results (avoid duplicates)
+        const uniqueAppointments = [
+            ...new Map(
+                [...todayAppointments, ...next24HourAppointments].map((item) => [
+                    item._id.toString(),
+                    item,
+                ])
+            ).values(),
+        ];
+
+        // Respond with combined appointments
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(200, { appointments: uniqueAppointments }, 'Appointments fetched successfully.')
+            );
+    } catch (error) {
+        console.error(error);
+        return res
+            .status(500)
+            .json(new ApiResponse(500, null, 'Failed to fetch appointments.'));
+    }
+});
 
 
 
 export {
     loginDoctor,
     getPatientDetailsId,
+    getDoctorAppointments,
 }
