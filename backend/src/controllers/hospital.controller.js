@@ -290,6 +290,231 @@ const getDoctorAppointments = asyncHandler(async (req, res) => {
 
 
 
+const verifyOtpAndFetchData = asyncHandler(async (req, res) => {
+
+    const { patientId, otp } = req.body;
+    //let userId=req.user._id;
+    if (!patientId || !otp ) throw new ApiError(400, 'Patient ID, OTP, and User ID are required');
+
+    // Fetch patient from MongoDB
+    const patient = await Patient.findOne({ patientId });
+    if (!patient) throw new ApiError(404, 'Patient not found');
+
+    // Validate OTP
+    if (patient.otp !== otp) throw new ApiError(400, 'Invalid OTP');
+
+    const isExpired = Date.now() > patient.otpExpiration;
+    if (isExpired) throw new ApiError(400, 'OTP expired');
+
+    // Clear OTP after successful validation
+    await Patient.updateOne({ patientId }, { $unset: { otp: 1, otpExpiration: 1 } });
+
+    // Fetch user from MongoDB
+    // const user = await User.findById(userId);
+    // if (!user) throw new ApiError(404, 'User not found');
+
+    // Add patientId to user's patient_ids array if not already present
+    // if (!user.patient_ids.includes(patientId)) {
+    //     await User.updateOne(
+    //         { _id: userId },
+    //         { $addToSet: { patient_ids: patientId } } // Ensures no duplicates
+    //     );
+    // }
+
+    // Fetch patient data (from FHIR API or MongoDB if API is down)
+    let patientData;
+    try {
+        const apiResponse = await axios.get(`http://hapi.fhir.org/baseR4/Patient/${patientId}`);
+        patientData = apiResponse.data;
+    } catch (error) {
+        console.error('FHIR API Error:', error.message);
+        patientData = patient;
+    }
+
+    res.status(200).json(new ApiResponse(200, { patientDetails: patientData }, 'Patient data fetched and verified successfully'));
+});
+
+
+
+const createPatientId = asyncHandler(async (req, res) => {
+    const { name, email, dob, contact } = req.body;
+
+    if (!name || !email || !dob || !contact) {
+        throw new ApiError('All fields (name, email, dob, contact) are required', 400);
+    }
+
+    let patientId;
+
+    try {
+        const fhirPayload = {
+            resourceType: 'Patient',
+            name: [{ given: [name.split(' ')[0]], family: name.split(' ')[1] || '' }],
+            telecom: [
+                { system: 'email', value: email, use: 'home' },
+                { system: 'phone', value: contact, use: 'mobile' }
+            ],
+            birthDate: dob
+        };
+
+        const fhirResponse = await axios.post('http://hapi.fhir.org/baseR4/Patient', fhirPayload);
+        patientId = fhirResponse.data.id;
+
+        if (!patientId) {
+            throw new ApiError(400, 'Failed to create patient ID in FHIR API');
+        }
+    } catch (error) {
+        console.error('FHIR API Error:', error.response?.data || error.message);
+        throw new ApiError(500, 'Failed to create patient ID in FHIR API');
+    }
+
+    const newPatient = new Patient({
+        patientId,
+        name,
+        email,
+        dob,
+        contact,
+        details: {}
+    });
+
+    await newPatient.save();
+
+    const mailMessage = `Your new Patient ID is: ${patientId}`;
+    await sendMail(email, mailMessage, 'Patient ID Creation Successful');
+
+    res.status(201).json(new ApiResponse(201, { patientId }, 'Patient ID created successfully'));
+});
+
+
+const getPatientDetailsId = asyncHandler(async (req, res) => {
+    try {
+      const { patientId } = req.params; // Extract patient ID from the route parameter
+      const patient = await Patient.findById({
+        patientId}); 
+  
+      if (!patient) {
+        return res.status(404).json({ error: "Patient not found" });
+      }
+  
+      res.json(patient);
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({ error: "Unable to fetch patient details" });
+    }
+});
+  
+
+
+
+
+const uploadMedicalDetails = asyncHandler(async (req, res) => {
+    const { patientId, description } = req.body;
+
+    // Log inputs for debugging
+    console.log("\n\n" + patientId + "\n\n");
+    console.log("\n\n" + description + "\n\n");
+
+    // Check for required fields
+    if (!patientId || !req.file || !description) {
+        throw new ApiError(400, 'Patient ID, description, and file are required');
+    }
+
+    // Fetch patient from MongoDB
+    const patient = await Patient.findOne({ patientId });
+    if (!patient) {
+        throw new ApiError(404, 'Patient not found');
+    }
+
+    const localFilePath = req.file.path;
+    
+    try {
+        // Upload the file to Cloudinary
+        const uploadResponse = await uploadOnCloudinary(localFilePath);
+        if (!uploadResponse) {
+            throw new ApiError(500, 'Failed to upload file to Cloudinary');
+        }
+
+        const fileUrl = uploadResponse.url;
+
+        // Update MongoDB with the uploaded file details
+        await Patient.updateOne(
+            { patientId },
+            {
+                $push: {
+                    medicalDetails: {
+                        patientId,
+                        fileUrl,
+                        description,
+                        uploadedAt: new Date(),
+                    },
+                },
+            }
+        );
+
+        // Fetch the current FHIR Patient resource to avoid overwriting existing extensions
+        let fhirPatient;
+        try {
+            const fhirResponse = await axios.get(`http://hapi.fhir.org/baseR4/Patient/${patientId}`);
+            fhirPatient = fhirResponse.data;
+        } catch (error) {
+            console.error('Failed to fetch existing FHIR Patient resource:', error.message);
+            fhirPatient = { resourceType: 'Patient', id: patientId, extension: [] }; // Fallback if not found
+        }
+
+        // Append the new medical file to the existing extension array
+        const newMedicalFile = {
+            url: fileUrl,
+            title: description,
+        };
+
+        fhirPatient.extension = fhirPatient?.extension || []; // Ensure extensions exist
+        fhirPatient.extension.push({
+            url: 'http://example.org/fhir/StructureDefinition/medicalFiles', // Custom extension URL
+            valueAttachment: {
+                contentType: req?.file?.mimetype, // You can dynamically set this based on the file type
+                url: fileUrl,
+                title: description,
+            },
+        });
+
+        // Update the FHIR Patient resource with the appended data
+        try {
+            const response = await axios.put(`http://hapi.fhir.org/baseR4/Patient/${patientId}`, fhirPatient);
+            const updatedPatient = response.data;
+            console.log(updatedPatient);
+        } catch (error) {
+            if (error.response.status === 500) {
+                console.log('Update successful, but server unable to return updated resource');
+              } else {
+                console.error('FHIR API upload failed:', error.message);
+                // Save failed upload attempt for retry
+                await FailedUploads.create({
+                  patientId,
+                  fileUrl,
+                  description,
+                  retryCount: 0,
+                });
+              }
+            
+        }
+
+        // Clean up the local file after the upload is done
+        fs.unlinkSync(localFilePath);
+
+        // Respond with success
+        res.status(200).json(new ApiResponse(200, { fileUrl }, 'Medical details uploaded successfully'));
+    } catch (error) {
+        console.error('Error uploading medical details:', error.message);
+
+        // Clean up the local file on failure
+        if (fs.existsSync(localFilePath)) {
+            fs.unlinkSync(localFilePath);
+        }
+
+        throw new ApiError(500, 'Failed to upload medical details');
+    }
+});
+
+
 
 export {
     registerHospital,
@@ -299,4 +524,8 @@ export {
     getDoctorAppointments,
     getCurrentUser,
     logoutUser,
+    uploadMedicalDetails,
+    getPatientDetailsId,
+    createPatientId,
+    verifyOtpAndFetchData,
 }

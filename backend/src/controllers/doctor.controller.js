@@ -56,9 +56,25 @@ const loginDoctor = async (req, res) => {
     }
 };
 
-
+const getPatientDetailsId = asyncHandler(async (req, res) => {
+    try {
+      const { patientId } = req.params; // Extract patient ID from the route parameter
+      const patient = await Patient.findById({
+        patientId}); 
+  
+      if (!patient) {
+        return res.status(404).json({ error: "Patient not found" });
+      }
+  
+      res.json(patient);
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({ error: "Unable to fetch patient details" });
+    }
+});
 
 
 export {
     loginDoctor,
+    getPatientDetailsId,
 }
