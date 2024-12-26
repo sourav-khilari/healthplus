@@ -70,10 +70,10 @@ const Login = () => {
       const response = await axiosInstance.post("/login", { idToken });
       console.log(response.data);
 
-      if (response.message === "Admin login successful") {
+      if (response.data.message === "Admin login successful") {
         alert("Login successful! Welcome, Admin.");
         navigate("/admindashboard"); // Redirect to admin dashboard
-      } else if (response.message === "User login successful") {
+      } else if (response.data.message === "User login successful") {
         alert("Login successful! Welcome, User.");
         navigate("/userdashboard"); // Redirect to user dashboard
       } else {
