@@ -21,11 +21,11 @@ router.post('/gfetchPatientData',fetchPatientData);
 router.post('/getDoctorAppointments/:doctorId', getDoctorAppointments);
 
 //community
-router.post("/addcomment", roleMiddleware("user"), addcomment);
-router.get("/getAllPosts", roleMiddleware("user"), getAllPosts);
-router.get("/getUserPosts", roleMiddleware("user"), getUserPosts);
-router.get("/getPostById/:postId", roleMiddleware("user"), getPostById);
-router.get("/getNotifications", roleMiddleware("user"), getNotifications);
+router.post("/addcomment", roleMiddleware("doctor"), addcomment);
+router.get("/getAllPosts", roleMiddleware("doctor"), getAllPosts);
+router.get("/getUserPosts", roleMiddleware("doctor"), getUserPosts);
+router.get("/getPostById/:postId", roleMiddleware("doctor"), getPostById);
+router.get("/getNotifications", roleMiddleware("doctor"), getNotifications);
 
 
 

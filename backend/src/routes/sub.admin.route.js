@@ -132,9 +132,9 @@ router.delete('/delete-user', roleMiddleware("admin"), deleteUser);
 
 //comunity
 
-router.get("/getAllPosts", roleMiddleware("user"), getAllPosts);
-router.get("/getUserPosts", roleMiddleware("user"), getUserPosts);
-router.get("/getPostById/:postId", roleMiddleware("user"), getPostById);
-router.delete("/posts/:postId", roleMiddleware("user"), deletePost);
+router.get("/getAllPosts", roleMiddleware("admin"), getAllPosts);
+router.get("/getUserPosts", roleMiddleware("admin"), getUserPosts);
+router.get("/getPostById/:postId", roleMiddleware("admin"), getPostById);
+router.delete("/posts/:postId", roleMiddleware("admin"), deletePost);
 
 export default router;

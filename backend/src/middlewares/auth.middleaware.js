@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User, } from "../models/user.model.js";
 import { admin } from "../config/firebase.js"
 import { Hospital } from "../models/hospital.model.js"
+import { Doctor } from "../models/doctor.model.js"
 //const admin = require('../config/firebase');
 
 
@@ -40,19 +41,19 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 const refreshAuthToken = async (expiredToken) => {
   try {
-      // Decode the expired token to get the UID
-      const decodedToken = admin.auth().decodeIdToken(expiredToken, true); // true = allow expired token
-      const { uid } = decodedToken;
+    // Decode the expired token to get the UID
+    const decodedToken = admin.auth().decodeIdToken(expiredToken, true); // true = allow expired token
+    const { uid } = decodedToken;
 
-      // Generate a new custom token
-      const newToken = await admin.auth().createCustomToken(uid);
+    // Generate a new custom token
+    const newToken = await admin.auth().createCustomToken(uid);
 
-      // Verify the newly generated token
-      const newIdToken = await admin.auth().verifyIdToken(newToken);
+    // Verify the newly generated token
+    const newIdToken = await admin.auth().verifyIdToken(newToken);
 
-      return { idToken: newIdToken, uid };
+    return { idToken: newIdToken, uid };
   } catch (error) {
-      throw new ApiError(401, `Unable to refresh token: ${error.message}`);
+    throw new ApiError(401, `Unable to refresh token: ${error.message}`);
   }
 };
 
@@ -100,59 +101,62 @@ const refreshAuthToken = async (expiredToken) => {
 const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => {
   const authToken = req.cookies?.authToken;
   if (!authToken) {
-      throw new ApiError(401, 'Unauthorized: No token provided');
+    throw new ApiError(401, 'Unauthorized: No token provided');
   }
 
   try {
-      // Verify Firebase token
-      let decodedToken;
-      try {
-          decodedToken = await admin.auth().verifyIdToken(authToken);
-      } catch (error) {
-          if (error.code === 'auth/id-token-expired') {
-              // Token expired, attempt to refresh it
-              const { idToken: newIdToken, uid } = await refreshAuthToken(authToken);
+    // Verify Firebase token
+    let decodedToken;
+    try {
+      decodedToken = await admin.auth().verifyIdToken(authToken);
+    } catch (error) {
+      if (error.code === 'auth/id-token-expired') {
+        // Token expired, attempt to refresh it
+        const { idToken: newIdToken, uid } = await refreshAuthToken(authToken);
 
-              // Update the authToken cookie with the new token
-              const options = {
-                  httpOnly: true,
-                  secure: process.env.NODE_ENV === 'production', // Set true in production
-                  sameSite: 'None',
-                  domain: 'localhost', // Match your backend domain
-                  path: '/',
-                  maxAge: 24 * 60 * 60 * 1000, // 1 day
-              };
-              res.cookie('authToken', newIdToken, options);
+        // Update the authToken cookie with the new token
+        const options = {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production', // Set true in production
+          sameSite: 'None',
+          domain: 'localhost', // Match your backend domain
+          path: '/',
+          maxAge: 24 * 60 * 60 * 1000, // 1 day
+        };
+        res.cookie('authToken', newIdToken, options);
 
-              // Use the new token for verification
-              decodedToken = await admin.auth().verifyIdToken(newIdToken);
-          } else {
-              throw new ApiError(401, `Unauthorized: ${error.message}`);
-          }
-      }
-
-      const { uid } = decodedToken;
-
-      // Fetch the user from MongoDB
-      let user;
-      if (requiredRole === 'hospital') {
-          user = await Hospital.findOne({ firebaseUid: uid });
+        // Use the new token for verification
+        decodedToken = await admin.auth().verifyIdToken(newIdToken);
       } else {
-          user = await User.findOne({ firebaseUid: uid });
+        throw new ApiError(401, `Unauthorized: ${error.message}`);
       }
+    }
 
-      if (!user) {
-          throw new ApiError(404, 'User not found');
-      }
+    const { uid } = decodedToken;
 
-      if (user.role !== requiredRole) {
-          throw new ApiError(403, `Forbidden: ${requiredRole} access required`);
-      }
+    // Fetch the user from MongoDB
+    let user;
+    if (requiredRole === 'doctor') {
+      user = await Doctor.findOne({ firebaseUid: uid });
+    }
+    else if (requiredRole === 'hospital') {
+      user = await Hospital.findOne({ firebaseUid: uid });
+    } else {
+      user = await User.findOne({ firebaseUid: uid });
+    }
 
-      req.user = user; // Attach user data to the request object
-      next();
+    if (!user) {
+      throw new ApiError(404, 'User not found');
+    }
+
+    if (user.role !== requiredRole) {
+      throw new ApiError(403, `Forbidden: ${requiredRole} access required`);
+    }
+
+    req.user = user; // Attach user data to the request object
+    next();
   } catch (error) {
-      throw new ApiError(401, `Unauthorized: ${error.message}`);
+    throw new ApiError(401, `Unauthorized: ${error.message}`);
   }
 });
 

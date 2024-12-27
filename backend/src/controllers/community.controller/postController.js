@@ -324,7 +324,7 @@ const getAllPosts = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
   const { _id } = req.user; // Assuming userId is available in req.user
-  const userId=_id
+  const userId = _id
   try {
     // Find posts created by the user
     const userPosts = await Post.find({ userId })
@@ -392,7 +392,7 @@ const getPostById = async (req, res) => {
 
 const getNotifications = async (req, res) => {
   const { _id } = req.user; // Assuming `req.user` contains the logged-in user's ID
-  const userId=_id
+  const userId = _id
   try {
     const notifications = await Notification.find({ recipientId: userId })
       .sort({ createdAt: -1 }) // Sort notifications by the most recent
@@ -457,13 +457,14 @@ const deletePost = async (req, res) => {
     }
 
     // Validate permissions
-    if (post.userId.toString() !== userId) {
-      return res.status(403).send({
-        success: false,
-        message: "You are not authorized to delete this post.",
-      });
+    if (role != admin) {
+      if (post.userId.toString() !== userId) {
+        return res.status(403).send({
+          success: false,
+          message: "You are not authorized to delete this post.",
+        });
+      }
     }
-
     // Delete the post
     await Post.findByIdAndDelete(postId);
 
