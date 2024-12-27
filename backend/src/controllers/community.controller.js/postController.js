@@ -211,6 +211,48 @@ const getAllPosts = async (req, res) => {
 };
 
 
+const getUserPosts = async (req, res) => {
+  const { userId } = req.user; // Assuming userId is available in req.user
+
+  try {
+    // Find posts created by the user
+    const userPosts = await Post.find({ userId })
+      .populate("userId", "name email") // Populate post owner details
+      .populate({
+        path: "comments",
+        options: { sort: { createdAt: 1 } }, // Sort comments by creation time
+        populate: {
+          path: "userId",
+          select: "name email role", // Populate commenter details
+          model: function (doc) {
+            return doc.role === "doctor" ? "Doctor" : "User";
+          },
+        },
+      });
+
+    if (!userPosts || userPosts.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "No posts found for this user.",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "User posts retrieved successfully.",
+      data: userPosts,
+    });
+  } catch (error) {
+    console.error("Error retrieving user posts:", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
+
+
+
 // const addcomment = async (req, res) => {
 //   const { postId, comment, userId } = req.body;
 
@@ -242,5 +284,6 @@ const getAllPosts = async (req, res) => {
 export{
   createPost,
   getAllPosts,
-  addcomment
+  addcomment,
+  getUserPosts,
 }
