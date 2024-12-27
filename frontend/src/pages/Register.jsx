@@ -114,64 +114,79 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <h1>{isRegistering ? "Register" : "Login"}</h1>
+    <div className="register-page">
+      <div className="register-container">
+        <h2 className="register-title">
+          {isRegistering ? "Register" : "Login"}
+        </h2>
 
-      <form
-        onSubmit={isRegistering ? handleRegister : handleLogin}
-        className="register-form"
-      >
-        {isRegistering && (
+        <form
+          onSubmit={isRegistering ? handleRegister : handleLogin}
+          className="register-form"
+        >
+          {isRegistering && (
+            <div className="form-group">
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                className="input-field"
+              />
+            </div>
+          )}
+
           <div className="form-group">
-            <label htmlFor="name">Name:</label>
+            <label htmlFor="email">Email:</label>
             <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleInputChange}
               required
+              className="input-field"
             />
           </div>
-        )}
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit" className="register-button">
-          {isRegistering ? "Register" : "Login"}
-        </button>
-      </form>
 
-      <div>
-        <button onClick={handleGoogleLogin}>Google Login</button>
-        <button onClick={() => setIsRegistering(!isRegistering)}>
-          {isRegistering
-            ? "Already have an account? Login"
-            : "Don't have an account? Register"}
-        </button>
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+              className="input-field"
+            />
+          </div>
+
+          <button type="submit" className="submit-btn">
+            {isRegistering ? "Register" : "Login"}
+          </button>
+        </form>
+
+        <div className="alternate-actions">
+          <button onClick={handleGoogleLogin} className="google-login-btn">
+            Google Login
+          </button>
+          <button
+            onClick={() => setIsRegistering(!isRegistering)}
+            className="toggle-btn"
+          >
+            {isRegistering
+              ? "Already have an account? Login"
+              : "Don't have an account? Register"}
+          </button>
+        </div>
+
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">Success! Redirecting...</p>}
       </div>
-
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">Success! Redirecting...</p>}
     </div>
   );
 };

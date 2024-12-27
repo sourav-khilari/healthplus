@@ -1,4 +1,4 @@
-/* Register Page Styles */
+/* Hospital Register Page Styles */
 .register-page {
   background-color: #f7f7f7;
   display: flex;
@@ -50,56 +50,20 @@
 .submit-btn {
   padding: 12px;
   font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
   background-color: #3498db;
   color: white;
-  border: none;
-}
-
-.submit-btn:disabled {
-  background-color: #7f8c8d;
-}
-
-.alternate-actions {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.google-login-btn {
-  padding: 12px;
-  font-size: 1rem;
-  background-color: #db4437;
-  color: white;
-  border: none;
   border-radius: 5px;
-  width: 100%;
-  margin-bottom: 15px;
-  cursor: pointer;
-}
-
-.toggle-btn {
-  padding: 12px;
-  font-size: 1rem;
-  background-color: #2ecc71;
-  color: white;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  width: 100%;
+  transition: all 0.3s ease;
 }
 
-.error-message {
-  color: red;
-  font-size: 1rem;
-  text-align: center;
+.submit-btn:hover {
+  background-color: #2980b9;
 }
 
-.success-message {
-  color: green;
-  font-size: 1rem;
-  text-align: center;
+.submit-btn:focus {
+  outline: none;
 }
 
 @media (max-width: 768px) {

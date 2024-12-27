@@ -1,61 +1,132 @@
-.login-container {
-  max-width: 400px;
-  margin: 50px auto;
+/* Doctor Login Page Styles */
+.login-page {
+  background-color: #f7f7f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-h2 {
+.login-container {
+  background-color: #fff;
+  padding: 40px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-title {
+  font-size: 2.5rem;
   text-align: center;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .form-container {
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
 .form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 .input-field {
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
 }
 
-.input-field:disabled {
-  background-color: #f0f0f0;
+.input-field:focus {
+  border-color: #3498db;
 }
 
-.submit-btn {
-  padding: 10px;
-  background-color: #4caf50;
-  color: #fff;
+.email-login-btn {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #3498db;
+  color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+}
+
+.email-login-btn:disabled {
+  background-color: #7f8c8d;
+}
+
+.or-text {
+  text-align: center;
+  font-size: 1rem;
+  color: #888;
+  margin: 10px 0;
+}
+
+.register-text {
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+}
+
+.register-btn {
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.submit-btn:hover {
-  background-color: #45a049;
+.register-btn:hover {
+  background-color: #27ae60;
 }
 
-.submit-btn:disabled {
-  background-color: #b0b0b0;
-  cursor: not-allowed;
+.register-btn:focus {
+  outline: none;
+}
+
+.login-image {
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-image img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    padding: 20px;
+    width: 90%;
+  }
+
+  .login-title {
+    font-size: 2rem;
+  }
+
+  .login-page {
+    flex-direction: column;
+  }
+
+  .login-image {
+    max-width: 100%;
+    margin-top: 20px;
+  }
 }

@@ -1,67 +1,100 @@
+/* LandingPage.css */
 .landing-container {
+  background-color: #f5f5f5;
   text-align: center;
-  margin: 20px;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 50px 20px;
+  height: 75vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
-h1 {
-  font-size: 36px;
-  color: #007bff;
-}
-
-p {
-  font-size: 18px;
+.landing-container h1 {
+  font-size: 3rem;
   margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.landing-container p {
+  font-size: 1.5rem;
+  color: #7f8c8d;
+  margin-bottom: 40px;
 }
 
 .landing-buttons {
   display: flex;
   justify-content: center;
-  gap: 40px;
-  margin-top: 20px;
+  gap: 30px;
+  
 }
 
-.user-section,
-.hospital-section {
-  text-align: center;
+.role-section {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 90%;
+  max-width: 350px;
+}
+
+.role-section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #34495e;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .landing-button {
-  display: block;
-  margin: 10px auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  padding: 12px;
+  font-size: 1.1rem;
+  border-radius: 8px;
   cursor: pointer;
+  width: 100%;
   transition: all 0.3s ease;
+  text-align: center;
+}
+
+.landing-button:disabled {
+  background-color: #bdc3c7;
 }
 
 .landing-button:hover {
-  background-color: #0056b3;
+  opacity: 0.9;
 }
 
-.landing-button:focus {
-  outline: 3px solid #80bdff;
-  outline-offset: 2px;
+.user-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+}
+
+.hospital-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+}
+
+.doctor-button {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
 }
 
 @media (max-width: 768px) {
-  .landing-buttons {
-    flex-direction: column;
-    gap: 20px;
+  .landing-container {
+    padding: 30px;
   }
 
-  h1 {
-    font-size: 28px;
+  .role-section {
+    padding: 20px;
   }
 
-  p {
-    font-size: 16px;
+  .landing-container h1 {
+    font-size: 2.5rem;
   }
 }

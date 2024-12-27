@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { initializeApp } from "firebase/app";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, getIdToken } from "firebase/auth";
+import "../styles/DoctorLogin.css";
 
 // Firebase Config
 const firebaseConfig = {
@@ -28,7 +29,7 @@ const DoctorLogin = () => {
   const navigate = useNavigate();
 
   const axiosInstance = axios.create({
-    baseURL: "http://localhost:8000", // Change to your backend URL
+    baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
     withCredentials: true, // For handling cookies
   });
 
@@ -66,37 +67,56 @@ const DoctorLogin = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Doctor Login</h2>
-      <form onSubmit={handleLogin} className="form-container">
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
-            className="input-field"
-          />
-        </div>
+    <div className="login-page">
+      <div className="login-container">
+        <h2 className="login-title">Doctor Login</h2>
+        <form onSubmit={handleLogin} className="form-container">
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              className="input-field"
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading}
-            className="input-field"
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+              className="input-field"
+            />
+          </div>
 
-        <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          <button type="submit" className="email-login-btn" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        <div className="or-text">or</div>
+
+        <div className="register-text">
+          Do not have an account?{" "}
+          <a href="/doctor/register" className="register-btn">
+            Register here
+          </a>
+        </div>
+      </div>
+      <div className="login-image">
+        <img
+          src="../assets/images/doctor_login_image.jpg" // Replace with the correct image
+          alt="Doctor Login"
+        />
+      </div>
     </div>
   );
 };

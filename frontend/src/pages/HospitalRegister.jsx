@@ -33,51 +33,59 @@ const HospitalRegister = () => {
   };
 
   return (
-    <div className="register-container">
-      <h2>Hospital Registration</h2>
-      <form onSubmit={handleRegister}>
-        <div className="form-group">
-          <label>Name:</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
+    <div className="register-page">
+      <div className="register-container">
+        <h2 className="register-title">Hospital Registration</h2>
+        <form onSubmit={handleRegister} className="register-form">
+          <div className="form-group">
+            <label>Name:</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="input-field"
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label>Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="input-field"
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Address:</label>
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label>Address:</label>
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              required
+              className="input-field"
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Contact Number:</label>
-          <input
-            type="text"
-            value={contactNumber}
-            onChange={(e) => setContactNumber(e.target.value)}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label>Contact Number:</label>
+            <input
+              type="text"
+              value={contactNumber}
+              onChange={(e) => setContactNumber(e.target.value)}
+              required
+              className="input-field"
+            />
+          </div>
 
-        <button type="submit">Register</button>
-      </form>
+          <button type="submit" className="submit-btn">
+            Register
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
