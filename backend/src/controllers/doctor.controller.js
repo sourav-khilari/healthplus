@@ -132,7 +132,7 @@ const fetchPatientData = asyncHandler(async (req, res) => {
 
 
 const getDoctorAppointments =asyncHandler( async (req, res) => {
-    const doctorId = req.params.doctorId; // Doctor ID from request params
+    const doctorId = req.params?.doctorId; // Doctor ID from request params
     const currentTime = new Date();
     const next24Hours = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000);
 

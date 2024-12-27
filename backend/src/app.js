@@ -24,6 +24,7 @@ app.use(cookieParser())
 import userRouter from './routes/user.router.js'
 import adminRouter from './routes/sub.admin.route.js'
 import hospitalRouter from './routes/hospital.route.js'
+import doctorRouter from './routes/doctor.route.js'
 //routes decalaration
 app.use("/api/v1/users",userRouter);
 
@@ -31,6 +32,7 @@ app.use("/api/v1/hospital",hospitalRouter);
 
 console.log("hidsufgui");
 app.use("/api/v1/admin",adminRouter);
+app.use("/api/v1/doctor",doctorRouter);
 
 
 
