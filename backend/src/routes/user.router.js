@@ -58,7 +58,7 @@ import {
   } from "../controllers/medicalstore.controller/product.controller.js";
 
 
-import {} from "../controllers/community.controller.js/postController.js"
+import {addcomment,createPost,getAllPosts,getPostById,getUserPosts,getNotifications} from "../controllers/community.controller/postController.js"
 
 const router = Router()
 
@@ -112,6 +112,7 @@ router.post("/:id/reviews",roleMiddleware("user"), addProductReview);
 
 
 //community
+
 
 
 

@@ -1,9 +1,5 @@
 import { Router } from "express";
 import {
-    registerHospital,
-    loginHospital,
-    addDoctor,
-    getHospitalAllAppointments,
     getCurrentUser,
     logoutUser
 } from '../controllers/hospital.controller.js'
@@ -15,7 +11,7 @@ import {
     fetchPatientData,
 } from '../controllers/doctor.controller.js'
 
-import {} from "../controllers/community.controller.js/postController.js"
+import {} from "../controllers/community.controller/postController.js"
 
 const router = Router()
 

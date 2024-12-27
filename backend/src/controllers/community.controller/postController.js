@@ -1,5 +1,5 @@
 // import User from "../models/userModel.js";
-import { uploadOnCloudinary } from "../utils/cloudnary.js";
+import { uploadOnCloudinary } from "../../utils/cloudnary.js";
 import { Post } from "../../models/community.model/postModel.js";
 import { Comment } from "../../models/community.model/postModel.js";
 import { Notification } from "../../models/community.model/notification.model.js"
@@ -323,8 +323,8 @@ const getAllPosts = async (req, res) => {
 
 
 const getUserPosts = async (req, res) => {
-  const { userId } = req.user; // Assuming userId is available in req.user
-
+  const { _id } = req.user; // Assuming userId is available in req.user
+  const userId=_id
   try {
     // Find posts created by the user
     const userPosts = await Post.find({ userId })
@@ -391,8 +391,8 @@ const getPostById = async (req, res) => {
 };
 
 const getNotifications = async (req, res) => {
-  const { userId } = req.user; // Assuming `req.user` contains the logged-in user's ID
-
+  const { _id } = req.user; // Assuming `req.user` contains the logged-in user's ID
+  const userId=_id
   try {
     const notifications = await Notification.find({ recipientId: userId })
       .sort({ createdAt: -1 }) // Sort notifications by the most recent
