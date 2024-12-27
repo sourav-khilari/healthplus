@@ -7,6 +7,12 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     }, // Firebase UID
+    coverImage:{
+      type:String,
+    },
+    avatar:{
+      type:String,
+    },
     email: {
       type: String,
       required: true,

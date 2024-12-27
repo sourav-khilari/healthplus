@@ -18,6 +18,12 @@ const hospitalSchema = new Schema({
         type: String,
         required: true
     },
+    coverImage: {
+        type: String,
+    },
+    avatar: {
+        type: String,
+    },
     status: {
         type: String,
         enum: ['pending', 'approved', 'rejected'],
@@ -29,9 +35,9 @@ const hospitalSchema = new Schema({
     password: {
         type: String
     }, // Set only when approved
-    role:{
-        type:String,
-        default:"hospital",
+    role: {
+        type: String,
+        default: "hospital",
     }
 }, {
     timestamps: true
