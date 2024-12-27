@@ -737,7 +737,7 @@ const getPatientDetailsId = asyncHandler(async (req, res) => {
       console.error(error);
       res.status(400).json({ error: "Unable to fetch patient details" });
     }
-  });
+});
   
 
 

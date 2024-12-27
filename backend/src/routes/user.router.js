@@ -107,4 +107,11 @@ router.get("/fetchProductById/:id",fetchProductById)
 router.post("/:id/reviews",roleMiddleware("user"), addProductReview);
 
 
+
+//community
+
+
+
+
+
 export default router

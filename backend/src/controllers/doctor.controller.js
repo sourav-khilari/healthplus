@@ -74,6 +74,63 @@ const getPatientDetailsId = asyncHandler(async (req, res) => {
     }
 });
 
+
+const fetchPatientData = asyncHandler(async (req, res) => {
+    const { patientId } = req.body;
+    const userId = req.user._id;
+
+    if (!patientId || !userId) throw new ApiError(400, 'Patient ID and User ID are required');
+
+    // Step 1: Fetch patient details from FHIR API or fallback to MongoDB
+    let patientData;
+    try {
+        const apiResponse = await axios.get(`http://hapi.fhir.org/baseR4/Patient/${patientId}`);
+        patientData = apiResponse.data;
+
+        // Extract details
+        const email = patientData.telecom?.[0]?.value; // Email
+        const contact = patientData.telecom?.[1]?.value; // Contact
+
+        if (!email) throw new ApiError(500, "Email not found in FHIR API data");
+
+        // Save data in MongoDB if not already present
+        const existingPatient = await Patient.findOne({ patientId });
+        if (!existingPatient) {
+            await Patient.create({
+                patientId,
+                name: `${patientData.name?.[0]?.given?.join(' ')} ${patientData.name?.[0]?.family}` || 'Unknown',
+                dob: patientData.birthDate || 'N/A',
+                email,
+                contact,
+                details: patientData,
+            });
+        }
+    } catch (error) {
+        console.error('FHIR API Error:', error.message);
+
+        // Fallback to MongoDB if FHIR API fails
+        const patientFromDb = await Patient.findOne({ patientId });
+        if (!patientFromDb) throw new ApiError(404, "Patient not found in both FHIR API and MongoDB");
+
+        patientData = patientFromDb;
+    }
+
+    // // Step 2: Add patientId to user's patient_ids array
+    // const user = await User.findById(userId);
+    // if (!user) throw new ApiError(404, 'User not found');
+
+    // if (!user.patient_ids.includes(patientId)) {
+    //     await User.updateOne(
+    //         { _id: userId },
+    //         { $addToSet: { patient_ids: patientId } } // Ensures no duplicates
+    //     );
+    // }
+
+    // Step 3: Respond with patient details
+    res.status(200).json(new ApiResponse(200, { patientDetails: patientData }, 'Patient data fetched successfully'));
+});
+
+
 const getDoctorAppointments =asyncHandler( async (req, res) => {
     const doctorId = req.params.doctorId; // Doctor ID from request params
     const currentTime = new Date();
@@ -140,4 +197,6 @@ export {
     loginDoctor,
     getPatientDetailsId,
     getDoctorAppointments,
+    fetchPatientData ,
+    
 }
