@@ -1,5 +1,6 @@
+
 import ServiceCard from "../components/ServiceCard";
-import "../styles/Home.css";
+import "../styles/Home.css"; // Ensure this file includes styles for the home page
 
 const Home = () => {
   const services = [
@@ -25,27 +26,38 @@ const Home = () => {
     },
     {
       title: "Find Hospital Near You",
-      description: "Get the posiible near hospital.",
+      description: "Get the possible hospitals near you.",
       link: "/findHospital",
     },
     {
       title: "Find Pharmacy Near You",
-      description: "Get the posiible near hospital. ",
+      description: "Get the possible pharmacies near you.",
       link: "/findPharmacy",
+    },
+    {
+      title: "Community",
+      description: "Join a community of health-conscious individuals.",
+      link: "/community",
+    },
+    {
+      title: "Blood Bank",
+      description: "Donate or request blood at nearby centers.",
+      link: "/bloodbank",
     },
   ];
 
   return (
     <div className="home">
       {/* Hero Section */}
-      <section className="hero ">
-        <h1>Welcome to Health+</h1>
-        <p>Comprehensive care, personalized for you.</p>
+      <section className="hero">
+        <div className="hero-content">
+          <h1>Welcome to Health+</h1>
+          <p>Comprehensive care, personalized for you.</p>
+        </div>
         <img
           src="./src/assets/images/h2.jpeg"
           alt="HealthPlus banner showing healthcare excellence"
-          className="hero-image "
-          style={{ width: "40%" }}
+          className="hero-image"
         />
       </section>
 

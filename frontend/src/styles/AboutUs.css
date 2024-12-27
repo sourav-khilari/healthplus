@@ -1,17 +1,251 @@
+/* AboutUs.css
+
 .about-us {
+  font-family: "Arial", sans-serif;
   padding: 40px;
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
+  background-color: #f9f9f9;
+  color: #333;
 }
 
-.about-us h1 {
-  font-size: 32px;
+.hero-section {
+  text-align: center;
+  background-color: #2980b9;
+  color: white;
+  padding: 60px 20px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
   margin-bottom: 20px;
 }
 
-.about-us p {
-  font-size: 18px;
-  color: #555;
+.hero-section .intro-text {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.mission-section,
+.values-section,
+.team-section,
+.contact-section {
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+p {
+  font-size: 1.1rem;
   line-height: 1.6;
+  color: #555;
+}
+
+.values-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.value {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.value h3 {
+  font-size: 1.5rem;
+  color: #2980b9;
+  margin-bottom: 10px;
+}
+
+.value p {
+  font-size: 1rem;
+}
+
+.contact-section p {
+  font-size: 1.1rem;
+}
+
+.contact-section a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+.contact-section a:hover {
+  text-decoration: underline;
+}
+.intro-text {
+  color: #fff;
+} */
+/* AboutUs.css */
+.intro-text {
+  color: #fff;
+}
+.about-us-container {
+  font-family: "Roboto", sans-serif;
+  padding: 40px;
+  background-color: #f7f7f7;
+  color: #333;
+}
+
+.hero-section {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #3498db;
+  color: white;
+  padding: 40px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+}
+
+.hero-text {
+  max-width: 50%;
+  color: white;
+}
+
+.hero-text h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.hero-image img {
+  width: 100%;
+  height: auto;
+  max-width: 500px;
+  border-radius: 8px;
+}
+
+.mission-section {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mission-section h2 {
+  font-size: 2.5rem;
+  color: #2980b9;
+  margin-bottom: 20px;
+}
+
+.mission-section p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.values-section {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.values-section h2 {
+  font-size: 2.5rem;
+  color: #2980b9;
+  margin-bottom: 20px;
+}
+
+.values-cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.value-card {
+  background-color: #ecf0f1;
+  padding: 20px;
+  flex: 1;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.value-card h3 {
+  font-size: 1.8rem;
+  color: #3498db;
+  margin-bottom: 10px;
+}
+
+.value-card p {
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+.team-section {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.team-section h2 {
+  font-size: 2.5rem;
+  color: #2980b9;
+  margin-bottom: 20px;
+}
+
+.team-section p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.team-images {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.team-member {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.contact-section {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  margin-top: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.contact-section h2 {
+  font-size: 2.5rem;
+  color: #2980b9;
+  margin-bottom: 20px;
+}
+
+.contact-section p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.contact-section a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.contact-section a:hover {
+  text-decoration: underline;
 }

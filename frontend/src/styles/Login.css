@@ -1,112 +1,115 @@
 /* Login.css */
-
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f9;
+.login-page {
+  background-color: #f7f7f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
 }
 
 .login-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background: #ffffff;
+  background-color: #fff;
+  padding: 40px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-title {
+  font-size: 2.5rem;
   text-align: center;
+  color: #333;
+  margin-bottom: 30px;
 }
 
-h1 {
-  color: #333333;
-  margin-bottom: 20px;
-  font-size: 24px;
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.login-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 16px;
+.input-field {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
 }
 
-.email-login-button,
-.google-login-button,
-.register-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  font-size: 16px;
+.input-field:focus {
+  border-color: #3498db;
+}
+
+.email-login-btn,
+.google-login-btn {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.email-login-btn {
+  background-color: #3498db;
+  color: white;
   border: none;
-  border-radius: 4px;
+}
+
+.email-login-btn:disabled {
+  background-color: #7f8c8d;
+}
+
+.google-login-btn {
+  background-color: #db4437;
+  color: white;
+  border: none;
+}
+
+.google-login-btn:disabled {
+  background-color: #7f8c8d;
+}
+
+.or-text {
+  text-align: center;
+  font-size: 1rem;
+  color: #888;
+  margin: 10px 0;
+}
+
+.register-text {
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+}
+
+.register-btn {
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.email-login-button {
-  background-color: #4caf50;
-  color: #ffffff;
+.register-btn:hover {
+  background-color: #27ae60;
 }
 
-.google-login-button {
-  background-color: #4285f4;
-  color: #ffffff;
+.register-btn:focus {
+  outline: none;
 }
 
-.register-button {
-  background-color: #e0e0e0;
-  color: #333333;
-}
-
-.email-login-button:hover {
-  background-color: #45a049;
-}
-
-.google-login-button:hover {
-  background-color: #357ae8;
-}
-
-.register-button:hover {
-  background-color: #d6d6d6;
-}
-
-.email-login-button:disabled,
-.google-login-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-p {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #666666;
-}
-
-@media (max-width: 500px) {
+@media (max-width: 768px) {
   .login-container {
-    margin: 20px;
-    padding: 15px;
+    padding: 20px;
+    width: 90%;
   }
 
-  h1 {
-    font-size: 20px;
-  }
-
-  .login-input {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .email-login-button,
-  .google-login-button,
-  .register-button {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  p {
-    font-size: 12px;
+  .login-title {
+    font-size: 2rem;
   }
 }

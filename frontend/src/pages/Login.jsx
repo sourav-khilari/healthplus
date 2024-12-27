@@ -57,6 +57,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+
   const handleEmailLogin = async () => {
     try {
       setLoading(true);
@@ -92,41 +93,44 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h1>Login</h1>
-      <div>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="login-input"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="login-input"
-        />
-        <button
-          onClick={handleEmailLogin}
-          disabled={loading}
-          className="email-login-button"
-        >
-          {loading ? "Logging in..." : "Login with Email"}
-        </button>
-        <button
-          onClick={handleGoogleLogin}
-          disabled={loading}
-          className="google-login-button"
-        >
-          {loading ? "Logging in..." : "Sign in with Google"}
-        </button>
-        <p>Don’t have an account?</p>
-        <button onClick={redirectToRegister} className="register-button">
-          Register Here
-        </button>
+    <div className="login-page">
+      <div className="login-container">
+        <h1 className="login-title">Login to HealthPlus</h1>
+        <div className="form-container">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input-field"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="input-field"
+          />
+          <button
+            onClick={handleEmailLogin}
+            disabled={loading}
+            className="email-login-btn"
+          >
+            {loading ? "Logging in..." : "Login with Email"}
+          </button>
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="google-login-btn"
+          >
+            {loading ? "Logging in..." : "Sign in with Google"}
+          </button>
+          <p className="or-text">or</p>
+          <p className="register-text">Do not have an account?</p>
+          <button onClick={redirectToRegister} className="register-btn">
+            Register Here
+          </button>
+        </div>
       </div>
     </div>
   );
