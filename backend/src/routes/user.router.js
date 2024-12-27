@@ -1,64 +1,64 @@
 import { Router } from "express";
 import {
-    registerUser,
-    loginUser,
-    nearestHospital,
-    nearestPharmacy,
-    getAllHospitals,
-    bookAppointment,
-    getAvailableSlots,
-    deleteAppointment,
-    updateAppointment,
-    getAllDoctors,
-    sendOtpForPatientId,
-    verifyOtpAndFetchData,
-    createPatientId,
-    getCurrentUser,
-    logoutUser,
-    uploadMedicalDetails,
-    getPatientDetailsId,
+  registerUser,
+  loginUser,
+  nearestHospital,
+  nearestPharmacy,
+  getAllHospitals,
+  bookAppointment,
+  getAvailableSlots,
+  deleteAppointment,
+  updateAppointment,
+  getAllDoctors,
+  sendOtpForPatientId,
+  verifyOtpAndFetchData,
+  createPatientId,
+  getCurrentUser,
+  logoutUser,
+  uploadMedicalDetails,
+  getPatientDetailsId,
 } from '../controllers/user.controller.js'
 import { authMiddleware, roleMiddleware } from '../middlewares/auth.middleaware.js'
 import { upload } from "../middlewares/multer.middleware.js"
 
 
 import {
-    createOrder,
-    getAllOrders,
-    getUserOrders,
-    countTotalOrders,
-    calculateTotalSales,
-    calcualteTotalSalesByDate,
-    findOrderById,
-    markOrderAsPaid,
-    markOrderAsDelivered,
-  } from "../controllers/medicalstore.controller/order.controller.js";
+  createOrder,
+  getAllOrders,
+  getUserOrders,
+  countTotalOrders,
+  calculateTotalSales,
+  calcualteTotalSalesByDate,
+  findOrderById,
+  markOrderAsPaid,
+  markOrderAsDelivered,
+} from "../controllers/medicalstore.controller/order.controller.js";
 
 
-  import {
-    createCategory,
-    updateCategory,
-    removeCategory,
-    listCategory,
-    readCategory,
-  } from "../controllers/medicalstore.controller/category.controller.js";
+import {
+  createCategory,
+  updateCategory,
+  removeCategory,
+  listCategory,
+  readCategory,
+} from "../controllers/medicalstore.controller/category.controller.js";
 
 
-  import {
-    addProduct,
-    updateProductDetails,
-    removeProduct,
-    fetchProducts,
-    fetchProductById,
-    fetchAllProducts,
-    addProductReview,
-    fetchTopProducts,
-    fetchNewProducts,
-    filterProducts,
-  } from "../controllers/medicalstore.controller/product.controller.js";
+import {
+  addProduct,
+  updateProductDetails,
+  removeProduct,
+  fetchProducts,
+  fetchProductById,
+  fetchAllProducts,
+  addProductReview,
+  fetchTopProducts,
+  fetchNewProducts,
+  filterProducts,
+} from "../controllers/medicalstore.controller/product.controller.js";
 
 
-import {addcomment,createPost,getAllPosts,getPostById,getUserPosts,getNotifications} from "../controllers/community.controller/postController.js"
+import { addcomment, createPost, getAllPosts, getPostById, getUserPosts, getNotifications, deletePost } from "../controllers/community.controller/postController.js"
 
 const router = Router()
 
@@ -87,7 +87,7 @@ router.post('/create-patient-id', roleMiddleware("user"), createPatientId);
 
 //router.post('/create-patient-id',roleMiddleware("user"), createPatientId);
 router.post('/uploadMedicalDetails', roleMiddleware("user"), upload.single("medical-history"), uploadMedicalDetails);
-router.get("/ getPatientDetailsId/:id",roleMiddleware("user"),  getPatientDetailsId);
+router.get("/ getPatientDetailsId/:id", roleMiddleware("user"), getPatientDetailsId);
 
 
 
@@ -95,25 +95,31 @@ router.get("/ getPatientDetailsId/:id",roleMiddleware("user"),  getPatientDetail
 //health medstore
 
 router.get("/mine", roleMiddleware("user"), getUserOrders);
-router.get("/readCategory/:id",readCategory);
+router.get("/readCategory/:id", readCategory);
 router.get("/findOrderById/:id", roleMiddleware("user"), findOrderById);
 router.put("/:id/pay", roleMiddleware("user"), markOrderAsPaid);
 
-router.post("/createOrder",roleMiddleware("user"), createOrder)
+router.post("/createOrder", roleMiddleware("user"), createOrder)
 
 router.get("/top", fetchTopProducts);
 router.get("/new", fetchNewProducts);
 
-router.get("/allproducts",fetchAllProducts);
-router.post("/filtered-products",filterProducts);
-router.get("/fetchProductById/:id",fetchProductById)
-router.post("/:id/reviews",roleMiddleware("user"), addProductReview);
+router.get("/allproducts", fetchAllProducts);
+router.post("/filtered-products", filterProducts);
+router.get("/fetchProductById/:id", fetchProductById)
+router.post("/:id/reviews", roleMiddleware("user"), addProductReview);
 
 
 
 //community
 
-
+router.post("/addcomment", roleMiddleware("user"), addcomment);
+router.get("/getAllPosts", roleMiddleware("user"), getAllPosts);
+router.get("/getUserPosts", roleMiddleware("user"), getUserPosts);
+router.get("/getPostById/:postId", roleMiddleware("user"), getPostById);
+router.get("/getNotifications", roleMiddleware("user"), getNotifications);
+router.post("/createPost", roleMiddleware("user"), createPost);
+router.delete("/posts/:postId", roleMiddleware("user"), deletePost);
 
 
 

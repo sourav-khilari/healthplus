@@ -440,6 +440,49 @@ const getNotifications = async (req, res) => {
 // };
 
 
+
+const deletePost = async (req, res) => {
+  const { postId } = req.params;
+  const { _id, role } = req.user; // Assuming `req.user` contains userId and role
+  const userId = _id;
+
+  try {
+    // Check if the post exists
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).send({
+        success: false,
+        message: "Post not found.",
+      });
+    }
+
+    // Validate permissions
+    if (post.userId.toString() !== userId) {
+      return res.status(403).send({
+        success: false,
+        message: "You are not authorized to delete this post.",
+      });
+    }
+
+    // Delete the post
+    await Post.findByIdAndDelete(postId);
+
+    // Delete associated comments
+    await Comment.deleteMany({ postId });
+
+    return res.status(200).send({
+      success: true,
+      message: "Post and associated comments deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Error deleting post and comments:", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
+
 export {
   createPost,
   getAllPosts,
@@ -447,4 +490,5 @@ export {
   getUserPosts,
   getPostById,
   getNotifications,
+  deletePost,
 }

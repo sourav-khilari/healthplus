@@ -11,8 +11,8 @@ import {
     fetchPatientData,
 } from '../controllers/doctor.controller.js'
 
-import {} from "../controllers/community.controller/postController.js"
 
+import { addcomment, getAllPosts, getPostById, getUserPosts, getNotifications, deletePost } from "../controllers/community.controller/postController.js"
 const router = Router()
 
 router.post('/login', loginDoctor);
@@ -21,7 +21,11 @@ router.post('/gfetchPatientData',fetchPatientData);
 router.post('/getDoctorAppointments/:doctorId', getDoctorAppointments);
 
 //community
-
+router.post("/addcomment", roleMiddleware("user"), addcomment);
+router.get("/getAllPosts", roleMiddleware("user"), getAllPosts);
+router.get("/getUserPosts", roleMiddleware("user"), getUserPosts);
+router.get("/getPostById/:postId", roleMiddleware("user"), getPostById);
+router.get("/getNotifications", roleMiddleware("user"), getNotifications);
 
 
 

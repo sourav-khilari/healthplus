@@ -24,4 +24,7 @@ router.post('/addDoctor',roleMiddleware("hospital"), addDoctor);
 router.get('/getDoctorAppointments',roleMiddleware("hospital"), getDoctorAppointments);
 router.get('/getHospitalAllAppointments',roleMiddleware("hospital"), getHospitalAllAppointments);
 
+
+
+
 export default router
