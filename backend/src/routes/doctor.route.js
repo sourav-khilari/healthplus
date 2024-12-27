@@ -3,7 +3,6 @@ import {
     registerHospital,
     loginHospital,
     addDoctor,
-    getDoctorAppointments,
     getHospitalAllAppointments,
     getCurrentUser,
     logoutUser
@@ -23,6 +22,7 @@ router.post('/login', loginDoctor);
 router.post('/gfetchPatientData',fetchPatientData);
 
 router.post('/getDoctorAppointments/:doctorId', getDoctorAppointments);
+
 
 
 
