@@ -1,0 +1,83 @@
+.delete-post-page {
+  padding: 20px;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.posts-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.post-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.post-time {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.post-content h3 {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.delete-btn {
+  padding: 10px 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+.delete-btn:focus {
+  outline: none;
+}
+
+.delete-post-page p {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.delete-post-page .post-item:hover {
+  background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+  .delete-post-page {
+    padding: 15px;
+  }
+
+  .post-content h3 {
+    font-size: 1rem;
+  }
+
+  .delete-btn {
+    font-size: 0.9rem;
+  }
+}

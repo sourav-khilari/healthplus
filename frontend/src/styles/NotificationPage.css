@@ -1,0 +1,61 @@
+.notifications-page {
+  padding: 20px;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.notifications-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.notification-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.notification-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-time {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.notification-content p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.notifications-page p {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.notifications-page .notification-item:hover {
+  background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+  .notifications-page {
+    padding: 15px;
+  }
+
+  .notification-content p {
+    font-size: 0.9rem;
+  }
+}

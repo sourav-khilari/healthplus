@@ -12,7 +12,7 @@ const UserPosts = () => {
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
-        const response = await axiosInstance.get("/users/posts");
+        const response = await axiosInstance.get("/user/getUserPosts");
         setUserPosts(response.data.data);
       } catch (error) {
         console.error("Error fetching user posts", error);
@@ -32,7 +32,7 @@ const UserPosts = () => {
             <div key={post._id} className="mb-4">
               <h3>{post.title}</h3>
               <p>{post.discription}</p>
-              <Link to={`/post/${post._id}`} className="text-blue-500">
+              <Link to={`/user/posts/${post._id}`} className="text-blue-500">
                 View Post
               </Link>
             </div>

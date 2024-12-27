@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Post } from "../index"; // Assuming Post is a component that takes post data as props
 import { setposts } from "../../store/postSlice"; // Assuming you're using Redux for global state management
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux"; // Import useSelector
 import axios from "axios";
+
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
   withCredentials: true, // For handling cookies
@@ -12,12 +13,27 @@ const AllPost = () => {
   const dispatch = useDispatch();
   const [allPosts, setAllPosts] = useState([]);
 
+  // Retrieve role from Redux store will it work?????
+  // if yes then need to add it to the rest of the pages
+  //else if you find any other way to describe the role and
+  //navigate to the proper route add it
+  const role = useSelector((state) => state.user.role); // Assuming user role is stored in user slice
+
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        // Make sure the API endpoint URL is correct
-        const response = await axiosInstance.get("users/getallpost");
-        console.log(response.data.allPosts);
+        let response;
+
+        // Conditional API request based on the role
+        if (role === "user") {
+          response = await axiosInstance.get("/user/getAllPosts");
+        } else if (role === "doctor") {
+          response = await axiosInstance.get("/doctor/getAllPosts");
+        } else {
+          // Handle case where role is not set or is invalid
+          console.error("Role is not set correctly.");
+          return;
+        }
 
         // Update local state
         setAllPosts(response.data.allPosts);
@@ -30,7 +46,7 @@ const AllPost = () => {
     };
 
     fetchAllPosts();
-  }, [dispatch]); // Empty dependency array ensures the effect runs once on mount
+  }, [dispatch, role]); // role as a dependency to re-fetch if it changes
 
   // If the data hasn't been fetched yet, show loading
   if (allPosts.length === 0) {
@@ -45,7 +61,7 @@ const AllPost = () => {
           key={post._id}
           id={post._id}
           title={post.title}
-          description={post.discription}
+          description={post.description}
           image={post.image}
         />
       ))}
