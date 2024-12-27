@@ -65,7 +65,7 @@ const AdminProductUpdate = () => {
       });
       setImage(res.image);
     } catch (err) {
-      toast.success("Item added successfully", {
+      toast.success(`Item added successfully ${err}`, {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
       });

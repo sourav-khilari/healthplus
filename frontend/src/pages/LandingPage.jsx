@@ -41,6 +41,23 @@ const LandingPage = () => {
             Hospital Register
           </button>
         </div>
+
+        {/* Added Doctor Section */}
+        <div className="doctor-section">
+          <h2>For Doctors</h2>
+          <button
+            className="landing-button"
+            onClick={() => navigate("/doctor/login")}
+          >
+            Doctor Login
+          </button>
+          {/* <button
+            className="landing-button"
+            onClick={() => navigate("/doctor/register")}
+          >
+            Doctor Register
+          </button> */}
+        </div>
       </div>
     </div>
   );

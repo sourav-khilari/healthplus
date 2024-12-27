@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 
 const AdminMenu = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // Initialize the menu as open by setting isMenuOpen to true
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);

@@ -1,66 +1,78 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useGetFilteredProductsQuery } from "./redux/api/productApiSlice";
-import { useFetchCategoriesQuery } from "./redux/api/categoryApiSlice";
-
-import {
-  setCategories,
-  setProducts,
-  setChecked,
-  setPriceFilter,
-} from "./redux/features/shop/shopSlice";
-
-import Loader from "./Components/Loader";
+import axios from "axios"; // Import your axios instance
+import Loader from "./Loader";
 import ProductCard from "./Products/ProductCard";
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
 
 const Shop = () => {
-  const dispatch = useDispatch();
-  const { categories, products, checked, priceFilter } = useSelector(
-    (state) => state.shop
-  );
-
-  const categoriesQuery = useFetchCategoriesQuery();
-  const filteredProductsQuery = useGetFilteredProductsQuery({
-    checked,
-    priceFilter,
-  });
-
-  const [priceRange, setPriceRange] = useState([0, 1000]); // Default price range
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const [priceFilter, setPriceFilter] = useState([0, 1000]);
   const [selectedBrand, setSelectedBrand] = useState("All Brands");
 
-  // Fetch categories and update state
-  useEffect(() => {
-    if (categoriesQuery.isSuccess) {
-      dispatch(setCategories(categoriesQuery.data));
-    }
-  }, [categoriesQuery, dispatch]);
+  const [priceRange, setPriceRange] = useState([0, 1000]); // Default price range
 
-  // Filter products based on categories, brand, and price range
+  // Fetch categories
   useEffect(() => {
-    if (filteredProductsQuery.isSuccess) {
-      const filtered = filteredProductsQuery.data.filter((product) => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axiosInstance.get("/categories");
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Fetch filtered products based on filters
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axiosInstance.get("/products", {
+          params: { checked, priceFilter },
+        });
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [checked, priceFilter]);
+
+  // Filter products based on selected brand, price range, and categories
+  useEffect(() => {
+    const filterProducts = () => {
+      const filtered = products.filter((product) => {
         const matchesPrice =
           product.price >= priceRange[0] && product.price <= priceRange[1];
         const matchesBrand =
           selectedBrand === "All Brands" || product.brand === selectedBrand;
-        return matchesPrice && matchesBrand;
+        const matchesCategory =
+          checked.length === 0 || checked.includes(product.categoryId);
+
+        return matchesPrice && matchesBrand && matchesCategory;
       });
-      dispatch(setProducts(filtered));
-    }
-  }, [
-    checked,
-    priceRange,
-    selectedBrand,
-    filteredProductsQuery.data,
-    dispatch,
-  ]);
+
+      setFilteredProducts(filtered);
+    };
+
+    filterProducts();
+  }, [products, checked, priceRange, selectedBrand]);
 
   // Handle category selection
   const handleCheck = (value, id) => {
     const updatedChecked = value
       ? [...checked, id]
       : checked.filter((c) => c !== id);
-    dispatch(setChecked(updatedChecked));
+    setChecked(updatedChecked);
   };
 
   // Handle brand selection
@@ -72,23 +84,21 @@ const Shop = () => {
   const handlePriceChange = (e) => {
     const newRange = e.target.value.split(",").map((val) => parseInt(val, 10));
     setPriceRange(newRange);
-    dispatch(setPriceFilter(newRange));
+    setPriceFilter(newRange);
   };
 
   // Reset all filters
   const handleResetFilters = () => {
     setPriceRange([0, 1000]);
     setSelectedBrand("All Brands");
-    dispatch(setChecked([]));
-    dispatch(setPriceFilter([0, 1000]));
-    if (filteredProductsQuery.isSuccess) {
-      dispatch(setProducts(filteredProductsQuery.data));
-    }
+    setChecked([]);
+    setPriceFilter([0, 1000]);
   };
 
+  // Get unique brands
   const uniqueBrands = [
     "All Brands",
-    ...new Set(filteredProductsQuery.data?.map((p) => p.brand).filter(Boolean)),
+    ...new Set(products.map((p) => p.brand).filter(Boolean)),
   ];
 
   return (
@@ -100,7 +110,7 @@ const Shop = () => {
             Filter by Categories
           </h2>
           <div className="p-5">
-            {categories?.map((c) => (
+            {categories.map((c) => (
               <div key={c._id} className="mb-2">
                 <div className="flex items-center">
                   <input
@@ -163,12 +173,14 @@ const Shop = () => {
 
         {/* Main Content */}
         <div className="p-3 w-full md:w-3/4">
-          <h2 className="h4 text-center mb-2">{products?.length} Products</h2>
+          <h2 className="h4 text-center mb-2">
+            {filteredProducts.length} Products
+          </h2>
           <div className="flex flex-wrap">
-            {filteredProductsQuery.isLoading ? (
+            {filteredProducts.length === 0 ? (
               <Loader />
             ) : (
-              products?.map((p) => (
+              filteredProducts.map((p) => (
                 <div className="p-3" key={p._id}>
                   <ProductCard p={p} />
                 </div>

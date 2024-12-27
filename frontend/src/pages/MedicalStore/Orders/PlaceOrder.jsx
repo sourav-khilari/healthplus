@@ -2,16 +2,19 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import Message from "../components/Message";
-import ProgressSteps from "../components/ProgressSteps";
-import Loader from "../components/Loader";
-import { useCreateOrderMutation } from "../redux/api/orderApiSlice";
+import Message from "../Components/Message";
+import ProgressSteps from "../Components/ProgressSteps";
+// import Loader from "Loader";
+import axios from "axios";
 import { clearCartItems } from "../redux/features/cart/cartSlice";
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
   const cart = useSelector((state) => state.cart);
-  const [createOrder, { isLoading, error }] = useCreateOrderMutation();
 
   useEffect(() => {
     if (!cart.shippingAddress.address) {
@@ -23,7 +26,7 @@ const PlaceOrder = () => {
 
   const placeOrderHandler = async () => {
     try {
-      const res = await createOrder({
+      const { data } = await axiosInstance.post("/orders", {
         orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod,
@@ -31,11 +34,12 @@ const PlaceOrder = () => {
         shippingPrice: cart.shippingPrice,
         taxPrice: cart.taxPrice,
         totalPrice: cart.totalPrice,
-      }).unwrap();
+      });
+
       dispatch(clearCartItems());
-      navigate(`/order/${res._id}`);
+      navigate(`/order/${data._id}`);
     } catch (error) {
-      toast.error(error);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -114,8 +118,6 @@ const PlaceOrder = () => {
               </li>
             </ul>
 
-            {error && <Message variant="danger">{error.data.message}</Message>}
-
             <div>
               <h2 className="text-xl font-semibold mb-4 text-blue-600">
                 Shipping
@@ -143,8 +145,6 @@ const PlaceOrder = () => {
           >
             Place Order
           </button>
-
-          {isLoading && <Loader />}
         </div>
       </div>
     </>

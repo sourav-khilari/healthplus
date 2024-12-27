@@ -2,37 +2,47 @@ import { useEffect, useState } from "react";
 import { FaTrash, FaEdit, FaCheck, FaTimes } from "react-icons/fa";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import {
-  useDeleteUserMutation,
-  useGetUsersQuery,
-  useUpdateUserMutation,
-} from "../redux/api/usersApiSlice";
+import axios from "axios";
 import { toast } from "react-toastify";
-// ⚠️⚠️⚠️ don't forget this ⚠️⚠️⚠️⚠️
-// import AdminMenu from "./AdminMenu";
 
 const UserList = () => {
-  const { data: users, refetch, isLoading, error } = useGetUsersQuery();
-
-  const [deleteUser] = useDeleteUserMutation();
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [editableUserId, setEditableUserId] = useState(null);
   const [editableUserName, setEditableUserName] = useState("");
   const [editableUserEmail, setEditableUserEmail] = useState("");
 
-  const [updateUser] = useUpdateUserMutation();
-
   useEffect(() => {
-    refetch();
-  }, [refetch]);
+    fetchUsers();
+  }, []);
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+    withCredentials: true, // For handling cookies
+  });
+
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { data } = await axiosInstance.get("/users");
+      setUsers(data);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const deleteHandler = async (id) => {
-    if (window.confirm("Are you sure")) {
+    if (window.confirm("Are you sure?")) {
       try {
-        await deleteUser(id);
-        refetch();
+        await axiosInstance.delete(`/users/${id}`);
+        toast.success("User deleted successfully.");
+        fetchUsers();
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error(err.response?.data?.message || err.message);
       }
     }
   };
@@ -45,15 +55,15 @@ const UserList = () => {
 
   const updateHandler = async (id) => {
     try {
-      await updateUser({
-        userId: id,
+      await axiosInstance.put(`/users/${id}`, {
         username: editableUserName,
         email: editableUserEmail,
       });
+      toast.success("User updated successfully.");
       setEditableUserId(null);
-      refetch();
+      fetchUsers();
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error(err.response?.data?.message || err.message);
     }
   };
 
@@ -63,12 +73,9 @@ const UserList = () => {
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">
-          {error?.data?.message || error.error}
-        </Message>
+        <Message variant="danger">{error}</Message>
       ) : (
         <div className="flex flex-col md:flex-row">
-          {/* <AdminMenu /> */}
           <table className="w-full md:w-4/5 mx-auto table-auto">
             <thead className="bg-blue-100">
               <tr>

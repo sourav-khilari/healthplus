@@ -45,6 +45,8 @@ import Order from "./pages/MedicalStore/Orders/Order.jsx";
 import OrderList from "./pages/MedicalStore/Admin/OrderList.jsx";
 import MedAdminDashboard from "./pages/MedicalStore/Admin/MedAdminDashboard.jsx";
 import PrivateRoute from "./pages/MedicalStore/Components/PrivateRoute.jsx";
+import DoctorLogin from "./pages/DoctorLogin.jsx";
+// import DoctorRegister from "./pages/DoctorRegister.jsx";
 
 const App = () => {
   return (
@@ -61,6 +63,8 @@ const App = () => {
         <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/hospital/login" element={<HospitalLogin />} />
         <Route path="/hospital/register" element={<HospitalRegister />} />
+        <Route path="/doctor/login" element={<DoctorLogin />} />
+        {/* <Route path="/doctor/register" element={<DoctorRegister />} /> */}
         <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
 
         {/* General Pages */}
