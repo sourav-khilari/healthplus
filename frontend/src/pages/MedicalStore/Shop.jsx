@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios"; // Import your axios instance
-import Loader from "./Loader";
+import Loader from "./Components/Loader";
 import ProductCard from "./Products/ProductCard";
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/api/v1", // Change to your backend URL

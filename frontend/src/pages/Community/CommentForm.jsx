@@ -2,7 +2,7 @@ import  { useState } from "react";
 import axios from "axios";
 // Axios Instance
   const axiosInstance = axios.create({
-    baseURL: "http://localhost:8000", // Change to your backend URL
+    baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
     withCredentials: true, // For handling cookies
   });
 

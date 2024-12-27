@@ -1,27 +1,28 @@
-import  { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // Axios Instance
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:8000", // Change to your backend URL
-    withCredentials: true, // For handling cookies
-  });
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [discription, setDiscription] = useState("");
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
-
+//  const userId = useSelector((state) => state.auth.userData._id);
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
     formData.append("discription", discription);
     if (image) formData.append("image", image);
-
+    // formData.append("_id", userId);
     try {
-      const response = await axios.post("/api/create-post", formData);
+      const response = await axiosInstance.post("/create-post", formData);
       navigate(`/post/${response.data.data._id}`); // Navigate to the created post's detail page
     } catch (error) {
       console.error("Error creating post", error);
