@@ -1,20 +1,43 @@
+import { useState, useEffect } from "react";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
-import { useGetOrdersQuery } from "../redux/api/orderApiSlice";
 import AdminMenu from "./AdminMenu";
+import axios from "axios";
+
+// Create an axios instance
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Update with your backend URL
+  withCredentials: true, // Include credentials if required
+});
 
 const OrderList = () => {
-  const { data: orders, isLoading, error } = useGetOrdersQuery();
+  const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setIsLoading(true);
+        const { data } = await axiosInstance.get("/admin/orders");
+        setOrders(data);
+      } catch (err) {
+        setError(err.response?.data?.message || err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
 
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">
-          {error?.data?.message || error.error}
-        </Message>
+        <Message variant="danger">{error}</Message>
       ) : (
         <div className="container mx-auto p-4">
           <AdminMenu />

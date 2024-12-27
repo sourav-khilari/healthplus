@@ -4,16 +4,32 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/features/cart/cartSlice";
 import { toast } from "react-toastify";
 import HeartIcon from "./HeartIcon";
+import axios from "axios"; // Import your axios instance
 
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
 const ProductCard = ({ pr }) => {
   const dispatch = useDispatch();
 
-  const addToCartHandler = (product, qty) => {
+  const addToCartHandler = (product, qty = 1) => {
     dispatch(addToCart({ ...product, qty }));
-    toast.success("Item added successfully", {
+    toast.success("Item added to cart successfully", {
       position: toast.POSITION.TOP_RIGHT,
       autoClose: 2000,
     });
+  };
+
+  const fetchProductDetails = async (productId) => {
+    try {
+      const response = await axiosInstance.get(`/products/${productId}`);
+      console.log(response.data);
+      // Process the product data here
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+      toast.error("Error fetching product details");
+    }
   };
 
   return (
@@ -28,6 +44,7 @@ const ProductCard = ({ pr }) => {
             src={pr.image}
             alt={pr.name}
             style={{ height: "170px", objectFit: "cover" }}
+            onClick={() => fetchProductDetails(pr._id)} // Fetch product details when clicked
           />
         </Link>
         <HeartIcon product={pr} />
@@ -36,14 +53,16 @@ const ProductCard = ({ pr }) => {
       <div className="p-5">
         <div className="flex justify-between">
           <h5 className="mb-2 text-xl text-white dark:text-white">
-            {pr?.name}
+            {pr?.name || "Product Name"}
           </h5>
 
           <p className="text-black font-semibold text-pink-500">
-            {pr?.price?.toLocaleString("en-US", {
-              style: "currency",
-              currency: "USD",
-            })}
+            {pr?.price
+              ? pr?.price?.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })
+              : "Price Unavailable"}
           </p>
         </div>
 
@@ -75,6 +94,7 @@ const ProductCard = ({ pr }) => {
           </Link>
 
           <button
+            aria-label="Add to Cart"
             className="p-2 rounded-full"
             onClick={() => addToCartHandler(pr, 1)}
           >

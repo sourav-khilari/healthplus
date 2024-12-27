@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Import axiosInstance
 import {
   saveShippingAddress,
   savePaymentMethod,
 } from "../redux/features/cart/cartSlice";
-import ProgressSteps from "../components/ProgressSteps";
+import ProgressSteps from "../Components/ProgressSteps";
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
 
 const Shipping = () => {
   const cart = useSelector((state) => state.cart);
@@ -22,15 +27,28 @@ const Shipping = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    dispatch(saveShippingAddress({ address, city, postalCode, country }));
-    dispatch(savePaymentMethod(paymentMethod));
-    navigate("/placeorder");
+    try {
+      // Save or validate address with backend
+      const { data } = await axiosInstance.post("/shipping-address", {
+        address,
+        city,
+        postalCode,
+        country,
+      });
+
+      // Dispatch actions to update Redux store
+      dispatch(saveShippingAddress({ address, city, postalCode, country }));
+      dispatch(savePaymentMethod(paymentMethod));
+      navigate("/placeorder");
+    } catch (error) {
+      console.error(error.response?.data?.message || error.message);
+      alert("Failed to save shipping address. Please try again.");
+    }
   };
 
-  // Payment
   useEffect(() => {
     if (!shippingAddress.address) {
       navigate("/shipping");

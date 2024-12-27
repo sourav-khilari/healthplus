@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Ratings from "./Ratings";
-import { useGetTopProductsQuery } from "../redux/api/productApiSlice";
 import SmallProduct from "./SmallProduct";
 import Loader from "../components/Loader";
+import axios from "axios";
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
 
 const ProductTabs = ({
   loadingProductReview,
@@ -15,9 +19,29 @@ const ProductTabs = ({
   setComment,
   product,
 }) => {
-  const { data, isLoading, isError } = useGetTopProductsQuery();
-
   const [activeTab, setActiveTab] = useState(1);
+  const [topProducts, setTopProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    const fetchTopProducts = async () => {
+      try {
+        const { data } = await axiosInstance.get("/products/top");
+        setTopProducts(data);
+        setIsLoading(false);
+      } catch (error) {
+        setIsError(true);
+        setIsLoading(false);
+      }
+    };
+
+    fetchTopProducts();
+  }, []);
+
+  const handleTabClick = (tabNumber) => {
+    setActiveTab(tabNumber);
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -26,10 +50,6 @@ const ProductTabs = ({
   if (isError) {
     return <div>Error loading top products. Please try again later.</div>;
   }
-
-  const handleTabClick = (tabNumber) => {
-    setActiveTab(tabNumber);
-  };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -62,7 +82,6 @@ const ProductTabs = ({
                   <label htmlFor="rating" className="block text-xl mb-2">
                     Rating
                   </label>
-
                   <select
                     id="rating"
                     required
@@ -83,7 +102,6 @@ const ProductTabs = ({
                   <label htmlFor="comment" className="block text-xl mb-2">
                     Comment
                   </label>
-
                   <textarea
                     id="comment"
                     rows="3"
@@ -118,7 +136,6 @@ const ProductTabs = ({
         {activeTab === 2 && (
           <>
             <div>{product.reviews.length === 0 && <p>No Reviews</p>}</div>
-
             <div>
               {product.reviews.map((review) => (
                 <div
@@ -131,7 +148,6 @@ const ProductTabs = ({
                       {review.createdAt.substring(0, 10)}
                     </p>
                   </div>
-
                   <p className="my-4">{review.comment}</p>
                   <Ratings value={review.rating} />
                 </div>
@@ -144,15 +160,11 @@ const ProductTabs = ({
       <section>
         {activeTab === 3 && (
           <section className="ml-[4rem] flex flex-wrap">
-            {!data ? (
-              <Loader />
-            ) : (
-              data.map((product) => (
-                <div key={product._id}>
-                  <SmallProduct product={product} />
-                </div>
-              ))
-            )}
+            {topProducts.map((product) => (
+              <div key={product._id}>
+                <SmallProduct product={product} />
+              </div>
+            ))}
           </section>
         )}
       </section>

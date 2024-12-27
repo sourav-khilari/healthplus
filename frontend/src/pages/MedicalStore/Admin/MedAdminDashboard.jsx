@@ -1,22 +1,21 @@
-import Chart from "react-apexcharts";
-import { useGetUsersQuery } from "../redux/api/usersApiSlice";
-import {
-  useGetTotalOrdersQuery,
-  useGetTotalSalesByDateQuery,
-  useGetTotalSalesQuery,
-} from "../redux/api/orderApiSlice";
-
 import { useState, useEffect } from "react";
+import Chart from "react-apexcharts";
 import AdminMenu from "./AdminMenu";
 import OrderList from "./OrderList";
 import Loader from "../components/Loader";
+import axios from "axios";
+
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
 
 const MedAdminDashboard = () => {
-  const { data: sales, isLoading } = useGetTotalSalesQuery();
-  const { data: customers, isLoading: loading } = useGetUsersQuery();
-  const { data: orders, isLoading: loadingTwo } = useGetTotalOrdersQuery();
-  const { data: salesDetail } = useGetTotalSalesByDateQuery();
-
+  const [sales, setSales] = useState(null);
+  const [customers, setCustomers] = useState(null);
+  const [orders, setOrders] = useState(null);
+  const [salesDetail, setSalesDetail] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState({
     options: {
       chart: {
@@ -66,6 +65,32 @@ const MedAdminDashboard = () => {
   });
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const [salesRes, customersRes, ordersRes, salesDetailRes] =
+          await Promise.all([
+            axiosInstance.get("/admin/totalSales"),
+            axiosInstance.get("/admin/users"),
+            axiosInstance.get("/admin/totalOrders"),
+            axiosInstance.get("/admin/salesByDate"),
+          ]);
+
+        setSales(salesRes.data);
+        setCustomers(customersRes.data);
+        setOrders(ordersRes.data);
+        setSalesDetail(salesDetailRes.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     if (salesDetail) {
       const formattedSalesDate = salesDetail.map((item) => ({
         x: item._id,
@@ -80,7 +105,6 @@ const MedAdminDashboard = () => {
             categories: formattedSalesDate.map((item) => item.x),
           },
         },
-
         series: [
           { name: "Sales", data: formattedSalesDate.map((item) => item.y) },
         ],
@@ -100,7 +124,6 @@ const MedAdminDashboard = () => {
             <div className="font-bold rounded-full w-[3rem] bg-blue-500 text-center p-3">
               $
             </div>
-
             <p className="mt-5">Sales</p>
             <h1 className="text-xl font-bold">
               {isLoading ? <Loader /> : `$${sales?.totalSales.toFixed(2)}`}
@@ -112,10 +135,9 @@ const MedAdminDashboard = () => {
             <div className="font-bold rounded-full w-[3rem] bg-blue-500 text-center p-3">
               C
             </div>
-
             <p className="mt-5">Customers</p>
             <h1 className="text-xl font-bold">
-              {loading ? <Loader /> : customers?.length}
+              {isLoading ? <Loader /> : customers?.length}
             </h1>
           </div>
 
@@ -124,10 +146,9 @@ const MedAdminDashboard = () => {
             <div className="font-bold rounded-full w-[3rem] bg-blue-500 text-center p-3">
               O
             </div>
-
             <p className="mt-5">All Orders</p>
             <h1 className="text-xl font-bold">
-              {loadingTwo ? <Loader /> : orders?.totalOrders}
+              {isLoading ? <Loader /> : orders?.totalOrders}
             </h1>
           </div>
         </div>
@@ -137,8 +158,8 @@ const MedAdminDashboard = () => {
           <Chart
             options={state.options}
             series={state.series}
-            type="line" // Changed to 'line' for a better trend view
-            width="90%" // Adjusted for responsiveness
+            type="line"
+            width="90%"
           />
         </div>
 

@@ -1,4 +1,5 @@
-import { useGetTopProductsQuery } from "../redux/api/productApiSlice";
+import { useState, useEffect } from "react";
+import axios from "axios"; // Import Axios instance
 import Message from "../components/Message";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -11,9 +12,15 @@ import {
   FaStar,
   FaStore,
 } from "react-icons/fa";
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
 
 const ProductCarousel = () => {
-  const { data: products, isLoading, error } = useGetTopProductsQuery();
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const settings = {
     dots: false,
@@ -26,10 +33,28 @@ const ProductCarousel = () => {
     autoplaySpeed: 3000,
   };
 
+  // Fetch products using Axios instance
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axiosInstance.get("products/top"); // Adjust the endpoint
+        setProducts(response.data); // Assuming the response has data field with product list
+        setIsLoading(false);
+      } catch (err) {
+        setError(err);
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   if (isLoading) return <Message variant="info">Loading...</Message>;
   if (error)
     return (
-      <Message variant="danger">{error?.data?.message || error.error}</Message>
+      <Message variant="danger">
+        {error?.response?.data?.message || error.message}
+      </Message>
     );
 
   return (

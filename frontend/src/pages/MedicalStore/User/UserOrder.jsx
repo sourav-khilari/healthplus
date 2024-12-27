@@ -1,10 +1,32 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { Link } from "react-router-dom";
-import { useGetMyOrdersQuery } from "../redux/api/orderApiSlice";
+import axios from "axios"; // Import your axios instance
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
 
 const UserOrder = () => {
-  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
+  const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axiosInstance.get("/orders/mine");
+        setOrders(response.data);
+        setIsLoading(false);
+      } catch (err) {
+        setError(err);
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
 
   return (
     <div className="container mx-auto p-4 mt-[10rem] bg-white">
@@ -13,7 +35,9 @@ const UserOrder = () => {
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">{error?.data?.error || error.error}</Message>
+        <Message variant="danger">
+          {error?.response?.data?.error || error.message}
+        </Message>
       ) : (
         <table className="w-full bg-white shadow-lg border border-blue-200">
           <thead>
