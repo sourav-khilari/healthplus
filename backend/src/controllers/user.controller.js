@@ -111,8 +111,10 @@ const loginUser = asyncHandler(async (req, res) => {
         const options = {
             httpOnly: true,
             secure: false, // Set to true in production
-            sameSite: 'lax', 
-           // maxAge: 24 * 60 * 60 * 1000, // 1 day
+            sameSite: 'None', 
+            domain: 'localhost', // Match your backend domain
+            path: '/',    
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
         };
         res.cookie('authToken', idToken, options);
 
@@ -128,6 +130,123 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, `Login failed: ${error.message}`);
     }
 });
+
+
+// const loginUser = asyncHandler(async (req, res) => {
+//     const { idToken } = req.body;
+
+//     try {
+//         if (!idToken) {
+//             throw new ApiError(400, 'Invalid login request: ID Token is required');
+//         }
+
+//         // Verify Firebase ID token
+//         const decodedToken = await admin.auth().verifyIdToken(idToken);
+//         const { uid } = decodedToken;
+
+//         // Fetch the user from MongoDB
+//         let user = await User.findOne({ firebaseUid: uid });
+
+//         if (!user) {
+//             throw new ApiError(404, 'User not found in the database');
+//         }
+
+//         if (!user.status) {
+//             throw new ApiError(403, 'Account is deactivated. Please contact support.');
+//         }
+
+//         // Retrieve the Firebase user record
+//         const userRecord = await admin.auth().getUser(uid);
+//         const refreshToken = userRecord.customClaims?.refreshToken || null;
+
+//         if (!refreshToken) {
+//             throw new ApiError(500, 'Unable to retrieve refresh token');
+//         }
+
+//         // Update the refresh token in the database if it has changed
+//         if (user.refreshToken !== refreshToken) {
+//             user.refreshToken = refreshToken;
+//             await user.save();
+//         }
+
+//         // Save the ID token in a cookie
+//         const options = {
+//             httpOnly: true,
+//             secure: process.env.NODE_ENV === 'production', // Use true in production
+//             sameSite: 'lax',
+//             maxAge: 24 * 60 * 60 * 1000, // 1 day
+//         };
+
+//         res.cookie('authToken', idToken, options).cookie("refreshToken", refreshToken, options);
+
+//         // Return user info along with the refresh token (optional)
+//         const response = {
+//             user: {
+//                 id: user._id,
+//                 firebaseUid: user.firebaseUid,
+//                 email: user.email,
+//                 role: user.role,
+//             },
+//             refreshToken, // Optionally include refresh token
+//         };
+
+//         if (user.role === 'admin') {
+//             return res.status(200).json(new ApiResponse(200, response, 'Admin login successful'));
+//         } else if (user.role === 'user') {
+//             return res.status(200).json(new ApiResponse(200, response, 'User login successful'));
+//         } else {
+//             throw new ApiError(403, 'Unauthorized role');
+//         }
+//     } catch (error) {
+//         throw new ApiError(500, `Login failed: ${error.message}`);
+//     }
+// });
+
+
+
+
+const refreshIdToken = asyncHandler(async (req, res) => {
+    try {
+        // Retrieve refreshToken from cookies
+        const refreshToken = req.cookies?.refreshToken;
+
+        if (!refreshToken) {
+            throw new ApiError(401, 'Refresh token is missing. Please log in again.');
+        }
+
+        // Verify refresh token
+        const decoded = jwt.decode(refreshToken);
+        if (!decoded) {
+            throw new ApiError(401, 'Invalid refresh token.');
+        }
+
+        // Exchange refresh token for a new ID token
+        const newIdToken = await admin.auth().createCustomToken(decoded.sub);
+
+        // Verify the new ID token
+        const verifiedNewIdToken = await admin.auth().verifyIdToken(newIdToken);
+
+        // Save the new ID token in cookies
+        const options = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Use true in production
+            sameSite: 'lax',
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+        };
+
+        res.cookie('authToken', newIdToken, options);
+
+        // Send success response
+        return res.status(200).json(
+            new ApiResponse(200, { newIdToken }, 'ID token refreshed successfully')
+        );
+    } catch (error) {
+        throw new ApiError(500, `Failed to refresh ID token: ${error.message}`);
+    }
+});
+
+
+
 
 
 const getCurrentUser = asyncHandler(async(req, res) => {

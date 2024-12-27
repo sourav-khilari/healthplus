@@ -35,7 +35,7 @@ const CategoryList = () => {
     }
     
     try {
-      const result = await createCategory({ name }).unwrap();
+      //const result = await createCategory({ name }).unwrap();
       await axiosInstance.post("/admin/createCategory", {name});
       // if (result.error) {
       //   toast.error(result.error);

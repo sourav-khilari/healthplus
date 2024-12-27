@@ -40,7 +40,9 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => {
   const authToken = req.cookies?.authToken;
-  console.log("\n\n" + authToken + "\n\n")
+  //const cookie = req.headers.cookie;
+  // console.log("\n\ncookie=" + cookie + "\n\n")
+  // console.log("\n\n" + authToken + "\n\n")
   if (!authToken) {
     throw new ApiError(401, 'Unauthorized: No token provided');
   }
@@ -49,6 +51,10 @@ const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => 
     // Verify Firebase token
     const decodedToken = await admin.auth().verifyIdToken(authToken);
     const { uid } = decodedToken;
+    const now = Math.floor(Date.now() / 1000);
+    if (decodedToken.exp < now) {
+      return res.status(401).json({ error: 'Token expired' });
+    }
     let user = "";
     // Check user's role in MongoDB
     if (requiredRole === "hospital") {
