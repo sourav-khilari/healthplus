@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 // Axios Instance
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000", // Change to your backend URL
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
   withCredentials: true, // For handling cookies
 });
 const UserPosts = () => {
