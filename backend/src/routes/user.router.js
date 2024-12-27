@@ -58,7 +58,15 @@ import {
 } from "../controllers/medicalstore.controller/product.controller.js";
 
 
-import { addcomment, createPost, getAllPosts, getPostById, getUserPosts, getNotifications, deletePost } from "../controllers/community.controller/postController.js"
+import { 
+  addcomment,
+   createPost,
+   getAllPosts, 
+   getPostById, 
+   getUserPosts, 
+   getNotifications, 
+   deletePost 
+  } from "../controllers/community.controller/postController.js"
 
 const router = Router()
 

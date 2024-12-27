@@ -13,17 +13,17 @@ import { authMiddleware, roleMiddleware } from '../middlewares/auth.middleaware.
 
 const router = Router();
 
-router.get('/getUser', roleMiddleware("admin"), getAllUsers);
-router.post('/updateUserStatus', roleMiddleware("admin"), updateUserStatus);
+router.get('/getUser', roleMiddleware("superadmin"), getAllUsers);
+router.post('/updateUserStatus', roleMiddleware("superadmin"), updateUserStatus);
 
-router.post('/add-user', roleMiddleware("admin"), addUser);
-router.delete('/delete-user', roleMiddleware("admin"), deleteUser);
+router.post('/add-user', roleMiddleware("superadmin"), addUser);
+router.delete('/delete-user', roleMiddleware("superadmin"), deleteUser);
 
-router.post('/approveOrDeclineHospital', roleMiddleware("admin"), approveOrDeclineHospital);
+router.post('/approveOrDeclineHospital', roleMiddleware("superadmin"), approveOrDeclineHospital);
 
-router.get('/getPendingHospitals', roleMiddleware("admin"), getPendingHospitals);
-router.get('/getRejectedHospitals', roleMiddleware("admin"), getRejectedHospitals);
-router.get('/getApprovedHospitals', roleMiddleware("admin"), getApprovedHospitals);
+router.get('/getPendingHospitals', roleMiddleware("superadmin"), getPendingHospitals);
+router.get('/getRejectedHospitals', roleMiddleware("superadmin"), getRejectedHospitals);
+router.get('/getApprovedHospitals', roleMiddleware("superadmin"), getApprovedHospitals);
 
 
 

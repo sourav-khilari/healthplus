@@ -43,6 +43,17 @@ import {
   markOrderAsDelivered,
 } from "../controllers/medicalstore.controller/order.controller.js";
 
+import { 
+  addcomment,
+   createPost,
+   getAllPosts, 
+   getPostById, 
+   getUserPosts, 
+   getNotifications, 
+   deletePost 
+  } from "../controllers/community.controller/postController.js"
+
+
 import { upload } from "../middlewares/multer.middleware.js";
 
 import { roleMiddleware } from "../middlewares/auth.middleaware.js";
@@ -119,5 +130,11 @@ router.post('/updateUserStatus', roleMiddleware("admin"), updateUserStatus);
 router.post('/add-user', roleMiddleware("admin"), addUser);
 router.delete('/delete-user', roleMiddleware("admin"), deleteUser);
 
+//comunity
+
+router.get("/getAllPosts", roleMiddleware("user"), getAllPosts);
+router.get("/getUserPosts", roleMiddleware("user"), getUserPosts);
+router.get("/getPostById/:postId", roleMiddleware("user"), getPostById);
+router.delete("/posts/:postId", roleMiddleware("user"), deletePost);
 
 export default router;
