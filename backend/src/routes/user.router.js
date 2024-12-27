@@ -57,6 +57,9 @@ import {
     filterProducts,
   } from "../controllers/medicalstore.controller/product.controller.js";
 
+
+import {} from "../controllers/community.controller.js/postController.js"
+
 const router = Router()
 
 router.post('/register', registerUser);

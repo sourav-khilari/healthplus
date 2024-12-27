@@ -71,9 +71,12 @@ const PostSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    comments: {
-      type: [],
-    },
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Doctor", // Store doctor IDs who commented
+      },
+    ],
   },
   {
     timestamps: true,

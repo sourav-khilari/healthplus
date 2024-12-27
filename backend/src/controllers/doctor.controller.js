@@ -11,6 +11,8 @@ import {calendar} from '../config/googleCalendar.js'
 import bcrypt from "bcrypt"
 import sendEmail from '../utils/sendEmail.js'; 
 
+
+
 const loginDoctor = asyncHandler(async (req, res) => {
     const { idToken, password } = req.body;
 
@@ -190,6 +192,7 @@ const getDoctorAppointments =asyncHandler( async (req, res) => {
             .json(new ApiResponse(500, null, 'Failed to fetch appointments.'));
     }
 });
+
 
 
 

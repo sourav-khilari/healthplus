@@ -15,6 +15,7 @@ import {
     fetchPatientData,
 } from '../controllers/doctor.controller.js'
 
+import {} from "../controllers/community.controller.js/postController.js"
 
 const router = Router()
 
@@ -23,6 +24,7 @@ router.post('/gfetchPatientData',fetchPatientData);
 
 router.post('/getDoctorAppointments/:doctorId', getDoctorAppointments);
 
+//community
 
 
 

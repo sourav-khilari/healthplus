@@ -1,5 +1,5 @@
 // import User from "../models/userModel.js";
-import { uploadToCloudinary } from "../../utils/cloudinary.js";
+import { uploadOnCloudinary } from "../utils/cloudnary.js";
 import { Post } from "../../models/community.model/postModel.js";
 import { Comment } from "../../models/community.model/postModel.js";
 // desc : create a post
@@ -31,7 +31,7 @@ const createPost = async (req, res) => {
 
   try {
     // Upload avatar to Cloudinary and get the URL
-    userPostImage = await uploadToCloudinary(postLocalImage);
+    userPostImage = await uploadOnCloudinary(postLocalImage);
 
     // Check if avatar upload was successful
     if (!userPostImage || !userPostImage.url) {
@@ -251,6 +251,33 @@ const getUserPosts = async (req, res) => {
   }
 };
 
+const getPostById = async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+    const post = await Post.findById(postId)
+      .populate("userId", "name email") // Populate user details
+      .populate("comments", "name email"); // Populate doctor details
+
+    if (!post) {
+      return res.status(404).send({
+        success: false,
+        message: "Post not found.",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      data: post,
+    });
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
 
 
 // const addcomment = async (req, res) => {
