@@ -2,6 +2,7 @@
 import { uploadOnCloudinary } from "../utils/cloudnary.js";
 import { Post } from "../../models/community.model/postModel.js";
 import { Comment } from "../../models/community.model/postModel.js";
+import { Notification } from "../../models/community.model/notification.model.js"
 // desc : create a post
 // route :
 const createPost = async (req, res) => {
@@ -115,11 +116,114 @@ const createPost = async (req, res) => {
 //   console.log(post);
 // };
 
+// const addcomment = async (req, res) => {
+//   const { postId, comment } = req.body;
+//   const { _id, role } = req.user; // Assuming `req.user` contains `userId` and `role`
+//   const userId=_id;
+
+//   if (!comment || !postId) {
+//     return res.status(400).send({
+//       success: false,
+//       message: "Post ID and comment are required.",
+//     });
+//   }
+
+//   try {
+//     const post = await Post.findById(postId);
+//     if (!post) {
+//       return res.status(404).send({
+//         success: false,
+//         message: "Post not found.",
+//       });
+//     }
+
+//     // Validate permissions
+//     if (role === "user" && post.userId.toString() !== userId) {
+//       return res.status(403).send({
+//         success: false,
+//         message: "Only the post owner can comment on this post.",
+//       });
+//     }
+
+//     if (role === "doctor") {
+//       const isDoctor = await Doctor.exists({ _id: userId });
+//       if (!isDoctor) {
+//         return res.status(403).send({
+//           success: false,
+//           message: "Only doctors can comment on this post.",
+//         });
+//       }
+//     }
+
+//     // Create and save the comment
+//     const newComment = new Comment({
+//       userId,
+//       role,
+//       comment,
+//       postId,
+//     });
+
+//     await newComment.save();
+
+//     return res.status(201).send({
+//       success: true,
+//       message: "Comment added successfully.",
+//       data: newComment,
+//     });
+//   } catch (error) {
+//     console.error("Error creating comment:", error);
+//     return res.status(500).send({
+//       success: false,
+//       message: "Internal server error.",
+//     });
+//   }
+// };
+
+// Import the Notification model
+
+
+
+const sendNotifications = async (post, currentUserId, role) => {
+  try {
+    const notifications = [];
+
+    // Notify post owner (if the commenter isn't the post owner)
+    if (post.userId.toString() !== currentUserId) {
+      notifications.push({
+        recipientId: post.userId,
+        message: `Your post has a new comment.`,
+        link: `/posts/${post._id}`,
+      });
+    }
+
+    // Notify other doctors who have commented on the post (exclude current commenter)
+    if (role === "doctor") {
+      for (const doctorId of post.comments) {
+        if (doctorId.toString() !== currentUserId) {
+          notifications.push({
+            recipientId: doctorId,
+            message: `A new comment has been added to a post you commented on.`,
+            link: `/posts/${post._id}`,
+          });
+        }
+      }
+    }
+
+    // Save notifications to the database
+    await Notification.insertMany(notifications);
+
+    console.log("Notifications saved successfully:", notifications);
+  } catch (error) {
+    console.error("Error sending notifications:", error);
+  }
+};
+
+
+
 const addcomment = async (req, res) => {
   const { postId, comment } = req.body;
   const { _id, role } = req.user; // Assuming `req.user` contains `userId` and `role`
-  const userId=_id;
-
+  const userId = _id;
   if (!comment || !postId) {
     return res.status(400).send({
       success: false,
@@ -128,7 +232,8 @@ const addcomment = async (req, res) => {
   }
 
   try {
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate("comments");
+
     if (!post) {
       return res.status(404).send({
         success: false,
@@ -155,14 +260,21 @@ const addcomment = async (req, res) => {
     }
 
     // Create and save the comment
-    const newComment = new Comment({
+    const newComment = await Comment.create({
       userId,
       role,
       comment,
       postId,
     });
+    await Comment.save();
+    // Add doctor ID to post's comments array if not already present
+    if (role === "doctor" && !post.comments.includes(userId)) {
+      post.comments.push(userId);
+      await post.save();
+    }
 
-    await newComment.save();
+    // Notify post owner and doctors
+    await sendNotifications(post, userId, role);
 
     return res.status(201).send({
       success: true,
@@ -177,7 +289,6 @@ const addcomment = async (req, res) => {
     });
   }
 };
-
 
 
 const getAllPosts = async (req, res) => {
@@ -279,6 +390,27 @@ const getPostById = async (req, res) => {
   }
 };
 
+const getNotifications = async (req, res) => {
+  const { userId } = req.user; // Assuming `req.user` contains the logged-in user's ID
+
+  try {
+    const notifications = await Notification.find({ recipientId: userId })
+      .sort({ createdAt: -1 }) // Sort notifications by the most recent
+      .limit(20); // Optional: Limit the number of notifications
+
+    return res.status(200).send({
+      success: true,
+      data: notifications,
+    });
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
+
 
 // const addcomment = async (req, res) => {
 //   const { postId, comment, userId } = req.body;
@@ -308,9 +440,11 @@ const getPostById = async (req, res) => {
 // };
 
 
-export{
+export {
   createPost,
   getAllPosts,
   addcomment,
   getUserPosts,
+  getPostById,
+  getNotifications,
 }
