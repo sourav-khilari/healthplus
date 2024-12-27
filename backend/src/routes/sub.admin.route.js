@@ -85,7 +85,8 @@ router.post(
   addProduct,
 );
 
-router.get("/allproducts", roleMiddleware("admin"),fetchAllProducts);
+ router.get("/allproducts", roleMiddleware("admin"),fetchAllProducts);
+//router.get("/allproducts",fetchAllProducts);
 router.get("/top", roleMiddleware("admin"),fetchTopProducts);
 router.get("/new", roleMiddleware("admin"),fetchNewProducts);
 

@@ -28,7 +28,7 @@ const CategoryList = () => {
   });
   const handleCreateCategory = async (e) => {
     e.preventDefault();
-
+    console.log("name="+name);
     if (!name) {
       toast.error("Category name is required");
       return;
@@ -36,7 +36,7 @@ const CategoryList = () => {
     
     try {
       const result = await createCategory({ name }).unwrap();
-      await axiosInstance.post("/admin/createCategory", name);
+      await axiosInstance.post("/admin/createCategory", {name});
       // if (result.error) {
       //   toast.error(result.error);
       // } else {
