@@ -2,7 +2,7 @@ import express from "express"
 import cors from "cors"
 //cud in cokies of browser by server
 import cookieParser from "cookie-parser"
-
+ 
 const app=express()
 
 app.use(cors({
@@ -36,6 +36,9 @@ app.use("/api/v1/superadmin",superadminRouter);
 app.use("/api/v1/doctor",doctorRouter);
 
 
+import {failedUploads} from "./scheduler/fail.uploads.js"
+import {pendingHospitalScheduler}  from "./scheduler/reminder.hospital.js"
 
+pendingHospitalScheduler();
 
 export {app}
