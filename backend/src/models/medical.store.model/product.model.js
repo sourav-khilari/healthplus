@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 const { ObjectId } = mongoose.Schema;
 
+const likeSchema = new Schema({
+  likedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+  },
+  
+}, {timestamps: true})
+
 const reviewSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
