@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 const { ObjectId } = mongoose.Schema;
 
-const likeSchema = new Schema({
+const likeSchema = new mongoose.Schema({
   likedBy: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User"
   },
   
