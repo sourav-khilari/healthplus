@@ -1030,5 +1030,7 @@ export {
     logoutUser,
     uploadMedicalDetails ,
     getPatientDetailsId,
-    
+    updateUserAvatar,
+    updateUserCoverImage,
+
 }
