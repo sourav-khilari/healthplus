@@ -132,4 +132,37 @@ router.delete("/posts/:postId", roleMiddleware("user"), deletePost);
 
 
 
+
+
+
+
+
+router.post("/auth/refreshToken", async (req, res) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).json({ error: "Authorization header missing" });
+  }
+
+  const idToken = authHeader.split(" ")[1];
+
+  try {
+    // Verify the new token
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+
+    // Set the token as a cookie
+    res.cookie("authToken", idToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+    });
+
+    res.status(200).json({ message: "Token refreshed successfully" });
+  } catch (error) {
+    res.status(401).json({ error: "Invalid or expired token" });
+  }
+});
+
+
+
 export default router
