@@ -117,6 +117,9 @@ const loginUser = asyncHandler(async (req, res) => {
 
         // Check user's role
         if (user.role === 'superadmin') {
+            return res.status(200).json(new ApiResponse(200, user, 'SuperAdmin login successful'));
+        } 
+        else if (user.role === 'superadmin') {
             return res.status(200).json(new ApiResponse(200, user, 'Admin login successful'));
         } else if (user.role === 'user') {
             return res.status(200).json(new ApiResponse(200, user, 'User login successful'));
