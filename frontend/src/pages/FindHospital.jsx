@@ -135,7 +135,11 @@ const FindHospital = () => {
         originalRequest._retry = true; // Prevent infinite retries
 
         try {
-          const auth = getAuth();
+          const auth = await getAuth();
+          if (!auth.currentUser) {
+            console.log("User is not authenticated. Please log in again.");
+            //return Promise.reject(error);
+          }
           const newIdToken = await auth.currentUser.getIdToken(true); // Force refresh the token
 
           // Call refreshToken API to update token in cookies
@@ -166,6 +170,8 @@ const FindHospital = () => {
   const fetchHospitals = async (lat, lng) => {
     try {
       const response = await axiosInstance.get(`/hospitals?lat=${lat}&lng=${lng}`);
+      console.log(JSON.stringify(response, null, 2) + "\n\n");
+
       setHospitals(response.data);
       setLoading(false);
     } catch (error) {

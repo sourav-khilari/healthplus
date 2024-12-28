@@ -68,6 +68,8 @@ import {
    deletePost 
   } from "../controllers/community.controller/postController.js"
 
+
+import { admin } from "../config/firebase.js";
 const router = Router()
 
 router.post('/register', registerUser);
@@ -141,9 +143,10 @@ router.post("/auth/refreshToken", async (req, res) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
+    console.log("\n\n"+"header"+"\n\n")
     return res.status(401).json({ error: "Authorization header missing" });
   }
-
+  console.log("\n\n"+"header2"+"\n\n")
   const idToken = authHeader.split(" ")[1];
 
   try {
@@ -154,7 +157,7 @@ router.post("/auth/refreshToken", async (req, res) => {
     res.cookie("authToken", idToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      //sameSite: "Strict",
     });
 
     res.status(200).json({ message: "Token refreshed successfully" });
