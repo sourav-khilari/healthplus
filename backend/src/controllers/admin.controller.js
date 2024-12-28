@@ -94,7 +94,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
         //   const users = await User.find({ role: { $ne: 'admin' }, role: { $ne: 'subadmin' } })
         //     .select('name email role createdAt')
         //     .sort({ createdAt: -1 });
-        const users = await User.find({ $or: [{ role: { $ne: 'admin' } }, { role: { $ne: 'superadmin' } }] })
+        const users = await User.find({ $and: [{ role: { $ne: 'admin' } }, { role: { $ne: 'superadmin' } }] })
             .sort({ createdAt: -1 });
 
         return res.status(200).json(
@@ -109,7 +109,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 const updateUserStatus = asyncHandler(async (req, res) => {
     const { firebaseUid, status } = req.body; // firebaseUid: Firebase UID, status: true/false
-
+    
     try {
         // Check if the requester is an admin
         if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {

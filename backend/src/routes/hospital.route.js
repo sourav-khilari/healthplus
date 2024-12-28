@@ -21,8 +21,8 @@ router.get("/logoutUser",roleMiddleware("hospital"),logoutUser)
 
 router.post('/addDoctor',roleMiddleware("hospital"), addDoctor);
 
-router.get('/getDoctorAppointments',roleMiddleware("hospital"), getDoctorAppointments);
-router.get('/getHospitalAllAppointments',roleMiddleware("hospital"), getHospitalAllAppointments);
+router.get('/getDoctorAppointments/:doctorId',roleMiddleware("hospital"), getDoctorAppointments);
+router.get('/getHospitalAllAppointments/:hospitalId',roleMiddleware("hospital"), getHospitalAllAppointments);
 
 
 

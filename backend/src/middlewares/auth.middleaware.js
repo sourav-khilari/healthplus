@@ -126,7 +126,7 @@ const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => 
   if (!authToken) {
     throw new ApiError(401, 'Unauthorized: No token provided');
   }
-  console.log("\n\nauthToken="+ authToken+"\n\n");
+  //console.log("\n\nauthToken="+ authToken+"\n\n");
   try {
     // Verify Firebase token
     let decodedToken;

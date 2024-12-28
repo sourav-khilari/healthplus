@@ -47,7 +47,7 @@ const AdminDashboard = () => {
   };
   const approveOrDeclineHospital = async (hospitalId, isApproved) => {
     try {
-      await axiosInstance.post(`/api/v1/admin/approveOrDeclineHospital`, {
+      await axiosInstance.post(`/api/v1/superadmin/approveOrDeclineHospital`, {
         hospitalId,
         action: isApproved,
       });
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
   };
   const handleUserStatusChange = async (firebaseUid, newStatus) => {
     try {
-      await axios.post("/api/v1/admin/updateUserStatus", {
+      await axiosInstance.post("/api/v1/superadmin/updateUserStatus", {
         firebaseUid,
         status: newStatus,
       });

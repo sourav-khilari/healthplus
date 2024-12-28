@@ -16,7 +16,7 @@ import { addcomment, getAllPosts, getPostById, getUserPosts, getNotifications, d
 const router = Router()
 
 router.post('/login', loginDoctor);
-router.post('/gfetchPatientData',fetchPatientData);
+router.post('/fetchPatientData/',fetchPatientData);
 
 router.post('/getDoctorAppointments/:doctorId', getDoctorAppointments);
 

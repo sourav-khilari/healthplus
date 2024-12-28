@@ -216,7 +216,7 @@ const addDoctor = async (req, res) => {
             Please log in to the platform to set up your profile and manage your appointments.
 
             Best Regards,
-            Hospital Admin Team
+            Hospital Admin Team 
         `;
 
         await sendEmail(email, emailSubject, emailMessage);
@@ -248,6 +248,8 @@ const getHospitalAllAppointments = asyncHandler(async (req, res) => {
 
         // Get all appointments for these doctors
         const doctorIds = doctors.map((doctor) => doctor._id);
+        console.log('\n\nDoctor IDs:', doctorIds+"\n\n");
+
         const appointments = await Appointment.find({ doctorId: { $in: doctorIds } })
             .populate('patientId', 'name email') // Optional: Populate patient details
             .populate('doctorId', 'name department specialty') // Optional: Populate doctor details
@@ -269,6 +271,9 @@ const getDoctorAppointments = asyncHandler(async (req, res) => {
 
     try {
         // Validate if the doctor exists
+        if(!doctorId){
+            throw new ApiError(404, 'Doctor id is not there');
+        }
         const doctor = await Doctor.findById(doctorId);
         if (!doctor) {
             throw new ApiError(404, 'Doctor not found');

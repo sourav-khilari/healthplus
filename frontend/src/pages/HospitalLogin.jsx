@@ -56,7 +56,7 @@ const HospitalLogin = () => {
 
       // On successful login, notify and redirect
       toast.success(response.data.message || "Login successful!");
-      navigate("/hospitaldashboard"); // Redirect to hospital dashboard
+      navigate("/hospital/dashboard"); // Redirect to hospital dashboard
     } catch (error) {
       console.error("Login Error:", error);
       toast.error(error.response?.data?.message || "Login failed");
