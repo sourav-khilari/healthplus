@@ -12,12 +12,13 @@ import "../styles/Register.css";
 
 // Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyB2sKWEJUe8lN3KSaC7Z4SvMVJI8AMvT7U",
-  authDomain: "mychatt-6cf4e.firebaseapp.com",
-  projectId: "mychatt-6cf4e",
-  storageBucket: "mychatt-6cf4e.appspot.com",
-  messagingSenderId: "282770822965",
-  appId: "1:282770822965:web:9875fd3a6c80cd6ed81e7c",
+  apiKey: "AIzaSyDJ9L91dE5EIVqH2QJNZiNsyObiiBmGuHo",
+  authDomain: "healthplus-a7bd7.firebaseapp.com",
+  projectId: "healthplus-a7bd7",
+  storageBucket: "healthplus-a7bd7.firebasestorage.app",
+  messagingSenderId: "18341081891",
+  appId: "1:18341081891:web:9eedc02c6d5a064ed81296",
+  measurementId: "G-6D223N3RLB",
 };
 
 // Initialize Firebase
@@ -51,11 +52,15 @@ const Register = () => {
     const { email, password, name } = formData;
 
     try {
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await getIdToken(result.user);
+
       const response = await axiosInstance.post("/register", {
         email,
         password,
         name,
       });
+     
       console.log(response.data);
       alert("Registration successful");
 
@@ -100,7 +105,7 @@ const Register = () => {
       const idToken = await getIdToken(result.user);
 
       // Send data to backend
-      const response = await axiosInstance.post("/login", { idToken });
+      const response = await axiosInstance.post("/register", { idToken });
       console.log(response.data);
       alert("Google Login/Registration successful");
 

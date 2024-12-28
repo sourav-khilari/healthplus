@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import "../styles/FindHospital.css"; // Optional styling file
+import axios from "axios"
 
 const FindHospital = () => {
   const [hospitals, setHospitals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8000/api/v1/users", // Backend API URL
+    withCredentials: true, // Handle cookies
+  });
 
   // Function to get the user's location and fetch nearby hospitals
   const getUserLocation = () => {
@@ -31,10 +36,14 @@ const FindHospital = () => {
   // Function to fetch hospitals based on user's latitude and longitude
   const fetchHospitals = async (lat, lng) => {
     try {
-      const response = await fetch(
-        `http://localhost:8000/api/v1/users/pharmacy?lat=${lat}&lng=${lng}`
+      const response = await axiosInstance.get(
+        `/hospitals?lat=${lat}&lng=${lng}`,
       );
-      const data = await response.json();
+      // const data = await response.json();
+      console.log(response+"\n\n");
+      console.log()
+      const data = response.data;
+      console.log(data+"\n\n")
       setHospitals(data); // Set fetched hospital data to state
       setLoading(false);
     } catch (error) {

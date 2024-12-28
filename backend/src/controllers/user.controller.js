@@ -84,7 +84,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
     const { idToken } = req.body;
-
+    console.log("\nisToken\n"+idToken);
     try {
         let decodedToken;
 
@@ -110,10 +110,7 @@ const loginUser = asyncHandler(async (req, res) => {
         // Save token in cookies
         const options = {
             httpOnly: true,
-            secure: false, // Set to true in production
-            sameSite: 'None', 
-            domain: 'localhost', // Match your backend domain
-            path: '/',    
+            secure: true, // Set to true in production
             maxAge: 24 * 60 * 60 * 1000, // 1 day
         };
         res.cookie('authToken', idToken, options);

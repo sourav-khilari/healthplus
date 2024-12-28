@@ -39,23 +39,23 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 });
 
 
-const refreshAuthToken = async (expiredToken) => {
-  try {
-    // Decode the expired token to get the UID
-    const decodedToken = admin.auth().decodeIdToken(expiredToken, true); // true = allow expired token
-    const { uid } = decodedToken;
+// const refreshAuthToken = async (expiredToken) => {
+//   try {
+//     // Decode the expired token to get the UID
+//     const decodedToken = admin.auth().decodeIdToken(expiredToken, true); // true = allow expired token
+//     const { uid } = decodedToken;
 
-    // Generate a new custom token
-    const newToken = await admin.auth().createCustomToken(uid);
+//     // Generate a new custom token
+//     const newToken = await admin.auth().createCustomToken(uid);
 
-    // Verify the newly generated token
-    const newIdToken = await admin.auth().verifyIdToken(newToken);
+//     // Verify the newly generated token
+//     const newIdToken = await admin.auth().verifyIdToken(newToken);
 
-    return { idToken: newIdToken, uid };
-  } catch (error) {
-    throw new ApiError(401, `Unable to refresh token: ${error.message}`);
-  }
-};
+//     return { idToken: newIdToken, uid };
+//   } catch (error) {
+//     throw new ApiError(401, `Unable to refresh token: ${error.message}`);
+//   }
+// };
 
 
 // const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => {
@@ -98,12 +98,35 @@ const refreshAuthToken = async (expiredToken) => {
 //   }
 // });
 
+
+
+const refreshAuthToken = async (expiredToken) => {
+  if (!expiredToken) {
+    throw new ApiError(401, 'Expired token is required');
+  }
+  let decodedToken
+  try {
+    decodedToken = await admin.auth().verifyIdToken(expiredToken, { checkRevoked: false });
+    const { uid } = decodedToken;
+    console.log("\n\ndecode\n\n");
+    const newToken = await admin.auth().createCustomToken(uid);
+    return { idToken: newToken, uid };
+  } catch (error) {
+    // Log or monitor the error
+    console.error('Error refreshing token:', error);
+    throw new ApiError(401, `Unable to refresh token: ${error.message}`);
+  }
+};
+
+
+
+
 const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => {
   const authToken = req.cookies?.authToken;
   if (!authToken) {
     throw new ApiError(401, 'Unauthorized: No token provided');
   }
-
+  console.log("\n\nauthToken="+ authToken+"\n\n");
   try {
     // Verify Firebase token
     let decodedToken;

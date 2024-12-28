@@ -7,6 +7,10 @@ const MedicineStore = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:8000/api/v1/users", // Backend API URL
+    withCredentials: true, // Handle cookies
+  });
   // Function to get user's current location
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -31,12 +35,17 @@ const MedicineStore = () => {
   // Function to fetch nearby pharmacies based on location
   const fetchPharmacies = async (lat, lng) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/api/v1/users/pharmacy`,
-        {
-          params: { lat, lng },
-        }
+      // const response = await axios.get(
+      //   `http://localhost:8000/api/v1/users/pharmacy`,
+      //   {
+      //     params: { lat, lng },
+      //   },
+      //   withCredentials= true,
+      // );
+      const response = await axiosInstance.get(
+        `/pharmacy?lat=${lat}&lng=${lng}`,
       );
+      console.log("response"+response);
       setPharmacies(response.data);
       setLoading(false);
     } catch (error) {
