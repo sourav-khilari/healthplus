@@ -86,7 +86,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 const getAllUsers = asyncHandler(async (req, res) => {
     try {
         // Check if the requester is an admin or subadmin
-        if (req.user.role !== 'admin' && req.user.role !== 'subadmin') {
+        if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
             throw new ApiError(403, 'Access denied: Admins and Subadmins only');
         }
 
@@ -112,7 +112,7 @@ const updateUserStatus = asyncHandler(async (req, res) => {
 
     try {
         // Check if the requester is an admin
-        if (req.user.role !== 'admin') {
+        if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
             throw new ApiError(403, 'Access denied: Admins only');
         }
 
@@ -145,7 +145,7 @@ const approveOrDeclineHospital = asyncHandler(async (req, res) => {
 
     try {
         // Check if requester is an admin
-        if (req.user.role !== 'admin') {
+        if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
             throw new ApiError(403, 'Access denied: Admins only');
         }
 
@@ -203,7 +203,7 @@ const approveOrDeclineHospital = asyncHandler(async (req, res) => {
 
 const getPendingHospitals = asyncHandler(async (req, res) => {
     try {
-        if (req.user.role !== 'admin') {
+        if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
             throw new ApiError(403, 'Access denied: Admins only');
         }
 
@@ -219,7 +219,7 @@ const getPendingHospitals = asyncHandler(async (req, res) => {
 
 const getRejectedHospitals = asyncHandler(async (req, res) => {
     try {
-        if (req.user.role !== 'admin') {
+        if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
             throw new ApiError(403, 'Access denied: Admins only');
         }
 
@@ -236,7 +236,7 @@ const getRejectedHospitals = asyncHandler(async (req, res) => {
 
 const getApprovedHospitals = asyncHandler(async (req, res) => {
     try {
-        if (req.user.role !== 'admin') {
+        if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
             throw new ApiError(403, 'Access denied: Admins only');
         }
 

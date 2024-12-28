@@ -28,10 +28,10 @@ const AdminDashboard = () => {
         approvedHospitalsRes,
         rejectedHospitalsRes,
       ] = await Promise.all([
-        axiosInstance.get("/api/v1/admin/getUser"),
-        axiosInstance.get("/api/v1/admin/getPendingHospitals"),
-        axiosInstance.get("/api/v1/admin/getRejectedHospitals"),
-        axiosInstance.get("/api/v1/admin/getApprovedHospitals"),
+        axiosInstance.get("/api/v1/superadmin/getUser"),
+        axiosInstance.get("/api/v1/superadmin/getPendingHospitals"),
+        axiosInstance.get("/api/v1/superadmin/getRejectedHospitals"),
+        axiosInstance.get("/api/v1/superadmin/getApprovedHospitals"),
       ]);
 
       setUsers(usersRes.data.data || []);
