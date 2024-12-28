@@ -41,10 +41,12 @@ const FindHospital = () => {
       );
       // const data = await response.json();
       console.log(response+"\n\n");
+      console.log(JSON.stringify(response, null, 2) + "\n\n");
+
       console.log()
-      const data = response.data;
-      console.log(data+"\n\n")
-      setHospitals(data); // Set fetched hospital data to state
+      
+      //console.log(data+"\n\n")
+      setHospitals(response.data); // Set fetched hospital data to state
       setLoading(false);
     } catch (error) {
       setLoading(false);
