@@ -17,6 +17,8 @@ import {
   logoutUser,
   uploadMedicalDetails,
   getPatientDetailsId,
+  updateUserAvatar,
+  updateUserCoverImage
 } from '../controllers/user.controller.js'
 import { authMiddleware, roleMiddleware } from '../middlewares/auth.middleaware.js'
 import { upload } from "../middlewares/multer.middleware.js"
@@ -79,6 +81,8 @@ router.get("/pharmacy", roleMiddleware("user"), nearestPharmacy);
 router.get("/pharmacy", roleMiddleware("user"), getAllHospitals);
 router.get("/getCurrentUser", roleMiddleware("user"), getCurrentUser);
 router.get("/logoutUser", roleMiddleware("user"), logoutUser)
+router.post("/updateUserAvatar", roleMiddleware("user"),updateUserAvatar);
+router.post("/updateUserCoverImage", roleMiddleware("user"),updateUserCoverImage);
 
 router.get("/getAllDoctors", getAllDoctors);
 
@@ -160,9 +164,9 @@ router.post("/auth/refreshToken", async (req, res) => {
       //sameSite: "Strict",
     });
 
-    res.status(200).json({ message: "Token refreshed successfully" });
+    return res.status(200).json({ message: "Token refreshed successfully" });
   } catch (error) {
-    res.status(401).json({ error: "Invalid or expired token" });
+    return res.status(401).json({ error: "Invalid or expired token" });
   }
 });
 

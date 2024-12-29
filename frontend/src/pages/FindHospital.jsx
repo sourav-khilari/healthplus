@@ -153,7 +153,7 @@ const FindHospital = () => {
               withCredentials: true,
             }
           );
-
+          console.log("interceptor")
           // Retry the original request with updated cookies
           return axiosInstance(originalRequest);
         } catch (refreshError) {
@@ -170,7 +170,7 @@ const FindHospital = () => {
   const fetchHospitals = async (lat, lng) => {
     try {
       const response = await axiosInstance.get(`/hospitals?lat=${lat}&lng=${lng}`);
-      console.log(JSON.stringify(response, null, 2) + "\n\n");
+      //console.log(JSON.stringify(response, null, 2) + "\n\n");
 
       setHospitals(response.data);
       setLoading(false);

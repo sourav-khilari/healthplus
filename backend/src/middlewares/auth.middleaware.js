@@ -40,25 +40,6 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 });
 
 
-// const refreshAuthToken = async (expiredToken) => {
-//   try {
-//     // Decode the expired token to get the UID
-//     const decodedToken = admin.auth().decodeIdToken(expiredToken, true); // true = allow expired token
-//     const { uid } = decodedToken;
-
-//     // Generate a new custom token
-//     const newToken = await admin.auth().createCustomToken(uid);
-
-//     // Verify the newly generated token
-//     const newIdToken = await admin.auth().verifyIdToken(newToken);
-
-//     return { idToken: newIdToken, uid };
-//   } catch (error) {
-//     throw new ApiError(401, `Unable to refresh token: ${error.message}`);
-//   }
-// };
-
-
 const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => {
   const authToken = req.cookies?.authToken;
   //const cookie = req.headers.cookie;

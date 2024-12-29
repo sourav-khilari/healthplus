@@ -5,7 +5,9 @@ import { registerHospital,
     getDoctorAppointments,
     getHospitalAllAppointments,
     getCurrentUser,
-    logoutUser
+    logoutUser,
+    updateHospitalAvatar,
+    updateHospitalCoverImage,
 } from '../controllers/hospital.controller.js'
 import {authMiddleware,roleMiddleware} from '../middlewares/auth.middleaware.js'
 
@@ -24,7 +26,8 @@ router.post('/addDoctor',roleMiddleware("hospital"), addDoctor);
 router.get('/getDoctorAppointments/:doctorId',roleMiddleware("hospital"), getDoctorAppointments);
 router.get('/getHospitalAllAppointments/:hospitalId',roleMiddleware("hospital"), getHospitalAllAppointments);
 
-
+router.post("/updateHospitalAvatar", roleMiddleware("hospital"),updateHospitalAvatar);
+router.post("/updateHospitalCoverImage", roleMiddleware("hospital"),updateHospitalCoverImage);
 
 
 export default router

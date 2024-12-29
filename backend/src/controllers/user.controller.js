@@ -134,47 +134,6 @@ const loginUser = asyncHandler(async (req, res) => {
 
 
 
-const refreshIdToken = asyncHandler(async (req, res) => {
-    try {
-        // Retrieve refreshToken from cookies
-        const refreshToken = req.cookies?.refreshToken;
-
-        if (!refreshToken) {
-            throw new ApiError(401, 'Refresh token is missing. Please log in again.');
-        }
-
-        // Verify refresh token
-        const decoded = jwt.decode(refreshToken);
-        if (!decoded) {
-            throw new ApiError(401, 'Invalid refresh token.');
-        }
-
-        // Exchange refresh token for a new ID token
-        const newIdToken = await admin.auth().createCustomToken(decoded.sub);
-
-        // Verify the new ID token
-        const verifiedNewIdToken = await admin.auth().verifyIdToken(newIdToken);
-
-        // Save the new ID token in cookies
-        const options = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Use true in production
-            sameSite: 'lax',
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
-        };
-
-        res.cookie('authToken', newIdToken, options);
-
-        // Send success response
-        return res.status(200).json(
-            new ApiResponse(200, { newIdToken }, 'ID token refreshed successfully')
-        );
-    } catch (error) {
-        throw new ApiError(500, `Failed to refresh ID token: ${error.message}`);
-    }
-});
-
-
 
 
 
