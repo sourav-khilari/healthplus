@@ -47,6 +47,15 @@ import MedAdminDashboard from "./pages/MedicalStore/Admin/MedAdminDashboard.jsx"
 import PrivateRoute from "./pages/MedicalStore/Components/PrivateRoute.jsx";
 import DoctorLogin from "./pages/DoctorLogin.jsx";
 // import DoctorRegister from "./pages/DoctorRegister.jsx";
+import AllPost from "./pages/Community/AllPost.jsx";
+import CommentCard from "./pages/Community/CommentCard.jsx";
+import CommentForm from "./pages/Community/CommentForm.jsx";
+import CreatePost from "./pages/Community/CreatePost.jsx";
+import DeletePost from "./pages/Community/DeletePost.jsx";
+import NotificationsPage from "./pages/Community/NotificationPage.jsx";
+import PostCard from "./pages/Community/PostCard.jsx";
+import PostDetail from "./pages/Community/PostDetail.jsx";
+import UserPost from "./pages/Community/UserPost.jsx";
 
 const App = () => {
   return (
@@ -109,10 +118,22 @@ const App = () => {
           <Route path="orderlist" element={<OrderList />} />
           <Route path="dashboard" element={<MedAdminDashboard />} />
         </Route>
-
-        {/* Other routes */}
         <Route path="/findPharmacy" element={<FindPharmacy />} />
         <Route path="/findHospital" element={<FindHospital />} />
+
+        {/* Other routes */}
+        <Route path="/Community" element={<AllPost />} />
+        <Route path="/Community/CommentCard" element={<CommentCard />} />
+        <Route path="/Community/CommentForm" element={<CommentForm />} />
+        <Route path="/Community/CreatePost" element={<CreatePost />} />
+        <Route path="/Community/DeletePost" element={<DeletePost />} />
+        <Route
+          path="/Community/NotificationsPage"
+          element={<NotificationsPage />}
+        />
+        <Route path="/Community/PostCard" element={<PostCard />} />
+        <Route path="/Community/PostDetail" element={<PostDetail />} />
+        <Route path="/Community/UserPost" element={<UserPost />} />
       </Routes>
       <Footer />
     </Router>

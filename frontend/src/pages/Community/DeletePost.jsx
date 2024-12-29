@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/DeletePostPage.css"; // Custom styles for the delete post page
+import "../../styles/DeletePostPage.css"; // Custom styles for the delete post page
 
 const DeletePostPage = () => {
   const [posts, setPosts] = useState([]);
@@ -17,7 +17,7 @@ const DeletePostPage = () => {
   // Fetch posts of the user
   const fetchUserPosts = async () => {
     try {
-      const response = await axiosInstance.get("/getUserPosts");
+      const response = await axiosInstance.get("/user/getUserPosts");
       setPosts(response.data.posts); // Assuming the response contains an array of user posts
     } catch (error) {
       console.error("Error fetching posts:", error);

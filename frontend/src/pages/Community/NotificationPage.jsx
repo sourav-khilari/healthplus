@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/NotificationsPage.css"; // Custom styles for the notifications page
+import "../../styles/NotificationPage.css"; // Custom styles for the notifications page
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -17,7 +17,7 @@ const NotificationsPage = () => {
   // Fetch notifications on page load
   const fetchNotifications = async () => {
     try {
-      const response = await axiosInstance.get("/getNotifications");
+      const response = await axiosInstance.get("/user/getNotifications");
       setNotifications(response.data.notifications); // Assuming the response contains an array of notifications
     } catch (error) {
       console.error("Error fetching notifications:", error);

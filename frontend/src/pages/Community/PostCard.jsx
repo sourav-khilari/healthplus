@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
@@ -8,7 +7,7 @@ const PostCard = ({ post }) => {
         <div className="flex">
           <div className="flex-1">
             <Link
-              to={`/post/${post._id}`}
+              to={`/user/posts/${post._id}`}
               className="block font-body text-lg font-semibold text-primary transition-colors hover:text-green-800"
             >
               {post.title}

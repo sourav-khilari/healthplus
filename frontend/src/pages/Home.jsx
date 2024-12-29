@@ -1,4 +1,3 @@
-
 import ServiceCard from "../components/ServiceCard";
 import "../styles/Home.css"; // Ensure this file includes styles for the home page
 
@@ -37,7 +36,7 @@ const Home = () => {
     {
       title: "Community",
       description: "Join a community of health-conscious individuals.",
-      link: "/community",
+      link: "/Community",
     },
     {
       title: "Blood Bank",

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import CommentForm from "../components/CommentForm";
-import CommentCard from "../components/CommentCard";
+import CommentForm from "./CommentForm";
+import CommentCard from "./CommentCard";
 
 // Axios Instance
 const axiosInstance = axios.create({
@@ -13,15 +13,21 @@ const axiosInstance = axios.create({
 const PostDetails = () => {
   const { id } = useParams(); // Extract post ID from URL
   const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch post details when component mounts
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axiosInstance.get(`/user/getPostById/${id}`);
-        setPost(response.data.data); // Set post data to state
-      } catch (error) {
-        console.error("Error fetching post:", error);
+        const { data } = await axiosInstance.get(`/user/getPostById/${id}`);
+        setPost(data?.data); // Set post data to state
+        setError(null); // Clear any previous errors
+      } catch (err) {
+        console.error("Error fetching post:", err);
+        setError("Failed to load post. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchPost();
@@ -35,31 +41,47 @@ const PostDetails = () => {
     }
 
     try {
-      const response = await axiosInstance.post(`/posts/${id}/comments`, {
+      const { data } = await axiosInstance.post(`/user/posts/${id}/comments`, {
         comment: newComment,
       });
 
       // Update post's comments state by adding the new comment
-      setPost({
-        ...post,
-        comments: [...post.comments, response.data.comment],
-      });
-    } catch (error) {
-      console.error("Error adding comment:", error);
+      setPost((prevPost) => ({
+        ...prevPost,
+        comments: [...prevPost.comments, data.comment],
+      }));
+    } catch (err) {
+      console.error("Error adding comment:", err);
+      setError("Failed to add comment. Please try again.");
     }
   };
+
+  // UI for loading or error state
+  if (loading) {
+    return <div>Loading post...</div>; // Replace with a spinner or skeleton if preferred
+  }
+
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
 
   return (
     <div className="container mx-auto mt-6">
       {post ? (
         <>
           <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-          <img src={post.image} alt={post.title} className="w-full mb-4" />
-          <p>{post.discription}</p>
+          {post.image && (
+            <img
+              src={post.image}
+              alt={post.title}
+              className="w-full rounded-lg mb-4"
+            />
+          )}
+          <p className="text-gray-700 mb-6">{post.discription}</p>
 
-          <h2 className="text-xl mt-6">Comments</h2>
-          {post.comments.length === 0 ? (
-            <p>No comments yet</p>
+          <h2 className="text-xl font-semibold mt-6 mb-4">Comments</h2>
+          {post.comments?.length === 0 ? (
+            <p className="text-gray-500">No comments yet</p>
           ) : (
             post.comments.map((comment) => (
               <CommentCard key={comment._id} comment={comment} />
@@ -69,7 +91,7 @@ const PostDetails = () => {
           <CommentForm onAddComment={handleAddComment} />
         </>
       ) : (
-        <p>Loading...</p>
+        <p>Post not found.</p>
       )}
     </div>
   );
