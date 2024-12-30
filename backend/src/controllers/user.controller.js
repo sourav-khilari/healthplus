@@ -11,7 +11,7 @@ import { calendar } from '../config/googleCalendar.js'
 import { Appointment } from '../models/appointment.model.js'
 import { Patient } from "../models/patient.model.js";
 import sendMail from "../utils/sendEmail.js"
-import {FailedUploads} from '../models/failed.upload.model.js';
+import { FailedUploads } from '../models/failed.upload.model.js';
 import fs from 'fs';
 
 
@@ -118,7 +118,7 @@ const loginUser = asyncHandler(async (req, res) => {
         // Check user's role
         if (user.role === 'superadmin') {
             return res.status(200).json(new ApiResponse(200, user, 'SuperAdmin login successful'));
-        } 
+        }
         else if (user.role === 'superadmin') {
             return res.status(200).json(new ApiResponse(200, user, 'Admin login successful'));
         } else if (user.role === 'user') {
@@ -137,17 +137,17 @@ const loginUser = asyncHandler(async (req, res) => {
 
 
 
-const getCurrentUser = asyncHandler(async(req, res) => {
+const getCurrentUser = asyncHandler(async (req, res) => {
     return res
-    .status(200)
-    .json(new ApiResponse(
-        200,
-        req.user,
-        "User fetched successfully"
-    ))
+        .status(200)
+        .json(new ApiResponse(
+            200,
+            req.user,
+            "User fetched successfully"
+        ))
 })
 
-const logoutUser = asyncHandler(async(req, res) => {
+const logoutUser = asyncHandler(async (req, res) => {
     // await User.findByIdAndUpdate(
     //     req.user._id,
     //     {
@@ -166,9 +166,9 @@ const logoutUser = asyncHandler(async(req, res) => {
     }
 
     return res
-    .status(200)
-    .clearCookie("authToken", options)
-    .json(new ApiResponse(200, {}, "User logged Out"))
+        .status(200)
+        .clearCookie("authToken", options)
+        .json(new ApiResponse(200, {}, "User logged Out"))
     //.clearCookie("refreshToken", options)
 })
 
@@ -314,7 +314,7 @@ const getAvailableSlots = asyncHandler(async (req, res) => {
         const freeSlots = calculateFreeSlots(availability, bookedSlots, doctor.slotDuration);
 
 
-        return res.status(200).json(new ApiResponse(200, {bookedSlots, freeSlots }, 'all free slots for particular doctor'));
+        return res.status(200).json(new ApiResponse(200, { bookedSlots, freeSlots }, 'all free slots for particular doctor'));
     } catch (error) {
         //res.status(500).json({ error: `Failed to fetch slots: ${error.message}` });
         throw new ApiError(500, "Failed to fetch slots", error.message);
@@ -371,7 +371,7 @@ const checkAvailability = async (doctorId, date, timeSlot) => {
 
 
 const bookAppointment = asyncHandler(async (req, res) => {
-    const { patientName,patient_id, patientEmail, doctorId, hospitalId, date, timeSlot } = req.body;
+    const { patientName, patient_id, patientEmail, doctorId, hospitalId, date, timeSlot } = req.body;
     try {
         const doctor = await Doctor.findById(doctorId);
         if (!doctor) throw new Error('Doctor not found');
@@ -391,7 +391,7 @@ const bookAppointment = asyncHandler(async (req, res) => {
 
         // Save appointment in MongoDB
         const newAppointment = new Appointment({
-            patientName, patientEmail, doctorId,patient_id, hospitalId, date, timeSlot, calendarEventId: eventResponse.data.id,
+            patientName, patientEmail, doctorId, patient_id, hospitalId, date, timeSlot, calendarEventId: eventResponse.data.id,
         });
         await newAppointment.save();
         return res.status(200).json(new ApiResponse(200, { appointment: newAppointment }, 'Appointment booked successfully'));
@@ -504,7 +504,7 @@ const sendOtpForPatientId = asyncHandler(async (req, res) => {
         console.log("\n\n" + patientData + "\n\n");
 
         email = patientData.telecom?.[0]?.value; // Extract email
-        const contact= patientData.telecom?.[1]?.value;
+        const contact = patientData.telecom?.[1]?.value;
         console.log("n\nemail=" + email + "\n\n")
 
         if (!email) throw new ApiError(500, "Email not found in FHIR API data ");
@@ -514,7 +514,7 @@ const sendOtpForPatientId = asyncHandler(async (req, res) => {
         if (!existingPatient) {
             await Patient.create({
                 patientId,
-                name: patientData.name?.[0]?.given+patientData.name?.[0]?.family || 'Unknown',
+                name: patientData.name?.[0]?.given + patientData.name?.[0]?.family || 'Unknown',
                 dob: patientData.birthDate || 'N/A',
                 email,
                 contact,
@@ -589,7 +589,7 @@ const sendOtpForPatientId = asyncHandler(async (req, res) => {
 const verifyOtpAndFetchData = asyncHandler(async (req, res) => {
 
     const { patientId, otp } = req.body;
-    let userId=req.user._id;
+    let userId = req.user._id;
     if (!patientId || !otp || !userId) throw new ApiError(400, 'Patient ID, OTP, and User ID are required');
 
     // Fetch patient from MongoDB
@@ -683,55 +683,56 @@ const createPatientId = asyncHandler(async (req, res) => {
 
 const getPatientDetailsId = asyncHandler(async (req, res) => {
     try {
-      const { patientId } = req.params; // Extract patient ID from the route parameter
-      const patient = await Patient.findById({
-        patientId}); // Replace with your model name
-  
-      if (!patient) {
-        return res.status(404).json({ error: "Patient not found" });
-      }
-  
-      res.json(patient);
+        const { patientId } = req.params; // Extract patient ID from the route parameter
+        const patient = await Patient.findById({
+            patientId
+        }); // Replace with your model name
+
+        if (!patient) {
+            return res.status(404).json({ error: "Patient not found" });
+        }
+
+        res.json(patient);
     } catch (error) {
-      console.error(error);
-      res.status(400).json({ error: "Unable to fetch patient details" });
+        console.error(error);
+        res.status(400).json({ error: "Unable to fetch patient details" });
     }
 });
-  
-const updateUserAvatar = asyncHandler(async(req, res) => {
+
+const updateUserAvatar = asyncHandler(async (req, res) => {
     const avatarLocalPath = req.file?.path
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is missing")
     }
 
- 
+
 
     const avatar = await uploadOnCloudinary(avatarLocalPath)
 
     if (!avatar.url) {
         throw new ApiError(400, "Error while uploading on avatar")
-        
+
     }
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
-            $set:{
+            $set: {
                 avatar: avatar.url
             }
         },
-        {new: true}
+        { new: true }
     ).select("-password")
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200, user, "Avatar image updated successfully")
-    )
+        .status(200)
+        .json(
+            new ApiResponse(200, user, "Avatar image updated successfully")
+        )
 })
 
-const updateUserCoverImage = asyncHandler(async(req, res) => {
+const updateUserCoverImage = asyncHandler(async (req, res) => {
     const coverImageLocalPath = req.file?.path
 
     if (!coverImageLocalPath) {
@@ -745,24 +746,24 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
 
     if (!coverImage.url) {
         throw new ApiError(400, "Error while uploading on avatar")
-        
+
     }
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
-            $set:{
+            $set: {
                 coverImage: coverImage.url
             }
         },
-        {new: true}
+        { new: true }
     ).select("-password")
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200, user, "Cover image updated successfully")
-    )
+        .status(200)
+        .json(
+            new ApiResponse(200, user, "Cover image updated successfully")
+        )
 })
 
 
@@ -876,7 +877,7 @@ const uploadMedicalDetails = asyncHandler(async (req, res) => {
     }
 
     const localFilePath = req.file.path;
-    
+
     try {
         // Upload the file to Cloudinary
         const uploadResponse = await uploadOnCloudinary(localFilePath);
@@ -935,17 +936,17 @@ const uploadMedicalDetails = asyncHandler(async (req, res) => {
         } catch (error) {
             if (error.response.status === 500) {
                 console.log('Update successful, but server unable to return updated resource');
-              } else {
+            } else {
                 console.error('FHIR API upload failed:', error.message);
                 // Save failed upload attempt for retry
                 await FailedUploads.create({
-                  patientId,
-                  fileUrl,
-                  description,
-                  retryCount: 0,
+                    patientId,
+                    fileUrl,
+                    description,
+                    retryCount: 0,
                 });
-              }
-            
+            }
+
         }
 
         // Clean up the local file after the upload is done
@@ -969,20 +970,20 @@ const uploadMedicalDetails = asyncHandler(async (req, res) => {
 
 const contactUs = asyncHandler(async (req, res) => {
     try {
-      const { name, email, message } = req.body;
-      if(!name || !email || !message){
-        throw new ApiError(500, 'Please fill ALL Details');
-      }
-      await sendMail("souravkhilari123456@gmail.com", "complain", `${name}+"\n" + ${email} +"\n"+ ${message}`);
-      //res.status(200).json({ message: "Email sent successfully" });
-      return res.status(200).json(new ApiResponse(400, null, 'Email sent successfully'));
+        const { name, email, message } = req.body;
+        if (!name || !email || !message) {
+            throw new ApiError(500, 'Please fill ALL Details');
+        }
+        await sendMail("souravkhilari123456@gmail.com", "complain", `${name}+"\n" + ${email} +"\n"+ ${message}`);
+        //res.status(200).json({ message: "Email sent successfully" });
+        return res.status(200).json(new ApiResponse(400, null, 'Email sent successfully'));
     } catch (error) {
-      console.error(error);
-      throw new ApiError(500, 'Error sending email');
+        console.error(error);
+        throw new ApiError(500, 'Error sending email');
     }
-  });
-  
-  
+});
+
+
 
 
 export {
@@ -1001,7 +1002,7 @@ export {
     createPatientId,
     getCurrentUser,
     logoutUser,
-    uploadMedicalDetails ,
+    uploadMedicalDetails,
     getPatientDetailsId,
     updateUserAvatar,
     updateUserCoverImage,

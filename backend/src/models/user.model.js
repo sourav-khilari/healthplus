@@ -37,9 +37,6 @@ const userSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    refreshToken: {
-      type: String, // To store the Firebase refresh token
-    },
   },
   {
     //add automatically createdAt and updatedAt

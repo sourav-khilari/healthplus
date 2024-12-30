@@ -114,7 +114,7 @@ router.post('/create-patient-id', roleMiddleware("user"), createPatientId);
 router.post('/uploadMedicalDetails', roleMiddleware("user"), upload.single("medical-history"), uploadMedicalDetails);
 router.get("/ getPatientDetailsId/:id", roleMiddleware("user"), getPatientDetailsId);
 
-router.post("/contactUs",contactUs);
+router.post("/contactUs", contactUs);
 
 
 //health medstore
@@ -149,6 +149,7 @@ router.post("/createPost", upload.fields([
     maxCount: 1,
   },
 ]), roleMiddleware("user"), createPost);
+
 router.delete("/posts/:postId", roleMiddleware("user"), deletePost);
 
 
@@ -187,5 +188,14 @@ router.post("/auth/refreshToken", async (req, res) => {
 });
 
 
+//blood donation
+
+import {
+  submitBloodDonationRequest,
+  cancelDonationRequest,
+} from "../controllers/blood.donation.controllers/donation.request.controller.js"
+
+router.post("/submitBloodDonationRequest", roleMiddleware("user"), submitBloodDonationRequest);
+router.post("/cancelDonationRequest", roleMiddleware("user"), cancelDonationRequest);
 
 export default router
