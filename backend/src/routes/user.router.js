@@ -193,9 +193,11 @@ router.post("/auth/refreshToken", async (req, res) => {
 import {
   submitBloodDonationRequest,
   cancelDonationRequest,
+  getUserDonationRequests,
 } from "../controllers/blood.donation.controllers/donation.request.controller.js"
 
 router.post("/submitBloodDonationRequest", roleMiddleware("user"), submitBloodDonationRequest);
 router.post("/cancelDonationRequest", roleMiddleware("user"), cancelDonationRequest);
+router.get("/getUserDonationRequests", roleMiddleware("user"), getUserDonationRequests);
 
 export default router

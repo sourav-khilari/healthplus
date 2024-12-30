@@ -1,7 +1,7 @@
 import { DonationRequest } from "../../models/blood_donation/donation.request.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 
-const submitBloodDonationRequest = asyncHandler (async (req, res) => {
+const submitBloodDonationRequest = asyncHandler(async (req, res) => {
     const { bloodGroup, phone, address } = req.body;
     const donorId = req.user._id;
 
@@ -30,7 +30,7 @@ const submitBloodDonationRequest = asyncHandler (async (req, res) => {
 });
 
 
-const getDonationRequestsForHospital = asyncHandler (async (req, res) => {
+const getDonationRequestsForHospital = asyncHandler(async (req, res) => {
     try {
         const requests = await DonationRequest.find({ status: "pending" }).populate("donorId", "name email");
 
@@ -48,8 +48,8 @@ const getDonationRequestsForHospital = asyncHandler (async (req, res) => {
 });
 
 
-const markRequestAsRead = asyncHandler (async (req, res) => {
-     //decide based on frontend
+const markRequestAsRead = asyncHandler(async (req, res) => {
+    //decide based on frontend
     //const { requestId } = req.params;
     //requestId=_id
     const { requestId } = req.body;
@@ -84,7 +84,7 @@ const markRequestAsRead = asyncHandler (async (req, res) => {
 });
 
 
-const cancelDonationRequest = asyncHandler (async (req, res) => {
+const cancelDonationRequest = asyncHandler(async (req, res) => {
     //decide based on frontend
     //const { requestId } = req.params;
     const { requestId } = req.body;
@@ -117,9 +117,47 @@ const cancelDonationRequest = asyncHandler (async (req, res) => {
     }
 });
 
+
+const getUserDonationRequests = async (req, res) => {
+    const donorId = req.user._id; // Assuming `req.user` contains the logged-in user's details
+
+    try {
+        const donationRequests = await DonationRequest.find({ donorId })
+            .sort({ createdAt: -1 }) // Sort by the most recent requests
+            .select("bloodGroup phone address status createdAt"); // Select only relevant fields
+
+        if (donationRequests.length === 0) {
+            return res.status(200).send({
+                success: true,
+                message: "You have not made any donation requests yet.",
+                data: [],
+            });
+        }
+
+
+        res.status(200).send({
+            success: true,
+            data: {
+                donationRequests,
+                user: req.user
+            }
+        });
+
+    } catch (error) {
+        console.error("Error fetching user's donation requests:", error);
+        res.status(500).send({
+            success: false,
+            message: "Internal server error. Could not fetch donation requests.",
+        });
+    }
+};
+
+
 export {
     submitBloodDonationRequest,
     getDonationRequestsForHospital,
     markRequestAsRead,
     cancelDonationRequest,
+    getUserDonationRequests,
+    
 }

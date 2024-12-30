@@ -48,8 +48,8 @@ import {
     markRequestAsRead,
 } from "../controllers/blood.donation.controllers/donation.request.controller.js"
 
-router.get("/getDonationRequestsForHospital", roleMiddleware("user"), getDonationRequestsForHospital);
-router.post("/markRequestAsRead", roleMiddleware("user"), markRequestAsRead);
+router.get("/getDonationRequestsForHospital", roleMiddleware("hospital"), getDonationRequestsForHospital);
+router.post("/markRequestAsRead", roleMiddleware("hospital"), markRequestAsRead);
 
 
 
