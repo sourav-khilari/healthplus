@@ -12,7 +12,7 @@ const CommentForm = ({ postId }) => {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axiosInstance.post("/user/addcomment", { postId, comment });
+      await axiosInstance.post("/users/addcomment", { postId, comment });
       setComment("");
     } catch (error) {
       console.error("Error adding comment", error);

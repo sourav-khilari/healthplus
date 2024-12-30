@@ -12,7 +12,7 @@ const UserPosts = () => {
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
-        const response = await axiosInstance.get("/user/getUserPosts");
+        const response = await axiosInstance.get("/users/getUserPosts");
         setUserPosts(response.data.data);
       } catch (error) {
         console.error("Error fetching user posts", error);

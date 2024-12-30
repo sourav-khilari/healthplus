@@ -17,7 +17,7 @@ const DeletePostPage = () => {
   // Fetch posts of the user
   const fetchUserPosts = async () => {
     try {
-      const response = await axiosInstance.get("/user/getUserPosts");
+      const response = await axiosInstance.get("/users/getUserPosts");
       setPosts(response.data.posts); // Assuming the response contains an array of user posts
     } catch (error) {
       console.error("Error fetching posts:", error);

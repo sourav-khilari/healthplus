@@ -132,7 +132,12 @@ router.get("/getAllPosts", roleMiddleware("user"), getAllPosts);
 router.get("/getUserPosts", roleMiddleware("user"), getUserPosts);
 router.get("/getPostById/:postId", roleMiddleware("user"), getPostById);
 router.get("/getNotifications", roleMiddleware("user"), getNotifications);
-router.post("/createPost", roleMiddleware("user"), createPost);
+router.post("/createPost", upload.fields([
+  {
+    name: "image",
+    maxCount: 1,
+  },
+]),roleMiddleware("user"), createPost);
 router.delete("/posts/:postId", roleMiddleware("user"), deletePost);
 
 

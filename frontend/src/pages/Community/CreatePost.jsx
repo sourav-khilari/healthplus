@@ -17,12 +17,13 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+    console.log(title)
     formData.append("title", title);
     formData.append("discription", discription);
     if (image) formData.append("image", image);
     // formData.append("_id", userId);
     try {
-      const response = await axiosInstance.post("/user/createPost", formData);
+      const response = await axiosInstance.post("/users/createPost", formData);
       navigate(`/post/${response.data.data._id}`); // Navigate to the created post's detail page
     } catch (error) {
       console.error("Error creating post", error);

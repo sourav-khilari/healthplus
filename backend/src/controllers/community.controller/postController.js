@@ -7,11 +7,15 @@ import { Notification } from "../../models/community.model/notification.model.js
 // route :
 const createPost = async (req, res) => {
   // Get data from req body: title, discription, and image (optional)
-  const { title, discription, _id } = req.body;
+  const { title, discription } = req.body;
+  const _id=req.user._id
   console.log(req.body);
+  console.log("\n\ntitle="+title);
+
 
   // Check if title and discription are present
   if (!title || !discription) {
+    console.log("ist if");
     return res.status(400).send({
       success: false,
       message: "Title and discription are required.",

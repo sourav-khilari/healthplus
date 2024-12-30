@@ -1,13 +1,52 @@
 import { useEffect, useState } from "react";
 import PostDetails from "./PostDetail"; // Fixed naming
 import axios from "axios";
-
+import { getAuth } from "firebase/auth";
 // Axios Instance
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/api/v1", // Replace with your backend URL
   withCredentials: true, // Handle cookies for session
 });
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
+    // Check for token expiration error
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // Prevent infinite retries
+
+      try {
+        const auth = await getAuth();
+        if (!auth.currentUser) {
+          console.log("User is not authenticated. Please log in again.");
+          //return Promise.reject(error);
+        }
+        const newIdToken = await auth.currentUser.getIdToken(true); // Force refresh the token
+
+        // Call refreshToken API to update token in cookies
+        await axios.post(
+          "http://localhost:8000/api/v1/users/auth/refreshToken", // Refresh token API endpoint
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${newIdToken}`,
+            },
+            withCredentials: true,
+          }
+        );
+        console.log("interceptor")
+        // Retry the original request with updated cookies
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        console.error("Error refreshing token:", refreshError);
+        //setError("Session expired. Please log in again.");
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 const AllPost = () => {
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +60,7 @@ const AllPost = () => {
       setLoading(true);
       setError(null);
 
-      const response = await axiosInstance.get(`user/getAllPosts`);
+      const response = await axiosInstance.get(`users/getAllPosts`);
       const posts = response.data?.data || [];
 
       if (posts.length > 0) {

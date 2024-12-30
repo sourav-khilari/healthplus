@@ -17,7 +17,7 @@ const NotificationsPage = () => {
   // Fetch notifications on page load
   const fetchNotifications = async () => {
     try {
-      const response = await axiosInstance.get("/user/getNotifications");
+      const response = await axiosInstance.get("/users/getNotifications");
       setNotifications(response.data.notifications); // Assuming the response contains an array of notifications
     } catch (error) {
       console.error("Error fetching notifications:", error);

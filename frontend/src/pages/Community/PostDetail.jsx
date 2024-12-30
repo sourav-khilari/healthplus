@@ -20,7 +20,7 @@ const PostDetails = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const { data } = await axiosInstance.get(`/user/getPostById/${id}`);
+        const { data } = await axiosInstance.get(`/users/getPostById/${id}`);
         setPost(data?.data); // Set post data to state
         setError(null); // Clear any previous errors
       } catch (err) {
