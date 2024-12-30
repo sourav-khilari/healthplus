@@ -18,7 +18,8 @@ import {
   uploadMedicalDetails,
   getPatientDetailsId,
   updateUserAvatar,
-  updateUserCoverImage
+  updateUserCoverImage,
+  contactUs
 } from '../controllers/user.controller.js'
 import { authMiddleware, roleMiddleware } from '../middlewares/auth.middleaware.js'
 import { upload } from "../middlewares/multer.middleware.js"
