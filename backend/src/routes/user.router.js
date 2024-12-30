@@ -113,7 +113,7 @@ router.post('/create-patient-id', roleMiddleware("user"), createPatientId);
 router.post('/uploadMedicalDetails', roleMiddleware("user"), upload.single("medical-history"), uploadMedicalDetails);
 router.get("/ getPatientDetailsId/:id", roleMiddleware("user"), getPatientDetailsId);
 
-
+router.post("/contactUs",contactUs);
 
 
 //health medstore

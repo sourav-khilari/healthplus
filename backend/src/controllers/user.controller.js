@@ -967,8 +967,22 @@ const uploadMedicalDetails = asyncHandler(async (req, res) => {
 
 
 
-
-
+const contactUs = asyncHandler(async (req, res) => {
+    try {
+      const { name, email, message } = req.body;
+      if(!name || !email || !message){
+        throw new ApiError(500, 'Please fill ALL Details');
+      }
+      await sendMail("souravkhilari123456@gmail.com", "complain", `${name}+"\n" + ${email} +"\n"+ ${message}`);
+      //res.status(200).json({ message: "Email sent successfully" });
+      return res.status(200).json(new ApiResponse(400, null, 'Email sent successfully'));
+    } catch (error) {
+      console.error(error);
+      throw new ApiError(500, 'Error sending email');
+    }
+  });
+  
+  
 
 
 export {
@@ -991,5 +1005,5 @@ export {
     getPatientDetailsId,
     updateUserAvatar,
     updateUserCoverImage,
-
+    contactUs,
 }
