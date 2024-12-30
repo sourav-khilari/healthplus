@@ -60,15 +60,15 @@ import {
 } from "../controllers/medicalstore.controller/product.controller.js";
 
 
-import { 
+import {
   addcomment,
-   createPost,
-   getAllPosts, 
-   getPostById, 
-   getUserPosts, 
-   getNotifications, 
-   deletePost 
-  } from "../controllers/community.controller/postController.js"
+  createPost,
+  getAllPosts,
+  getPostById,
+  getUserPosts,
+  getNotifications,
+  deletePost
+} from "../controllers/community.controller/postController.js"
 
 
 import { admin } from "../config/firebase.js";
@@ -81,8 +81,18 @@ router.get("/pharmacy", roleMiddleware("user"), nearestPharmacy);
 router.get("/pharmacy", roleMiddleware("user"), getAllHospitals);
 router.get("/getCurrentUser", roleMiddleware("user"), getCurrentUser);
 router.get("/logoutUser", roleMiddleware("user"), logoutUser)
-router.post("/updateUserAvatar", roleMiddleware("user"),updateUserAvatar);
-router.post("/updateUserCoverImage", roleMiddleware("user"),updateUserCoverImage);
+router.post("/updateUserAvatar", upload.fields([
+  {
+    name: "avatar",
+    maxCount: 1,
+  },
+]), roleMiddleware("user"), updateUserAvatar);
+router.post("/updateUserCoverImage", upload.fields([
+  {
+    name: "coverimage",
+    maxCount: 1,
+  },
+]), roleMiddleware("user"), updateUserCoverImage);
 
 router.get("/getAllDoctors", getAllDoctors);
 
@@ -137,7 +147,7 @@ router.post("/createPost", upload.fields([
     name: "image",
     maxCount: 1,
   },
-]),roleMiddleware("user"), createPost);
+]), roleMiddleware("user"), createPost);
 router.delete("/posts/:postId", roleMiddleware("user"), deletePost);
 
 
@@ -152,10 +162,10 @@ router.post("/auth/refreshToken", async (req, res) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    console.log("\n\n"+"header"+"\n\n")
+    console.log("\n\n" + "header" + "\n\n")
     return res.status(401).json({ error: "Authorization header missing" });
   }
-  console.log("\n\n"+"header2"+"\n\n")
+  console.log("\n\n" + "header2" + "\n\n")
   const idToken = authHeader.split(" ")[1];
 
   try {

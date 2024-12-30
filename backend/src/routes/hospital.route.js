@@ -10,7 +10,7 @@ import { registerHospital,
     updateHospitalCoverImage,
 } from '../controllers/hospital.controller.js'
 import {authMiddleware,roleMiddleware} from '../middlewares/auth.middleaware.js'
-
+import { upload } from "../middlewares/multer.middleware.js"
 
 
 const router = Router()
@@ -26,8 +26,18 @@ router.post('/addDoctor',roleMiddleware("hospital"), addDoctor);
 router.get('/getDoctorAppointments/:doctorId',roleMiddleware("hospital"), getDoctorAppointments);
 router.get('/getHospitalAllAppointments/:hospitalId',roleMiddleware("hospital"), getHospitalAllAppointments);
 
-router.post("/updateHospitalAvatar", roleMiddleware("hospital"),updateHospitalAvatar);
-router.post("/updateHospitalCoverImage", roleMiddleware("hospital"),updateHospitalCoverImage);
+router.post("/updateHospitalAvatar", upload.fields([
+    {
+      name: "avatar",
+      maxCount: 1,
+    },
+  ]),roleMiddleware("hospital"),updateHospitalAvatar);
+router.post("/updateHospitalCoverImage",upload.fields([
+    {
+      name: "cover",
+      maxCount: 1,
+    },
+  ]), roleMiddleware("hospital"),updateHospitalCoverImage);
 
 
 export default router

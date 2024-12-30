@@ -12,11 +12,21 @@ import {
 } from '../controllers/doctor.controller.js'
 
 
-import { addcomment, getAllPosts, getPostById, getUserPosts, getNotifications, deletePost } from "../controllers/community.controller/postController.js"
+import {
+    addcomment,
+    getAllPosts,
+    getPostById,
+    getUserPosts,
+    getNotifications,
+    deletePost
+} from "../controllers/community.controller/postController.js"
+
+
+import { upload } from "../middlewares/multer.middleware.js"
 const router = Router()
 
 router.post('/login', loginDoctor);
-router.post('/fetchPatientData/',fetchPatientData);
+router.post('/fetchPatientData/', fetchPatientData);
 
 router.post('/getDoctorAppointments/:doctorId', getDoctorAppointments);
 
