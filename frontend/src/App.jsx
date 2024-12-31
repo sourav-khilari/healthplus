@@ -61,7 +61,25 @@ import CancelDonationRequest from "./pages/BloodBank/CancelDonation.jsx";
 import UserDonationRequests from "./pages/BloodBank/UserDonationRequests.jsx";
 import BloodBankDashboard from "./pages/BloodBank/BloodBankDashboard.jsx";
 import HospitalBloodDashboard from "./pages/BloodBank/HospitalBloodDashboard.jsx";
+import LoadingPage from "./components/LoadingPage.jsx";
+import { useState, useEffect } from "react";
+
 const App = () => {
+  const [isFirstVisit, setIsFirstVisit] = useState(true); // Track if it's the first visit
+
+  useEffect(() => {
+    const visitedBefore = localStorage.getItem("visited");
+    if (visitedBefore) {
+      setIsFirstVisit(false); // If the user has visited before, skip the loading screen
+    } else {
+      localStorage.setItem("visited", "true"); // Mark as visited on first load
+    }
+  }, []);
+
+  if (isFirstVisit) {
+    return <LoadingPage />; // Show loading page on the first visit
+  }
+
   return (
     <Router>
       <Header />
