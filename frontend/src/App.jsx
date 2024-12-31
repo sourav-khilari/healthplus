@@ -56,6 +56,9 @@ import NotificationsPage from "./pages/Community/NotificationPage.jsx";
 import PostCard from "./pages/Community/PostCard.jsx";
 import PostDetail from "./pages/Community/PostDetail.jsx";
 import UserPost from "./pages/Community/UserPost.jsx";
+import SubmitDonationRequest from "./pages/SubmitDonationRequest.jsx";
+import CancelDonationRequest from "./pages/CancelDonation.jsx";
+import UserDonationRequests from "./pages/UserDonationRequests.jsx";
 
 const App = () => {
   return (
@@ -142,6 +145,18 @@ const App = () => {
           element={<PostDetail />}
         />
         <Route path="/Community/UserPost/:role" element={<UserPost />} />
+        <Route
+          path="/Bloodbank/submit-request"
+          element={<SubmitDonationRequest />}
+        />
+        <Route
+          path="/Bloodbank/cancel-request"
+          element={<CancelDonationRequest />}
+        />
+        <Route
+          path="/Bloodbank/my-requests"
+          element={<UserDonationRequests />}
+        />
       </Routes>
       <Footer />
     </Router>
