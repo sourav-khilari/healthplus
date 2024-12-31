@@ -1,7 +1,7 @@
 
 // import { Link } from "react-router-dom";
 
- const PostCard = ({ post }) => {
+ const PostCard = () => {
 //   return (
 //     <div className="bg-white p-4 mb-8 rounded-md shadow-md">
 //       <div className="border-b border-gray-200 pb-4">
