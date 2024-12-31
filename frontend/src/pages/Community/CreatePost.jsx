@@ -1,7 +1,17 @@
 import { useState } from "react";
+<<<<<<< HEAD
 import axiosInstance from "../../axios/axios_interceptor.js";
 import { useNavigate } from "react-router-dom";
 // Axios Instance
+=======
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+// Axios Instance
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -19,8 +29,13 @@ const CreatePost = () => {
     if (image) formData.append("image", image);
     // formData.append("_id", userId);
     try {
+<<<<<<< HEAD
       const response = await axiosInstance.post("/user/createPost", formData);
       navigate(`/user/getPostById//${response.data.data._id}`); // Navigate to the created post's detail page
+=======
+      const response = await axiosInstance.post("/users/createPost", formData);
+      navigate(`/post/${response.data.data._id}`); // Navigate to the created post's detail page
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
     } catch (error) {
       console.error("Error creating post", error);
     }

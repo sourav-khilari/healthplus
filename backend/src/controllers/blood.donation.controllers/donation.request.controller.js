@@ -156,7 +156,10 @@ const getUserDonationRequests = async (req, res) => {
 export {
     submitBloodDonationRequest,
     getDonationRequestsForHospital,
+<<<<<<< HEAD
     //searching option according to the location
+=======
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
     markRequestAsRead,
     cancelDonationRequest,
     getUserDonationRequests,

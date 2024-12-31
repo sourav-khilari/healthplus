@@ -1,4 +1,5 @@
 const CommentCard = ({ comment }) => {
+<<<<<<< HEAD
   // Destructure the fields and provide defaults in case they are missing
   const { key = {}, comment: commentText = "", createdAt = "N/A" } = comment;
 
@@ -29,6 +30,14 @@ const CommentCard = ({ comment }) => {
           </button>
         </div>
       )}
+=======
+  return (
+    <div className="comment-card mb-4 p-4 border rounded shadow-sm">
+      <p className="text-gray-700 mb-1">{comment.comment}</p>
+      <p className="text-sm text-gray-500">
+        <strong>{comment.userId.name}</strong> - {comment.userId.role || "User"}
+      </p>
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
     </div>
   );
 };

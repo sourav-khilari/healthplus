@@ -14,7 +14,11 @@ app.use(cors({
 //accept json
 app.use(express.json({limit: "36kb"}))
 //accept url encoded
+<<<<<<< HEAD
 app.use(express.urlencoded({extended:true,limit:"16kb"}))
+=======
+app.use(express.urlencoded({extented:true,limit:"16kb"}))
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
 //file,folder,public folder assets
 app.use(express.static("public"))
 //cud in cokies of browser by server

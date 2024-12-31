@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom"; // Importing useNavigate for programmatic routing
 import axiosInstance from "../../axios/axios_interceptor.js";
 import { useParams } from "react-router-dom";
@@ -28,14 +29,35 @@ const UserPosts = () => {
           response = await axiosInstance.get("/user/getUserPosts"); // Use the user endpoint
         }
 
+=======
+import axios from "axios";
+import { Link } from "react-router-dom";
+// Axios Instance
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
+  withCredentials: true, // For handling cookies
+});
+const UserPosts = () => {
+  const [userPosts, setUserPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchUserPosts = async () => {
+      try {
+        const response = await axiosInstance.get("/users/getUserPosts");
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
         setUserPosts(response.data.data);
       } catch (error) {
         console.error("Error fetching user posts", error);
       }
     };
+<<<<<<< HEAD
 
     fetchUserPosts();
   }, [role, navigate]); // Depend on role and navigate to re-fetch when role changes
+=======
+    fetchUserPosts();
+  }, []);
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
 
   return (
     <div className="container mx-auto">
@@ -48,10 +70,14 @@ const UserPosts = () => {
             <div key={post._id} className="mb-4">
               <h3>{post.title}</h3>
               <p>{post.discription}</p>
+<<<<<<< HEAD
               <Link
                 to={`/${role}/getPostById/${post._id}`} // Use dynamic route for user/admin
                 className="text-blue-500"
               >
+=======
+              <Link to={`/user/posts/${post._id}`} className="text-blue-500">
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
                 View Post
               </Link>
             </div>

@@ -30,16 +30,27 @@ h2 {
   align-items: center;
 }
 
+<<<<<<< HEAD
 .notification-content p {
   font-size: 1rem;
   color: #333;
 }
 
+=======
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
 .notification-time {
   font-size: 0.8rem;
   color: #888;
 }
 
+<<<<<<< HEAD
+=======
+.notification-content p {
+  font-size: 1rem;
+  color: #333;
+}
+
+>>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
 .notifications-page p {
   text-align: center;
   font-size: 1.2rem;
