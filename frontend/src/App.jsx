@@ -56,10 +56,11 @@ import NotificationsPage from "./pages/Community/NotificationPage.jsx";
 import PostCard from "./pages/Community/PostCard.jsx";
 import PostDetail from "./pages/Community/PostDetail.jsx";
 import UserPost from "./pages/Community/UserPost.jsx";
-import SubmitDonationRequest from "./pages/SubmitDonationRequest.jsx";
-import CancelDonationRequest from "./pages/CancelDonation.jsx";
-import UserDonationRequests from "./pages/UserDonationRequests.jsx";
-
+import SubmitDonationRequest from "./pages/BloodBank/SubmitDonationRequest.jsx";
+import CancelDonationRequest from "./pages/BloodBank/CancelDonation.jsx";
+import UserDonationRequests from "./pages/BloodBank/UserDonationRequests.jsx";
+import BloodBankDashboard from "./pages/BloodBank/BloodBankDashboard.jsx";
+import HospitalBloodDashboard from "./pages/BloodBank/HospitalBloodDashboard.jsx";
 const App = () => {
   return (
     <Router>
@@ -156,6 +157,11 @@ const App = () => {
         <Route
           path="/Bloodbank/my-requests"
           element={<UserDonationRequests />}
+        />
+        <Route path="/Bloodbank/dashboard" element={<BloodBankDashboard />} />
+        <Route
+          path="/Bloodbank/hospitaldashboard"
+          element={<HospitalBloodDashboard />}
         />
       </Routes>
       <Footer />

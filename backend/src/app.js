@@ -1,49 +1,45 @@
-import express from "express"
-import cors from "cors"
+import express from "express";
+import cors from "cors";
 //cud in cokies of browser by server
-import cookieParser from "cookie-parser"
- 
-const app=express()
+import cookieParser from "cookie-parser";
 
-app.use(cors({
-    origin:process.env.CORS_ORIGIN,
-    credentials:true,
-    sameSite: 'None',
+const app = express();
 
-}))
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+    sameSite: "None",
+  }),
+);
 //accept json
-app.use(express.json({limit: "36kb"}))
+app.use(express.json({ limit: "36kb" }));
 //accept url encoded
-<<<<<<< HEAD
-app.use(express.urlencoded({extended:true,limit:"16kb"}))
-=======
-app.use(express.urlencoded({extented:true,limit:"16kb"}))
->>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
+
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 //file,folder,public folder assets
-app.use(express.static("public"))
+app.use(express.static("public"));
 //cud in cokies of browser by server
-app.use(cookieParser())
+app.use(cookieParser());
 
 //routes import
-import userRouter from './routes/user.router.js'
-import adminRouter from './routes/sub.admin.route.js'
-import superadminRouter from './routes/admin.route.js'
-import hospitalRouter from './routes/hospital.route.js'
-import doctorRouter from './routes/doctor.route.js'
+import userRouter from "./routes/user.router.js";
+import adminRouter from "./routes/sub.admin.route.js";
+import superadminRouter from "./routes/admin.route.js";
+import hospitalRouter from "./routes/hospital.route.js";
+import doctorRouter from "./routes/doctor.route.js";
 //routes decalaration
-app.use("/api/v1/users",userRouter);
+app.use("/api/v1/users", userRouter);
 
-app.use("/api/v1/hospital",hospitalRouter);
+app.use("/api/v1/hospital", hospitalRouter);
 
-app.use("/api/v1/admin",adminRouter);
-app.use("/api/v1/superadmin",superadminRouter);
-app.use("/api/v1/doctor",doctorRouter);
+app.use("/api/v1/admin", adminRouter);
+app.use("/api/v1/superadmin", superadminRouter);
+app.use("/api/v1/doctor", doctorRouter);
 
-
-
-import {failedUploads} from "./scheduler/fail.uploads.js"
-import {pendingHospitalScheduler}  from "./scheduler/reminder.hospital.js"
+import { failedUploads } from "./scheduler/fail.uploads.js";
+import { pendingHospitalScheduler } from "./scheduler/reminder.hospital.js";
 
 pendingHospitalScheduler();
 
-export {app}
+export { app };

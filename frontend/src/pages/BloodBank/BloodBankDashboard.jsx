@@ -13,7 +13,7 @@ const BloodBankDashboard = () => {
 
     try {
       const response = await axiosInstance.get(
-        "/getDonationRequestsForHospital"
+        "/hospital/getDonationRequestsForHospital"
       ); // Assuming same route for blood bank
       setRequests(response.data?.data || []);
     } catch (err) {
@@ -27,7 +27,9 @@ const BloodBankDashboard = () => {
   // Function to accept a donation request
   const handleAccept = async (requestId) => {
     try {
-      await axiosInstance.post("/acceptDonationRequest", { requestId });
+      await axiosInstance.post("/hospital/acceptDonationRequest", {
+        requestId,
+      });
 
       // Optimistically update the request status to "accepted"
       setRequests((prevRequests) =>
@@ -46,7 +48,9 @@ const BloodBankDashboard = () => {
   // Function to decline a donation request
   const handleDecline = async (requestId) => {
     try {
-      await axiosInstance.post("/declineDonationRequest", { requestId });
+      await axiosInstance.post("/hospital/declineDonationRequest", {
+        requestId,
+      });
 
       // Optimistically update the request status to "declined"
       setRequests((prevRequests) =>

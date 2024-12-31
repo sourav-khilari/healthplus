@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import "../styles/FindPharmacy.css"; // Ensure to create appropriate CSS
 
-
-import { axiosInstance } from "../axios/axios_interceptor.js";
+import axiosInstance from "../axios/axios_interceptor.js";
 const MedicineStore = () => {
   const [pharmacies, setPharmacies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,9 +38,8 @@ const MedicineStore = () => {
       //   withCredentials= true,
       // );
       const response = await axiosInstance.get(
-
         `/users/pharmacy?lat=${lat}&lng=${lng}`
-     );
+      );
       //console.log("response"+response);
       setPharmacies(response.data);
       setLoading(false);
