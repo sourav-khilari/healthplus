@@ -25,7 +25,7 @@ axiosInstance.interceptors.response.use(
         const auth = await getAuth();
         if (!auth.currentUser) {
           console.log("User is not authenticated. Please log in again.");
-          //return Promise.reject(error);
+          window.location.reload(); //return Promise.reject(error);
           return Promise.reject(error); // Reject if user is not authenticated
         }
         const newIdToken = await auth.currentUser.getIdToken(true); // Force refresh the token
