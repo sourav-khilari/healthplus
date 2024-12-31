@@ -1,0 +1,78 @@
+/* Hospital Register Page Styles */
+.register-page {
+  background-color: #f7f7f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.register-container {
+  background-color: #fff;
+  padding: 40px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.register-title {
+  font-size: 2.5rem;
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: #3498db;
+}
+
+.submit-btn {
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #3498db;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #2980b9;
+}
+
+.submit-btn:focus {
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .register-container {
+    padding: 20px;
+    width: 90%;
+  }
+
+  .register-title {
+    font-size: 2rem;
+  }
+}

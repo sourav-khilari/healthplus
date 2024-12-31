@@ -1,0 +1,78 @@
+/* Hospital Login Page Styles */
+.login-page {
+  background-color: #f7f7f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.login-container {
+  background-color: #fff;
+  padding: 40px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-title {
+  font-size: 2.5rem;
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: #3498db;
+}
+
+.submit-btn {
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #3498db;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:disabled {
+  background-color: #7f8c8d;
+}
+
+.submit-btn:hover {
+  background-color: #2980b9;
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    padding: 20px;
+    width: 90%;
+  }
+
+  .login-title {
+    font-size: 2rem;
+  }
+}

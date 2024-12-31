@@ -1,0 +1,17 @@
+.services-page {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.services-page h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.service-cards {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}

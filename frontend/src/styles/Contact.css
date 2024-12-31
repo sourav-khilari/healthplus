@@ -1,0 +1,103 @@
+/* Contact.css */
+
+.contact-container {
+  font-family: "Roboto", sans-serif;
+  background-color: #f7f7f7;
+  padding: 40px;
+  color: #333;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #fff;
+}
+
+.form-section {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 98%;
+  transition: border 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.submit-btn {
+  background-color: #3498db;
+  color: white;
+  padding: 14px 20px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #2980b9;
+}
+
+.additional-contact-info {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.additional-contact-info p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.contact-link {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+}
+
+.hero-section {
+  text-align: center;
+  background-color: #3498db;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+  border-radius: 8px;
+}

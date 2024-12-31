@@ -1,0 +1,40 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+.medicine-store-page {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+#pharmacy-list {
+  margin-top: 20px;
+}
+
+.pharmacy {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+a {
+  color: blue;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#loading {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+#error {
+  color: red;
+  font-size: 1.2em;
+  font-weight: bold;
+}

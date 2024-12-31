@@ -1,0 +1,33 @@
+.service-card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  margin: 20px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.service-card h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.service-card p {
+  font-size: 16px;
+  color: #666;
+}
+
+.service-card .learn-more {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.service-card .learn-more:hover {
+  background-color: #45a049;
+}

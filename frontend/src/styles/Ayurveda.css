@@ -1,0 +1,16 @@
+.ayurveda-page {
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ayurveda-page h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.ayurveda-page p {
+  font-size: 18px;
+  color: #555;
+}

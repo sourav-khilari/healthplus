@@ -1,0 +1,73 @@
+/* Header.css */
+
+/* General Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #007bff; /* Blue header background */
+  color: white;
+}
+
+/* Logo Styles */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logo-link {
+  color: white;
+  text-decoration: none;
+  font-size: 26px;
+  transition: color 0.3s;
+}
+
+.logo-link:hover {
+  color: #c8f040	; /* Highlight color on hover */
+}
+
+/* Navigation Styles */
+.nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-left: 30px;
+  position: relative;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  margin-bottom: 5px;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #c8f040	; /* Highlight color on hover */
+}
+
+/* Underline Styles */
+.nav-underline {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: #c8f040	; /* Highlight color */
+  border: none;
+  transition: width 0.3s ease-in-out;
+  visibility: hidden;
+}
+
+.nav-item:hover .nav-underline {
+  width: 60%;
+  visibility: visible;
+}
