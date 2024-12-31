@@ -54,11 +54,7 @@ const Home = () => {
           <p>Comprehensive care, personalized for you.</p>
         </div>
         <img
-<<<<<<< HEAD
           src="./src/assets/images/h11.jpg"
-=======
-          src="./src/assets/images/h2.jpeg"
->>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
           alt="HealthPlus banner showing healthcare excellence"
           className="hero-image"
         />

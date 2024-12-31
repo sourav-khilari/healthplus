@@ -1,27 +1,13 @@
 import { useState, useEffect } from "react";
 import "../styles/FindPharmacy.css"; // Ensure to create appropriate CSS
-<<<<<<< HEAD
+
 
 import { axiosInstance } from "../axios/axios_interceptor.js";
-=======
-import axios from "axios";
-import {axiosInstance} from "../axios/axios_interceptor"
-
->>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
-
 const MedicineStore = () => {
   const [pharmacies, setPharmacies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-<<<<<<< HEAD
-=======
-  // const axiosInstance = axios.create({
-  //   baseURL: "http://localhost:8000/api/v1/users", // Backend API URL
-  //   withCredentials: true, // Handle cookies
-  // });
->>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
-  // Function to get user's current location
   const getUserLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -53,12 +39,9 @@ const MedicineStore = () => {
       //   withCredentials= true,
       // );
       const response = await axiosInstance.get(
-<<<<<<< HEAD
+
         `/users/pharmacy?lat=${lat}&lng=${lng}`
-=======
-        `/pharmacy?lat=${lat}&lng=${lng}`,
->>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
-      );
+     );
       //console.log("response"+response);
       setPharmacies(response.data);
       setLoading(false);
