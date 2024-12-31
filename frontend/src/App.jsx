@@ -122,7 +122,7 @@ const App = () => {
         <Route path="/findHospital" element={<FindHospital />} />
 
         {/* Other routes */}
-<<<<<<< HEAD
+
         <Route path="/Community/:role" element={<AllPost />} />
         <Route path="/Community/CommentCard" element={<CommentCard />} />
         <Route
@@ -131,29 +131,17 @@ const App = () => {
         />
         <Route path="/Community/CreatePost" element={<CreatePost />} />
         <Route path="/Community/DeletePost/:role" element={<DeletePost />} />
-=======
-        <Route path="/Community" element={<AllPost />} />
-        <Route path="/Community/CommentCard" element={<CommentCard />} />
-        <Route path="/Community/CommentForm" element={<CommentForm />} />
-        <Route path="/Community/CreatePost" element={<CreatePost />} />
-        <Route path="/Community/DeletePost" element={<DeletePost />} />
->>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
         <Route
           path="/Community/NotificationsPage"
           element={<NotificationsPage />}
         />
-<<<<<<< HEAD
+
         <Route path="/Community/PostCard/:role" element={<PostCard />} />
         <Route
           path="/Community/PostDetail/:_id/:role"
           element={<PostDetail />}
         />
         <Route path="/Community/UserPost/:role" element={<UserPost />} />
-=======
-        <Route path="/Community/PostCard" element={<PostCard />} />
-        <Route path="/Community/PostDetail" element={<PostDetail />} />
-        <Route path="/Community/UserPost" element={<UserPost />} />
->>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
       </Routes>
       <Footer />
     </Router>

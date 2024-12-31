@@ -38,13 +38,9 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
-<<<<<<< HEAD
-    "eslint": "^9.17.0",
-    "eslint-plugin-react": "^7.37.3",
-=======
+
     "eslint": "^9.9.0",
     "eslint-plugin-react": "^7.35.0",
->>>>>>> ae0507c8ba6ac7a8e84e8ef42488dbb392155bbe
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
