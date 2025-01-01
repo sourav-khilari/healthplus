@@ -6,7 +6,7 @@ const doctorSchema = new Schema({
     speciality: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String },
-    hospitalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Hospital', required: true },
+    hospitalId: { type: mongoose.Schema.Types.ObjectId, ref: 'Hospital' },
     calendarId: { type: String }, // Google Calendar ID
     availability: [
         {
@@ -21,7 +21,8 @@ const doctorSchema = new Schema({
     role: {
         type: String,
         default: "doctor",
-      },
+    },
+    isApproved: { type: Boolean, default: false }, // Pending approval by admin
 },{
     timestamps: true,
 });

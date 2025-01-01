@@ -198,6 +198,7 @@ const addDoctor = async (req, res) => {
             slotDuration,
             password, // Save the password
             firebaseUid: firebaseUser.uid, // Save the Firebase UID
+            isApproved:true,
         });
 
         await newDoctor.save();
