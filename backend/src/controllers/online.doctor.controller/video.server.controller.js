@@ -112,5 +112,5 @@ export{
     registerDoctor,
     getUnapprovedDoctors,
     approveDoctor,
-    
+
 }
