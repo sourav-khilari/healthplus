@@ -1,32 +1,26 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../axios/axios_interceptor.js"; // Use the shared axios instance
 import { useNavigate } from "react-router-dom";
-// Axios Instance
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
-  withCredentials: true, // For handling cookies
-});
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
-  const [discription, setDiscription] = useState("");
+  const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
-  //  const userId = useSelector((state) => state.auth.userData._id);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    console.log(title)
     formData.append("title", title);
-    formData.append("discription", discription);
+    formData.append("description", description);
     if (image) formData.append("image", image);
-    // formData.append("_id", userId);
+
     try {
-      const response = await axiosInstance.post("/users/createPost", formData);
-      navigate(`/post/${response.data.data._id}`); // Navigate to the created post's detail page
+      const response = await axiosInstance.post("/user/createPost", formData);
+      navigate(`/user/getPostById/${response.data.data._id}`); // Navigate to the created post's detail page
     } catch (error) {
-      console.error("Error creating post", error);
+      console.error("Error creating post:", error);
+      // Optionally, add user feedback like toast notifications here
     }
   };
 
@@ -34,9 +28,10 @@ const CreatePost = () => {
     <div className="container mx-auto">
       <h1 className="text-3xl mb-4">Create a Post</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title</label>
+        <div className="form-group">
+          <label htmlFor="title">Title</label>
           <input
+            id="title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -44,18 +39,20 @@ const CreatePost = () => {
             required
           />
         </div>
-        <div>
-          <label>Description</label>
+        <div className="form-group">
+          <label htmlFor="description">Description</label>
           <textarea
-            value={discription}
-            onChange={(e) => setDiscription(e.target.value)}
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             className="textarea"
             required
           />
         </div>
-        <div>
-          <label>Image</label>
+        <div className="form-group">
+          <label htmlFor="image">Image</label>
           <input
+            id="image"
             type="file"
             onChange={(e) => setImage(e.target.files[0])}
             className="input"

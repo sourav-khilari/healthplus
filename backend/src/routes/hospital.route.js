@@ -46,11 +46,12 @@ router.post("/updateHospitalCoverImage", upload.fields([
 import {
     getDonationRequestsForHospital,
     markRequestAsRead,
+    declineDonationRequest,
 } from "../controllers/blood.donation.controllers/donation.request.controller.js"
 
 router.get("/getDonationRequestsForHospital", roleMiddleware("hospital"), getDonationRequestsForHospital);
 router.post("/markRequestAsRead", roleMiddleware("hospital"), markRequestAsRead);
-
+router.post("/declineDonationRequest", roleMiddleware("hospital"), declineDonationRequest);
 
 
 export default router

@@ -83,6 +83,41 @@ const markRequestAsRead = asyncHandler(async (req, res) => {
     }
 });
 
+const declineDonationRequest = asyncHandler(async (req, res) => {
+    //decide based on frontend
+    //const { requestId } = req.params;
+    //requestId=_id
+    const { requestId } = req.body;
+    const hospitalId = req.user._id; // Assuming the user is a hospital
+
+    try {
+        const request = await DonationRequest.findById(requestId);
+
+        if (!request || request.status !== "pending") {
+            return res.status(400).send({
+                success: false,
+                message: "Request not found or already processed.",
+            });
+        }
+
+        request.status = "cancelled";
+        request.readByHospitalId = hospitalId;
+
+        await request.save();
+
+        res.status(200).send({
+            success: true,
+            message: "Request marked as read.",
+        });
+    } catch (error) {
+        console.error("Error marking request as read:", error);
+        res.status(500).send({
+            success: false,
+            message: "Internal server error.",
+        });
+    }
+});
+
 
 const cancelDonationRequest = asyncHandler(async (req, res) => {
     //decide based on frontend
@@ -159,5 +194,5 @@ export {
     markRequestAsRead,
     cancelDonationRequest,
     getUserDonationRequests,
-    
+    declineDonationRequest,
 }

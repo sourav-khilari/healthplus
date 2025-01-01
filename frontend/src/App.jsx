@@ -56,8 +56,30 @@ import NotificationsPage from "./pages/Community/NotificationPage.jsx";
 import PostCard from "./pages/Community/PostCard.jsx";
 import PostDetail from "./pages/Community/PostDetail.jsx";
 import UserPost from "./pages/Community/UserPost.jsx";
+import SubmitDonationRequest from "./pages/BloodBank/SubmitDonationRequest.jsx";
+import CancelDonationRequest from "./pages/BloodBank/CancelDonation.jsx";
+import UserDonationRequests from "./pages/BloodBank/UserDonationRequests.jsx";
+import BloodBankDashboard from "./pages/BloodBank/BloodBankDashboard.jsx";
+import HospitalBloodDashboard from "./pages/BloodBank/HospitalBloodDashboard.jsx";
+import LoadingPage from "./components/LoadingPage.jsx";
+import { useState, useEffect } from "react";
 
 const App = () => {
+  const [isFirstVisit, setIsFirstVisit] = useState(true); // Track if it's the first visit
+
+  useEffect(() => {
+    const visitedBefore = localStorage.getItem("visited");
+    if (visitedBefore) {
+      setIsFirstVisit(false); // If the user has visited before, skip the loading screen
+    } else {
+      localStorage.setItem("visited", "true"); // Mark as visited on first load
+    }
+  }, []);
+
+  if (isFirstVisit) {
+    return <LoadingPage />; // Show loading page on the first visit
+  }
+
   return (
     <Router>
       <Header />
@@ -122,18 +144,43 @@ const App = () => {
         <Route path="/findHospital" element={<FindHospital />} />
 
         {/* Other routes */}
-        <Route path="/Community" element={<AllPost />} />
+
+        <Route path="/Community/:role" element={<AllPost />} />
         <Route path="/Community/CommentCard" element={<CommentCard />} />
-        <Route path="/Community/CommentForm" element={<CommentForm />} />
+        <Route
+          path="/Community/CommentForm/:postId/:role"
+          element={<CommentForm />}
+        />
         <Route path="/Community/CreatePost" element={<CreatePost />} />
-        <Route path="/Community/DeletePost" element={<DeletePost />} />
+        <Route path="/Community/DeletePost/:role" element={<DeletePost />} />
         <Route
           path="/Community/NotificationsPage"
           element={<NotificationsPage />}
         />
-        <Route path="/Community/PostCard" element={<PostCard />} />
-        <Route path="/Community/PostDetail" element={<PostDetail />} />
-        <Route path="/Community/UserPost" element={<UserPost />} />
+
+        <Route path="/Community/PostCard/:role" element={<PostCard />} />
+        <Route
+          path="/Community/PostDetail/:_id/:role"
+          element={<PostDetail />}
+        />
+        <Route path="/Community/UserPost/:role" element={<UserPost />} />
+        <Route
+          path="/Bloodbank/submit-request"
+          element={<SubmitDonationRequest />}
+        />
+        <Route
+          path="/Bloodbank/cancel-request"
+          element={<CancelDonationRequest />}
+        />
+        <Route
+          path="/Bloodbank/my-requests"
+          element={<UserDonationRequests />}
+        />
+        <Route path="/Bloodbank/dashboard" element={<BloodBankDashboard />} />
+        <Route
+          path="/Bloodbank/hospitaldashboard"
+          element={<HospitalBloodDashboard />}
+        />
       </Routes>
       <Footer />
     </Router>

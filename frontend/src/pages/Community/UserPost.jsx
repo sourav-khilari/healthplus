@@ -1,25 +1,39 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
-// Axios Instance
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
-  withCredentials: true, // For handling cookies
-});
+import { useNavigate, useParams, Link } from "react-router-dom"; // Import necessary hooks and components
+import axiosInstance from "../../axios/axios_interceptor.js";
+
 const UserPosts = () => {
+  const { role } = useParams(); // Fetch the role from the URL params
+  const navigate = useNavigate(); // Hook for programmatic navigation
   const [userPosts, setUserPosts] = useState([]);
 
   useEffect(() => {
+    // Check if the role is valid before fetching posts
+    if (role !== "user" && role !== "admin") {
+      // Redirect to error page if the role is invalid
+      navigate("/error");
+      return;
+    }
+
     const fetchUserPosts = async () => {
       try {
-        const response = await axiosInstance.get("/users/getUserPosts");
-        setUserPosts(response.data.data);
+        let response;
+
+        // Fetch posts based on the role
+        if (role === "admin") {
+          response = await axiosInstance.get("/admin/getUserPosts"); // Admin endpoint
+        } else {
+          response = await axiosInstance.get("/user/getUserPosts"); // User endpoint
+        }
+
+        setUserPosts(response.data.data); // Update state with the fetched posts
       } catch (error) {
         console.error("Error fetching user posts", error);
       }
     };
+
     fetchUserPosts();
-  }, []);
+  }, [role, navigate]); // Re-fetch when the role or navigate changes
 
   return (
     <div className="container mx-auto">
@@ -32,7 +46,10 @@ const UserPosts = () => {
             <div key={post._id} className="mb-4">
               <h3>{post.title}</h3>
               <p>{post.discription}</p>
-              <Link to={`/user/posts/${post._id}`} className="text-blue-500">
+              <Link
+                to={`/${role}/getPostById/${post._id}`} // Dynamic route based on role
+                className="text-blue-500"
+              >
                 View Post
               </Link>
             </div>

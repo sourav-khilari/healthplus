@@ -1,7 +1,9 @@
+import { useState, useEffect } from "react";
 import ServiceCard from "../components/ServiceCard";
 import "../styles/Home.css"; // Ensure this file includes styles for the home page
 
 const Home = () => {
+  const [role, setRole] = useState(null); // Track the user's role
   const services = [
     {
       title: "Ayurveda Cure",
@@ -41,9 +43,24 @@ const Home = () => {
     {
       title: "Blood Bank",
       description: "Donate or request blood at nearby centers.",
-      link: "/bloodbank",
+      link:
+        role === "hospital"
+          ? "/Bloodbank/hospitaldashboard"
+          : "/Bloodbank/dashboard", // Conditional link
     },
   ];
+
+  // Simulate fetching the role (e.g., from Firebase, Redux, or context)
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      // Example: Fetch the user's role (this can be from Firebase, Redux, or localStorage)
+      // In a real scenario, replace this with actual logic to get the user's role
+      const fetchedRole = "hospital"; // Example, should come from auth context or similar
+      setRole(fetchedRole);
+    };
+
+    fetchUserRole();
+  }, []);
 
   return (
     <div className="home">
@@ -54,7 +71,7 @@ const Home = () => {
           <p>Comprehensive care, personalized for you.</p>
         </div>
         <img
-          src="./src/assets/images/h2.jpeg"
+          src="./src/assets/images/h11.jpg"
           alt="HealthPlus banner showing healthcare excellence"
           className="hero-image"
         />

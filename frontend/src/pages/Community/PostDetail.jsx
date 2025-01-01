@@ -1,27 +1,31 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+
+import axiosInstance from "../../axios/axios_interceptor.js";
 import CommentForm from "./CommentForm";
 import CommentCard from "./CommentCard";
 
-// Axios Instance
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1", // Change to your backend URL
-  withCredentials: true, // For handling cookies
-});
-
 const PostDetails = () => {
-  const { id } = useParams(); // Extract post ID from URL
+  const { id, role } = useParams(); // Extract post ID and role from URL params
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch post details when component mounts
+  // Fetch post details when component mounts, depending on the role
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const { data } = await axiosInstance.get(`/users/getPostById/${id}`);
-        setPost(data?.data); // Set post data to state
+        let response;
+
+        if (role === "admin") {
+          // Admin route for fetching the post
+          response = await axiosInstance.get(`/admin/getPostById/${id}`);
+        } else {
+          // User route for fetching the post
+          response = await axiosInstance.get(`/user/getPostById/${id}`);
+        }
+
+        setPost(response.data?.data); // Set post data to state
         setError(null); // Clear any previous errors
       } catch (err) {
         console.error("Error fetching post:", err);
@@ -30,8 +34,16 @@ const PostDetails = () => {
         setLoading(false);
       }
     };
+
     fetchPost();
-  }, [id]);
+  }, [id, role]); // Depend on both id and role to refetch post if params change
+
+  // Log comments to verify structure (for debugging)
+  useEffect(() => {
+    if (post?.comments) {
+      console.log(post.comments);
+    }
+  }, [post]);
 
   // Handle adding a new comment
   const handleAddComment = async (newComment) => {
@@ -41,14 +53,24 @@ const PostDetails = () => {
     }
 
     try {
-      const { data } = await axiosInstance.post(`/user/posts/${id}/comments`, {
-        comment: newComment,
-      });
+      let response;
+
+      if (role === "admin") {
+        // Admin route for posting comments
+        response = await axiosInstance.post(`/admin/posts/${id}/comments`, {
+          comment: newComment,
+        });
+      } else {
+        // User route for posting comments
+        response = await axiosInstance.post(`/user/posts/${id}/comments`, {
+          comment: newComment,
+        });
+      }
 
       // Update post's comments state by adding the new comment
       setPost((prevPost) => ({
         ...prevPost,
-        comments: [...prevPost.comments, data.comment],
+        comments: [...prevPost.comments, response.data.comment],
       }));
     } catch (err) {
       console.error("Error adding comment:", err);
@@ -77,14 +99,14 @@ const PostDetails = () => {
               className="w-full rounded-lg mb-4"
             />
           )}
-          <p className="text-gray-700 mb-6">{post.discription}</p>
+          <p className="text-gray-700 mb-6">{post.description}</p>
 
           <h2 className="text-xl font-semibold mt-6 mb-4">Comments</h2>
           {post.comments?.length === 0 ? (
             <p className="text-gray-500">No comments yet</p>
           ) : (
             post.comments.map((comment) => (
-              <CommentCard key={comment._id} comment={comment} />
+              <CommentCard key={comment._id} comment={comment} role={role} />
             ))
           )}
 
