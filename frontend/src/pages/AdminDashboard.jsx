@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // For navigation
 import axios from "axios";
+import "../styles/Common.css"; // Import common CSS (you can still use this if you want extra custom styles)
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -9,15 +11,17 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const navigate = useNavigate(); // Use React Router for navigation
 
   // Axios Instance
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8000", // Change to your backend URL
     withCredentials: true, // For handling cookies
   });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     setLoading(true);
@@ -30,8 +34,8 @@ const AdminDashboard = () => {
       ] = await Promise.all([
         axiosInstance.get("/api/v1/superadmin/getUser"),
         axiosInstance.get("/api/v1/superadmin/getPendingHospitals"),
-        axiosInstance.get("/api/v1/superadmin/getRejectedHospitals"),
         axiosInstance.get("/api/v1/superadmin/getApprovedHospitals"),
+        axiosInstance.get("/api/v1/superadmin/getRejectedHospitals"),
       ]);
 
       setUsers(usersRes.data.data || []);
@@ -45,36 +49,10 @@ const AdminDashboard = () => {
       setLoading(false);
     }
   };
-  const approveOrDeclineHospital = async (hospitalId, isApproved) => {
-    try {
-      await axiosInstance.post(`/api/v1/superadmin/approveOrDeclineHospital`, {
-        hospitalId,
-        action: isApproved,
-      });
-      alert(`Hospital ${isApproved ? "approved" : "rejected"} successfully.`);
-      fetchData(); // Re-fetch data to update the UI
-    } catch (err) {
-      setError("Failed to update hospital status");
-      console.error(err);
-    }
-  };
-  const handleUserStatusChange = async (firebaseUid, newStatus) => {
-    try {
-      await axiosInstance.post("/api/v1/superadmin/updateUserStatus", {
-        firebaseUid,
-        status: newStatus,
-      });
-      setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.firebaseUid === firebaseUid
-            ? { ...user, status: newStatus }
-            : user
-        )
-      );
-    } catch (err) {
-      setError("Failed to update user status");
-      console.error(err);
-    }
+
+  // Navigate to different sections based on button clicks
+  const navigateToPage = (page) => {
+    navigate(`/admindashboard/${page}`); // Use navigate instead of useHistory
   };
 
   if (loading) {
@@ -82,101 +60,60 @@ const AdminDashboard = () => {
   }
 
   if (error) {
-    return <p className="error">{error}</p>;
+    return <p className="text-red-500 text-center">{error}</p>;
   }
 
   return (
-    <div className="admin-dashboard">
-      <h1>Admin Dashboard</h1>
+    <div className="admin-dashboard container mx-auto p-5">
+      <h1 className="text-3xl font-semibold text-center mb-6">
+        Admin Dashboard
+      </h1>
 
-      {/* Users Section */}
-      <section>
-        <h2>Users</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users?.map((user) => (
-              <tr key={user.firebaseUid}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>{user.status ? "Active" : "Inactive"}</td>
-                <td>
-                  <button
-                    onClick={() =>
-                      handleUserStatusChange(user.firebaseUid, !user.status)
-                    }
-                  >
-                    {user.status ? "Deactivate" : "Activate"}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+      {/* Dashboard Buttons */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <button
+          className="bg-blue-500 text-white p-5 rounded-lg shadow-lg hover:bg-blue-600 transition-all duration-300"
+          onClick={() => navigateToPage("users")}
+        >
+          <h3 className="text-xl font-medium">Users</h3>
+          {/* <p>Total Users: {users.length}</p> */}
+        </button>
 
-      {/* Pending Hospitals */}
-      <section>
-        <h2>Pending Hospitals</h2>
-        <ul>
-          {pendingHospitals?.map((hospital) => (
-            <li key={hospital._id}>
-              {hospital.name}
-              <div>
-                <button
-                  onClick={() =>
-                    approveOrDeclineHospital(hospital._id, "approve")
-                  }
-                >
-                  Approve
-                </button>
-                <button
-                  onClick={() =>
-                    approveOrDeclineHospital(hospital._id, "decline")
-                  }
-                >
-                  Reject
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
+        <button
+          className="bg-yellow-500 text-white p-5 rounded-lg shadow-lg hover:bg-yellow-600 transition-all duration-300"
+          onClick={() => navigateToPage("pendingHospitals")}
+        >
+          <h3 className="text-xl font-medium">Pending Hospitals</h3>
+          {/* <p>Total Pending: {pendingHospitals.length}</p> */}
+        </button>
 
-      {/* Approved Hospitals */}
-      <section>
-        <h2>Approved Hospitals</h2>
-        <ul>
-          {approvedHospitals?.map((hospital) => (
-            <li key={hospital._id}>{hospital.name}</li>
-          ))}
-        </ul>
-      </section>
+        <button
+          className="bg-green-500 text-white p-5 rounded-lg shadow-lg hover:bg-green-600 transition-all duration-300"
+          onClick={() => navigateToPage("approvedHospitals")}
+        >
+          <h3 className="text-xl font-medium">Approved Hospitals</h3>
+          {/* <p>Total Approved: {approvedHospitals.length}</p> */}
+        </button>
 
-      {/* Rejected Hospitals */}
-      <section>
-        <h2>Rejected Hospitals</h2>
-        <ul>
-          {rejectedHospitals?.map((hospital) => (
-            <li key={hospital._id}>{hospital.name}</li>
-          ))}
-        </ul>
-      </section>
-      <section>
-        <h2>Medical Store</h2>
-        <ul>
-          
-        </ul>
-      </section>
+        <button
+          className="bg-red-500 text-white p-5 rounded-lg shadow-lg hover:bg-red-600 transition-all duration-300"
+          onClick={() => navigateToPage("rejectedHospitals")}
+        >
+          <h3 className="text-xl font-medium">Rejected Hospitals</h3>
+          {/* <p>Total Rejected: {rejectedHospitals.length}</p> */}
+        </button>
+
+        {/* Community Button */}
+        <button
+          className="bg-purple-500 text-white p-5 rounded-lg shadow-lg hover:bg-purple-600 transition-all duration-300"
+          onClick={() => navigate("/Community/admin")}
+        >
+          <h3 className="text-xl font-medium">Community</h3>
+        </button>
+      </div>
+
+      {/* Error and Success Messages */}
+      {error && <p className="text-red-500 text-center">{error}</p>}
     </div>
   );
 };

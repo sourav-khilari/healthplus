@@ -10,7 +10,6 @@ const AllPost = () => {
   const [page, setPage] = useState(1); // For pagination
   const [hasMore, setHasMore] = useState(true); // Check if more posts are available
   const { role } = useParams();
-
   // Fetch posts from the backend
   const fetchAllPosts = async () => {
     try {
