@@ -79,7 +79,7 @@ const approveDoctor = asyncHandler(async (req, res) => {
 
     // Generate credentials
     const password = generateRandomPassword(); // Custom function for random password
-    const firebaseUid = generateFirebaseUid(); // Generate Firebase UID if required
+    const hashedPassword = await bcrypt.hash(password, 10);
     const firebaseUser = await admin.auth().createUser({
         email: doctor.email,
         password,
@@ -87,7 +87,7 @@ const approveDoctor = asyncHandler(async (req, res) => {
     });
    // hospital.firebaseUid = firebaseUser.uid;
     // Update doctor details
-    doctor.password = password;
+    doctor.password = hashedPassword;
     doctor.firebaseUid = firebaseUser.uid;
     doctor.isApproved = true;
     await doctor.save();
@@ -99,7 +99,7 @@ const approveDoctor = asyncHandler(async (req, res) => {
         Email: ${doctor.email}
         Password: ${password}
     `;
-    await sendMail(doctor.email, 'Doctor Application Approved', message);
+    await sendEmail(doctor.email, 'Doctor Application Approved', message);
 
     res.status(200).json({ message: 'Doctor approved and notified successfully.' });
 });
@@ -109,7 +109,8 @@ const approveDoctor = asyncHandler(async (req, res) => {
 
 
 export{
-    loginDoctor,
-    addDoctor,
-
+    registerDoctor,
+    getUnapprovedDoctors,
+    approveDoctor,
+    
 }

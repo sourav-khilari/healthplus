@@ -169,7 +169,7 @@ const addDoctor = async (req, res) => {
     try {
         // Generate a random password for the doctor
         const password = generateRandomPassword();
-
+        const hashedPassword = await bcrypt.hash(password, 10);
         // Create a Google Calendar for the doctor
         const calendarResponse = await calendar.calendars.insert({
             requestBody: {
@@ -196,7 +196,7 @@ const addDoctor = async (req, res) => {
             calendarId: calendarResponse.data.id,
             availability,
             slotDuration,
-            password, // Save the password
+            password:hashedPassword, // Save the password
             firebaseUid: firebaseUser.uid, // Save the Firebase UID
             isApproved:true,
         });

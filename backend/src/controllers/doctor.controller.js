@@ -7,9 +7,9 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { admin } from "../config/firebase.js";
 
 import { Doctor } from "../models/doctor.model.js";
-import {calendar} from '../config/googleCalendar.js'
+import { calendar } from '../config/googleCalendar.js'
 import bcrypt from "bcrypt"
-import sendEmail from '../utils/sendEmail.js'; 
+import sendEmail from '../utils/sendEmail.js';
 
 
 
@@ -52,9 +52,10 @@ const loginDoctor = asyncHandler(async (req, res) => {
         res.cookie('authToken', idToken, option);
 
         // Return a successful login response
+        let message = doctor.role == "doctor" ? "Doctor logged in successfully" : "online doctor logged in successfully";
         return res
             .status(200)
-            .json(new ApiResponse(200, { doctor }, 'Doctor logged in successfully'));
+            .json(new ApiResponse(200, { doctor }, `${message}`));
     } catch (error) {
         console.error(error);
         throw new ApiError(500, 'Failed to login doctor', error.message);
@@ -64,18 +65,19 @@ const loginDoctor = asyncHandler(async (req, res) => {
 
 const getPatientDetailsId = asyncHandler(async (req, res) => {
     try {
-      const { patientId } = req.params; // Extract patient ID from the route parameter
-      const patient = await Patient.findById({
-        patientId}); 
-  
-      if (!patient) {
-        return res.status(404).json({ error: "Patient not found" });
-      }
-  
-      res.json(patient);
+        const { patientId } = req.params; // Extract patient ID from the route parameter
+        const patient = await Patient.findById({
+            patientId
+        });
+
+        if (!patient) {
+            return res.status(404).json({ error: "Patient not found" });
+        }
+
+        res.json(patient);
     } catch (error) {
-      console.error(error);
-      res.status(400).json({ error: "Unable to fetch patient details" });
+        console.error(error);
+        res.status(400).json({ error: "Unable to fetch patient details" });
     }
 });
 
@@ -136,7 +138,7 @@ const fetchPatientData = asyncHandler(async (req, res) => {
 });
 
 
-const getDoctorAppointments =asyncHandler( async (req, res) => {
+const getDoctorAppointments = asyncHandler(async (req, res) => {
     const doctorId = req.params?.doctorId; // Doctor ID from request params
     const currentTime = new Date();
     const next24Hours = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000);
@@ -204,6 +206,6 @@ export {
     loginDoctor,
     getPatientDetailsId,
     getDoctorAppointments,
-    fetchPatientData ,
-    
+    fetchPatientData,
+
 }
