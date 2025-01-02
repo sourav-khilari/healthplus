@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const OnlineDoctorDashboard = () => {
   const [appointments, setAppointments] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
 
+  const navigateToPage = (page) => {
+    navigate(`/${page}`);
+  };
   useEffect(() => {
     // Fetch upcoming online appointments and notifications
     axios
@@ -61,6 +66,12 @@ const OnlineDoctorDashboard = () => {
           <p>No new notifications.</p>
         )}
       </section>
+      <button
+        className="bg-green-500 text-white p-5 rounded-lg shadow-lg hover:bg-green-600 transition-all duration-300"
+        onClick={() => navigateToPage("lobby")}
+      >
+        <h3 className="text-xl font-medium">Go to Lobby</h3>
+      </button>
     </div>
   );
 

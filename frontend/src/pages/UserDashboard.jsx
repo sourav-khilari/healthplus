@@ -156,7 +156,7 @@ const UserDashboard = () => {
       {/* Room navigation */}
       <section className="room-join bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-          Join a Room
+          Join a Room for Consultation
         </h2>
         <input
           type="text"

@@ -104,13 +104,6 @@ const DoctorDashboard = () => {
           <h3 className="text-xl font-medium">Manage Patients</h3>
         </button>
 
-        <button
-          className="bg-green-500 text-white p-5 rounded-lg shadow-lg hover:bg-green-600 transition-all duration-300"
-          onClick={() => navigateToPage("lobby")}
-        >
-          <h3 className="text-xl font-medium">Go to Lobby</h3>
-        </button>
-
         {/* Navigate to Community */}
         <button
           className="bg-purple-500 text-white p-5 rounded-lg shadow-lg hover:bg-purple-600 transition-all duration-300"

@@ -81,6 +81,7 @@ import LobbyScreen from "./pages/Lobby.jsx";
 import DoctorRegistrationPage from "./pages/OnlineDoctor/DoctorRegistrationPage";
 import DoctorAppointmentsPage from "./pages/OnlineDoctor/DoctorAppointmentsPage";
 import VideoIdPage from "./pages/OnlineDoctor/VideoIdPage";
+import OnlineDoctorDashboard from "./pages/OnlineDoctor/OnlineDoctorDashboard.jsx";
 const App = () => {
   const [isFirstVisit, setIsFirstVisit] = useState(true); // Track if it's the first visit
 
@@ -224,10 +225,17 @@ const App = () => {
         {/* online doctor*/}
         <Route path="/register-doctor" element={<DoctorRegistrationPage />} />
         <Route
-          path="/doctor-appointments"
+          path="/online-doctor/doctor-appointments"
           element={<DoctorAppointmentsPage />}
         />
-        <Route path="/video-id/:appointmentId" element={<VideoIdPage />} />
+        <Route
+          path="/online-doctor/video-id/:appointmentId"
+          element={<VideoIdPage />}
+        />
+        <Route
+          path="/online-doctor/dashboard"
+          element={<OnlineDoctorDashboard />}
+        />
       </Routes>
       <Footer />
     </Router>
