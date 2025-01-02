@@ -7,7 +7,7 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Learn from "./pages/Learn";
 import Ayurveda from "./pages/ServiceDetails/Ayurveda";
-import DoctorConsultation from "./pages/ServiceDetails/DoctorConsultation";
+//import DoctorConsultation from "./pages/ServiceDetails/DoctorConsultation";
 import MedicineStore from "./pages/ServiceDetails/MedicineStore";
 import ReportGuidance from "./pages/ServiceDetails/ReportGuidance";
 import MyProfile from "./pages/Myprofile";
@@ -21,6 +21,7 @@ import HospitalLogin from "./pages/HospitalLogin"; // Import HospitalLogin
 import HospitalRegister from "./pages/HospitalRegister"; // Import HospitalRegister
 import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
+import DoctorDashboard from "./pages/DoctorDashboard";
 import HospitalDashboard from "./pages/HospitalDashboard";
 import FindPharmacy from "./pages/FindPharmacy";
 import FindHospital from "./pages/FindHospital";
@@ -56,6 +57,7 @@ import NotificationsPage from "./pages/Community/NotificationPage.jsx";
 import PostCard from "./pages/Community/PostCard.jsx";
 import PostDetail from "./pages/Community/PostDetail.jsx";
 import UserPost from "./pages/Community/UserPost.jsx";
+//bloodbank
 import SubmitDonationRequest from "./pages/BloodBank/SubmitDonationRequest.jsx";
 import CancelDonationRequest from "./pages/BloodBank/CancelDonation.jsx";
 import UserDonationRequests from "./pages/BloodBank/UserDonationRequests.jsx";
@@ -63,11 +65,22 @@ import BloodBankDashboard from "./pages/BloodBank/BloodBankDashboard.jsx";
 import HospitalBloodDashboard from "./pages/BloodBank/HospitalBloodDashboard.jsx";
 import LoadingPage from "./components/LoadingPage.jsx";
 import { useState, useEffect } from "react";
+//admin pages
 import HospitalManagement from "./pages/AdminDashboard/HospitalManagement.jsx";
 import UserManagement from "./pages/AdminDashboard/UserManagement.jsx";
 import ApprovedHospitals from "./pages/AdminDashboard/ApprovedHospitals.jsx";
 import RejectedHospitals from "./pages/AdminDashboard/RejectedHospitals.jsx";
 import PendingHospitals from "./pages/AdminDashboard/PendingHospitals.jsx";
+//video call with patient
+import RoomPage from "./pages/Room.jsx";
+import LobbyScreen from "./pages/Lobby.jsx";
+// import PatientConsultationEntry from "./pages/ServiceDetails/PatientConsultancy.jsx";
+// import DoctorConsultationEntry from "./pages/ServiceDetails/DoctorConsultation.jsx";
+
+//online doc
+import DoctorRegistrationPage from "./pages/OnlineDoctor/DoctorRegistrationPage";
+import DoctorAppointmentsPage from "./pages/OnlineDoctor/DoctorAppointmentsPage";
+import VideoIdPage from "./pages/OnlineDoctor/VideoIdPage";
 const App = () => {
   const [isFirstVisit, setIsFirstVisit] = useState(true); // Track if it's the first visit
 
@@ -89,13 +102,23 @@ const App = () => {
       <Header />
       <Routes>
         {/* Landing Page for Role Selection */}
+        <Route path="/user/lobby" element={<LobbyScreen />} />
+        <Route path="/doctors/room/:roomId" element={<RoomPage />} />
+        {/* <Route
+          path="/PatientConsultationEntry"
+          element={<PatientConsultationEntry />}
+        />
+        <Route
+          path="/DoctorConsultationEntry"
+          element={<DoctorConsultationEntry />}
+        /> */}
         <Route path="/login" element={<LandingPage />} />
-
         {/* User Authentication Routes */}
         <Route path="/user/login" element={<Login />} />
         <Route path="/user/register" element={<Register />} />
         <Route path="/userdashboard" element={<UserDashboard />} />
         <Route path="/admindashboard" element={<AdminDashboard />} />
+        <Route path="/doctordashboard" element={<DoctorDashboard />} />
         <Route
           path="/admindashboard/hospitalManagement"
           element={<HospitalManagement />}
@@ -113,13 +136,11 @@ const App = () => {
           path="/admindashboard/rejectedHospitals"
           element={<RejectedHospitals />}
         />
-
         <Route path="/hospital/login" element={<HospitalLogin />} />
         <Route path="/hospital/register" element={<HospitalRegister />} />
         <Route path="/doctor/login" element={<DoctorLogin />} />
         {/* <Route path="/doctor/register" element={<DoctorRegister />} /> */}
         <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
-
         {/* General Pages */}
         <Route path="/" element={<Home />} />
         <Route path="/about-us" element={<AboutUs />} />
@@ -132,13 +153,12 @@ const App = () => {
         <Route path="/myappointment" element={<MyAppointment />} />
         <Route path="/myprofile" element={<MyProfile />} />
         <Route path="/services/ayurveda" element={<Ayurveda />} />
-        <Route
+        {/* <Route
           path="/services/doctor-consultation"
           element={<DoctorConsultation />}
-        />
+        /> */}
         <Route path="/services/medicine-store" element={<MedicineStore />} />
         <Route path="/services/report-guidance" element={<ReportGuidance />} />
-
         {/* MedicalStore Routes */}
         <Route path="/medstore" element={<MedStore />} />
         <Route path="/medstore/user" element={<PrivateRoute />}>
@@ -164,9 +184,7 @@ const App = () => {
         </Route>
         <Route path="/findPharmacy" element={<FindPharmacy />} />
         <Route path="/findHospital" element={<FindHospital />} />
-
         {/* Other routes */}
-
         <Route path="/Community/:role" element={<AllPost />} />
         <Route path="/Community/:role" element={<AllPost />} />
         <Route path="/Community/CommentCard" element={<CommentCard />} />
@@ -180,7 +198,6 @@ const App = () => {
           path="/Community/NotificationsPage"
           element={<NotificationsPage />}
         />
-
         <Route path="/Community/PostCard/:role" element={<PostCard />} />
         <Route
           path="/Community/PostDetail/:_id/:role"
@@ -204,6 +221,13 @@ const App = () => {
           path="/Bloodbank/hospitaldashboard"
           element={<HospitalBloodDashboard />}
         />
+        {/* online doctor*/}
+        <Route path="/register-doctor" element={<DoctorRegistrationPage />} />
+        <Route
+          path="/doctor-appointments"
+          element={<DoctorAppointmentsPage />}
+        />
+        <Route path="/video-id/:appointmentId" element={<VideoIdPage />} />
       </Routes>
       <Footer />
     </Router>

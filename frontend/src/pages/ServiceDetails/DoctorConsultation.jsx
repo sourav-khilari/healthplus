@@ -1,17 +1,7 @@
+import RoomPage from "../Room"; // Import your RoomPage component
 
-import "../../styles/DoctorConsultation.css";
-
-const DoctorConsultation = () => {
-  return (
-    <div className="doctor-consultation-page">
-      <h1>Doctor Consultation</h1>
-      <p>
-        Book virtual consultations, manage appointments, and access consultation
-        history with top doctors.
-      </p>
-      {/* Add dynamic content such as booking forms, etc. */}
-    </div>
-  );
+const ConsultationEntry = () => {
+  return <RoomPage />;
 };
 
-export default DoctorConsultation;
+export default ConsultationEntry;

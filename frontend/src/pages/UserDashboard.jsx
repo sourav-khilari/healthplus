@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/UserDashboard.css";
+import { useNavigate } from "react-router-dom"; // For redirection
 
 const UserDashboard = () => {
+  const navigate = useNavigate(); // For navigation to room
   const [doctors, setDoctors] = useState([]);
   const [loadingDoctors, setLoadingDoctors] = useState(true);
   const [error, setError] = useState("");
@@ -13,6 +15,7 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [appointments, setAppointments] = useState([]);
   const [appointmentError, setAppointmentError] = useState("");
+  const [roomNo, setRoomNo] = useState(""); // New state for room number
 
   // Fetch doctors on mount
   useEffect(() => {
@@ -70,7 +73,14 @@ const UserDashboard = () => {
       setLoading(false);
     }
   };
-
+  // Redirect to room
+  const handleJoinRoom = () => {
+    if (roomNo) {
+      navigate(`/room/${roomNo}`);
+    } else {
+      alert("Please enter a valid room number.");
+    }
+  };
   return (
     <div className="user-dashboard">
       <h1>User Dashboard</h1>
@@ -143,7 +153,25 @@ const UserDashboard = () => {
           </ul>
         )}
       </section>
-
+      {/* Room navigation */}
+      <section className="room-join bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+          Join a Room
+        </h2>
+        <input
+          type="text"
+          value={roomNo}
+          onChange={(e) => setRoomNo(e.target.value)}
+          placeholder="Enter Room Number"
+          className="p-2 border rounded-md w-full mb-4"
+        />
+        <button
+          onClick={handleJoinRoom}
+          className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600"
+        >
+          Join Room
+        </button>
+      </section>
       {error && <p className="error">{error}</p>}
     </div>
   );

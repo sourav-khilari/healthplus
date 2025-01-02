@@ -85,20 +85,13 @@ const RoomPage = () => {
       setRemoteStream(remoteStream[0]);
     });
   }, []);
-  // const endCall = async () => {
-  //   const pc = await peer.getInstance();
-  //   if (pc) {
-  //     pc.peer.close();
-  //     // endCallBtn.style.display = 'none';
-  //   }
-  // }
+
   const endCall = async () => {
     try {
-      const pc = await peer.getInstance(); // Ensure you await the instance
+      const pc = await peer.getInstance();
       if (pc) {
-        pc.close(); // Properly close the peer connection
+        pc.close();
         console.log("Call ended and peer connection closed.");
-        // You can perform other cleanup tasks here if needed
       }
     } catch (error) {
       console.error("Error ending call:", error);
@@ -111,7 +104,7 @@ const RoomPage = () => {
     socket.on("call:accepted", handleCallAccepted);
     socket.on("peer:nego:needed", handleNegoNeedIncomming);
     socket.on("peer:nego:final", handleNegoNeedFinal);
-    socket.on("call-ended", (caller) => {
+    socket.on("call-ended", () => {
       endCall();
     });
     return () => {
@@ -120,9 +113,7 @@ const RoomPage = () => {
       socket.off("call:accepted", handleCallAccepted);
       socket.off("peer:nego:needed", handleNegoNeedIncomming);
       socket.off("peer:nego:final", handleNegoNeedFinal);
-      socket.off("call-ended", (caller) => {
-        endCall();
-      });
+      socket.off("call-ended", endCall);
     };
   }, [
     socket,
@@ -132,49 +123,72 @@ const RoomPage = () => {
     handleNegoNeedIncomming,
     handleNegoNeedFinal,
   ]);
-  //  function endCall() {
-  //     socket.emit("end-call", { from: socket.id, to: remoteSocketId });
-  //     setRemoteStream(null);
-  //     setMyStream(null);
-  //     peer.peer.close();
-  //     setRemoteSocketId(null);
-  //   }
-  //socket.emit("call-ended", caller)
+
   function end() {
     socket.emit("call-ended", { from: socket.id, to: remoteSocketId });
   }
 
   return (
-    <div>
-      <h1>Room Page</h1>
-      <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4>
-      {myStream && <button onClick={sendStreams}>Send Stream</button>}
-      {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
-      {myStream && (
-        <>
-          <h1>My Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="100px"
-            width="200px"
-            url={myStream}
-          />
-        </>
-      )}
-      {remoteStream && (
-        <>
-          <h1>Remote Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="100px"
-            width="200px"
-            url={remoteStream}
-          />
-        </>
-      )}
-      <button onClick={end}>End Call</button>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">Room Page</h1>
+      <h4
+        className={`text-lg font-medium ${
+          remoteSocketId ? "text-green-500" : "text-red-500"
+        }`}
+      >
+        {remoteSocketId ? "Connected" : "No one in room"}
+      </h4>
+      <div className="space-y-4 mt-4">
+        {myStream && (
+          <button
+            onClick={sendStreams}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+          >
+            Send Stream
+          </button>
+        )}
+        {remoteSocketId && (
+          <button
+            onClick={handleCallUser}
+            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+          >
+            Call
+          </button>
+        )}
+        {myStream && (
+          <div className="mt-4">
+            <h2 className="text-lg font-bold text-gray-800 mb-2">My Stream</h2>
+            <ReactPlayer
+              playing
+              muted
+              height="150px"
+              width="250px"
+              url={myStream}
+              className="rounded-lg shadow-md"
+            />
+          </div>
+        )}
+        {remoteStream && (
+          <div className="mt-4">
+            <h2 className="text-lg font-bold text-gray-800 mb-2">
+              Remote Stream
+            </h2>
+            <ReactPlayer
+              playing
+              height="150px"
+              width="250px"
+              url={remoteStream}
+              className="rounded-lg shadow-md"
+            />
+          </div>
+        )}
+        <button
+          onClick={end}
+          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition mt-4"
+        >
+          End Call
+        </button>
+      </div>
     </div>
   );
 };
