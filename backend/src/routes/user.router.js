@@ -200,4 +200,37 @@ router.post("/submitBloodDonationRequest", roleMiddleware("user"), submitBloodDo
 router.post("/cancelDonationRequest", roleMiddleware("user"), cancelDonationRequest);
 router.get("/getUserDonationRequests", roleMiddleware("user"), getUserDonationRequests);
 
+//online doctor consultation
+import {
+  onlineregisterDoctor,
+  onlinegetUnapprovedDoctors,
+  onlineapproveDoctor,
+  onlinegetAvailableSlots,
+  onlinebookAppointment,
+  onlineupdateAppointment,
+  onlinedeleteAppointment,
+  onlinegetDoctorAppointments,
+  onlinegetUserAppointments,
+  onlinegetVideoId,
+} from "../controllers/online.doctor.controller/video.server.controller.js"
+
+
+
+router.get("/onlinegetAvailableSlots/:doctorId/:date", roleMiddleware("user"), onlinegetAvailableSlots);
+router.post("/onlinebookAppointment", roleMiddleware("user"), onlinebookAppointment);
+router.put("/onlineupdateAppointment/:appointmentId", roleMiddleware("user"), onlineupdateAppointment);
+router.delete("/onlinedeleteAppointment/:appointmentId", roleMiddleware("user"), onlinedeleteAppointment);
+router.get("/onlinegetUserAppointments", roleMiddleware("user"), onlinegetUserAppointments);
+router.get("/onlinegetVideoId", roleMiddleware("user"), onlinegetVideoId);
+
+
+
+
+
+
+
+
+
+
+
 export default router

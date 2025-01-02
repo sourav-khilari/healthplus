@@ -137,4 +137,23 @@ router.get("/getUserPosts", roleMiddleware("admin"), getUserPosts);
 router.get("/getPostById/:postId", roleMiddleware("admin"), getPostById);
 router.delete("/posts/:postId", roleMiddleware("admin"), deletePost);
 
+
+//online doctor consultation
+import {
+  onlineregisterDoctor,
+  onlinegetUnapprovedDoctors,
+  onlineapproveDoctor,
+  onlinegetAvailableSlots,
+  onlinebookAppointment,
+  onlineupdateAppointment,
+  onlinedeleteAppointment,
+  onlinegetDoctorAppointments,
+  onlinegetUserAppointments,
+  onlinegetVideoId,
+} from "../controllers/online.doctor.controller/video.server.controller.js";
+
+router.get("/onlinegetUnapprovedDoctors", roleMiddleware("admin"), onlinegetUnapprovedDoctors);
+router.put("/onlineapproveDoctor/", roleMiddleware("admin"), onlineapproveDoctor);
+
+
 export default router;

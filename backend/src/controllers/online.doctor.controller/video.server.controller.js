@@ -14,14 +14,14 @@ import sendEmail from '../../utils/sendEmail.js';
 
 
 
-const generateRandomPassword = (length = 12) => {
+const onlinegenerateRandomPassword = (length = 12) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
     return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
 };
 
 
 // Doctor Registration
-const registerDoctor = asyncHandler(async (req, res) => {
+const onlineregisterDoctor = asyncHandler(async (req, res) => {
     const { name, department, speciality, email, phone, availability, slotDuration } = req.body;
 
     if (!name || !department || !speciality || !email || !availability || !slotDuration) {
@@ -44,6 +44,7 @@ const registerDoctor = asyncHandler(async (req, res) => {
         availability,
         slotDuration,
         isApproved: false, // Admin approval pending
+        role:"online doctor",
     });
 
     res.status(201).json({
@@ -54,14 +55,14 @@ const registerDoctor = asyncHandler(async (req, res) => {
 
 
 // Fetch all unapproved doctors
-const getUnapprovedDoctors = asyncHandler(async (req, res) => {
+const onlinegetUnapprovedDoctors = asyncHandler(async (req, res) => {
     const unapprovedDoctors = await Doctor.find({ isApproved: false });
     res.status(200).json({ doctors: unapprovedDoctors });
 });
 
 
 
-const approveDoctor = asyncHandler(async (req, res) => {
+const onlineapproveDoctor = asyncHandler(async (req, res) => {
     const { doctorId } = req.body;
 
     if (!doctorId) {
@@ -97,7 +98,7 @@ const approveDoctor = asyncHandler(async (req, res) => {
     doctor.password = hashedPassword;
     doctor.firebaseUid = firebaseUser.uid;
     doctor.calendarId = calendarResponse.data.id, // Google Calendar ID
-        doctor.isApproved = true;
+    doctor.isApproved = true;
     await doctor.save();
 
     // Send email with credentials
@@ -156,7 +157,7 @@ const calculateFreeSlots = (availability, bookedSlots, slotDuration) => {
 };
 
 //get doctor 
-const getAvailableSlots = asyncHandler(async (req, res) => {
+const onlinegetAvailableSlots = asyncHandler(async (req, res) => {
     const { doctorId, date } = req.params;
     console.log(doctorId);
     console.log(date)
@@ -193,7 +194,7 @@ const getAvailableSlots = asyncHandler(async (req, res) => {
     }
 });
 
-const checkAvailability = async (doctorId, date, timeSlot) => {
+const onlinecheckAvailability = async (doctorId, date, timeSlot) => {
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) throw new Error('Doctor not found');
 
@@ -242,7 +243,7 @@ function generateUniqueString(length = 8) {
 }
 
 
-const bookAppointment = asyncHandler(async (req, res) => {
+const onlinebookAppointment = asyncHandler(async (req, res) => {
     const { patientName, patient_id, patientEmail, doctorId, hospitalId, date, timeSlot } = req.body;
     try {
         const doctor = await Doctor.findById(doctorId);
@@ -276,7 +277,7 @@ const bookAppointment = asyncHandler(async (req, res) => {
 });
 
 
-const updateAppointment = asyncHandler(async (req, res) => {
+const onlineupdateAppointment = asyncHandler(async (req, res) => {
     const { appointmentId } = req.params;
     const { newDate, newTimeSlot } = req.body;
 
@@ -312,7 +313,7 @@ const updateAppointment = asyncHandler(async (req, res) => {
     }
 });
 
-const deleteAppointment = asyncHandler(async (req, res) => {
+const onlinedeleteAppointment = asyncHandler(async (req, res) => {
     const { appointmentId } = req.params;
 
     try {
@@ -338,7 +339,7 @@ const deleteAppointment = asyncHandler(async (req, res) => {
 });
 
 
-const getDoctorAppointments = asyncHandler(async (req, res) => {
+const onlinegetDoctorAppointments = asyncHandler(async (req, res) => {
     const doctorId = req.params?.doctorId; // Doctor ID from request params
     const currentTime = new Date();
     const next24Hours = new Date(currentTime.getTime() + 24 * 60 * 60 * 1000);
@@ -396,7 +397,7 @@ const getDoctorAppointments = asyncHandler(async (req, res) => {
     }
 });
 
-const getUserAppointments = asyncHandler(async (req, res) => {
+const onlinegetUserAppointments = asyncHandler(async (req, res) => {
     // Check if the user is logged in (via req.user._id)
     const userId = req.user?._id;
     if (!userId) {
@@ -416,7 +417,7 @@ const getUserAppointments = asyncHandler(async (req, res) => {
 
 // Function to check if the generated string is unique
 
-const getVideoId = asyncHandler(async (req, res) => {
+const onlinegetVideoId = asyncHandler(async (req, res) => {
     const { appointmentId } = req.params; // Appointment ID passed in the route params
 
     // Check if the appointment exists
@@ -440,12 +441,14 @@ const getVideoId = asyncHandler(async (req, res) => {
 
 
 export {
-    registerDoctor,
-    getUnapprovedDoctors,
-    approveDoctor,
-    getAvailableSlots,
-    bookAppointment,
-    updateAppointment,
-    deleteAppointment,
-    getDoctorAppointments,
+    onlineregisterDoctor,
+    onlinegetUnapprovedDoctors,
+    onlineapproveDoctor,
+    onlinegetAvailableSlots,
+    onlinebookAppointment,
+    onlineupdateAppointment,
+    onlinedeleteAppointment,
+    onlinegetDoctorAppointments,
+    onlinegetUserAppointments,
+    onlinegetVideoId,
 }
