@@ -22,6 +22,11 @@ const appointmentSchema = new Schema({
         //required: true
     },
     //hospitalId:{type:String},
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        //required: true
+    },
     date: {
         type: Date,
         required: true
@@ -42,6 +47,9 @@ const appointmentSchema = new Schema({
     calendarEventId: {
         type: String
     }, // Google Calendar event ID
+    video_id:{
+        type:String,
+    }
 });
 
 export const Appointment = mongoose.model('Appointment', appointmentSchema);

@@ -388,10 +388,9 @@ const bookAppointment = asyncHandler(async (req, res) => {
             end: { dateTime: timeSlot.end, timeZone: 'UTC' },
         };
         const eventResponse = await calendar.events.insert({ calendarId: doctor.calendarId, requestBody: event, });
-
-        // Save appointment in MongoDB
+        const userId=req.user._id;        // Save appointment in MongoDB
         const newAppointment = new Appointment({
-            patientName, patientEmail, doctorId, patient_id, hospitalId, date, timeSlot, calendarEventId: eventResponse.data.id,
+            patientName, patientEmail, doctorId, patient_id, hospitalId, userId,date, timeSlot, calendarEventId: eventResponse.data.id,
         });
         await newAppointment.save();
         return res.status(200).json(new ApiResponse(200, { appointment: newAppointment }, 'Appointment booked successfully'));
@@ -966,6 +965,24 @@ const uploadMedicalDetails = asyncHandler(async (req, res) => {
     }
 });
 
+const getUserAppointments = asyncHandler(async (req, res) => {
+    // Check if the user is logged in (via req.user._id)
+    const userId = req.user?._id;
+    if (!userId) {
+        return res.status(401).json({ error: 'Unauthorized. User not logged in.' });
+    }
+
+    // Fetch appointments belonging to the user
+    const appointments = await Appointment.find({ userId })
+        .sort({ date: -1 }) // Sort by date, latest first
+        .populate('doctorId', 'name speciality') // Include doctor's name and speciality
+        .populate('hospitalId', 'name'); // Include hospital's name
+
+    res.status(200).json({
+        message: 'Appointments retrieved successfully.',
+        appointments,
+    });
+});
 
 
 const contactUs = asyncHandler(async (req, res) => {
