@@ -63,7 +63,11 @@ import BloodBankDashboard from "./pages/BloodBank/BloodBankDashboard.jsx";
 import HospitalBloodDashboard from "./pages/BloodBank/HospitalBloodDashboard.jsx";
 import LoadingPage from "./components/LoadingPage.jsx";
 import { useState, useEffect } from "react";
-
+import HospitalManagement from "./pages/AdminDashboard/HospitalManagement.jsx";
+import UserManagement from "./pages/AdminDashboard/UserManagement.jsx";
+import ApprovedHospitals from "./pages/AdminDashboard/ApprovedHospitals.jsx";
+import RejectedHospitals from "./pages/AdminDashboard/RejectedHospitals.jsx";
+import PendingHospitals from "./pages/AdminDashboard/PendingHospitals.jsx";
 const App = () => {
   const [isFirstVisit, setIsFirstVisit] = useState(true); // Track if it's the first visit
 
@@ -92,6 +96,24 @@ const App = () => {
         <Route path="/user/register" element={<Register />} />
         <Route path="/userdashboard" element={<UserDashboard />} />
         <Route path="/admindashboard" element={<AdminDashboard />} />
+        <Route
+          path="/admindashboard/hospitalManagement"
+          element={<HospitalManagement />}
+        />
+        <Route path="/admindashboard/users" element={<UserManagement />} />
+        <Route
+          path="/admindashboard/pendingHospitals"
+          element={<PendingHospitals />}
+        />
+        <Route
+          path="/admindashboard/approvedHospitals"
+          element={<ApprovedHospitals />}
+        />
+        <Route
+          path="/admindashboard/rejectedHospitals"
+          element={<RejectedHospitals />}
+        />
+
         <Route path="/hospital/login" element={<HospitalLogin />} />
         <Route path="/hospital/register" element={<HospitalRegister />} />
         <Route path="/doctor/login" element={<DoctorLogin />} />
@@ -145,6 +167,7 @@ const App = () => {
 
         {/* Other routes */}
 
+        <Route path="/Community/:role" element={<AllPost />} />
         <Route path="/Community/:role" element={<AllPost />} />
         <Route path="/Community/CommentCard" element={<CommentCard />} />
         <Route

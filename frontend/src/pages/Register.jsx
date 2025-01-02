@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import "../styles/Register.css";
 
+import { useNavigate } from "react-router-dom";
 // Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDJ9L91dE5EIVqH2QJNZiNsyObiiBmGuHo",
@@ -41,6 +42,7 @@ const Register = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [isRegistering, setIsRegistering] = useState(true); // Switch between Register and Login
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,19 +54,22 @@ const Register = () => {
     const { email, password, name } = formData;
 
     try {
-      const result = await signInWithPopup(auth, provider);
-      const idToken = await getIdToken(result.user);
+      // const result = await signInWithPopup(auth, provider);
+      // const idToken = await getIdToken(result.user);
 
       const response = await axiosInstance.post("/register", {
         email,
         password,
         name,
       });
-     
+
       console.log(response.data);
       alert("Registration successful");
 
       setSuccess(true);
+      alert("Login successful! Welcome, User.");
+      navigate("/login"); // Redirect to user dashboard
+
       setError(null);
     } catch (error) {
       console.error("Registration Error:", error.message);
@@ -106,7 +111,9 @@ const Register = () => {
 
       // Send data to backend
       const response = await axiosInstance.post("/register", { idToken });
+      const response2 = await axiosInstance.post("/login", { idToken });
       console.log(response.data);
+      console.log(response2.data);
       alert("Google Login/Registration successful");
 
       setSuccess(true);
@@ -170,7 +177,7 @@ const Register = () => {
             />
           </div>
 
-          <button type="submit" className="submit-btn">
+          <button type="submit" className="submit-btn" onClick={handleRegister}>
             {isRegistering ? "Register" : "Login"}
           </button>
         </form>
