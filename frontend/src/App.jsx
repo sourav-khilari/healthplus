@@ -82,6 +82,7 @@ import DoctorRegistrationPage from "./pages/OnlineDoctor/DoctorRegistrationPage"
 import DoctorAppointmentsPage from "./pages/OnlineDoctor/DoctorAppointmentsPage";
 import VideoIdPage from "./pages/OnlineDoctor/VideoIdPage";
 import OnlineDoctorDashboard from "./pages/OnlineDoctor/OnlineDoctorDashboard.jsx";
+import OnlineDoctorLogin from "./pages/OnlineDoctor/DoctorLogin.jsx";
 const App = () => {
   const [isFirstVisit, setIsFirstVisit] = useState(true); // Track if it's the first visit
 
@@ -223,7 +224,12 @@ const App = () => {
           element={<HospitalBloodDashboard />}
         />
         {/* online doctor*/}
-        <Route path="/register-doctor" element={<DoctorRegistrationPage />} />
+        <Route path="/online-doctor/login" element={<OnlineDoctorLogin />} />
+
+        <Route
+          path="/online-doctor/register"
+          element={<DoctorRegistrationPage />}
+        />
         <Route
           path="/online-doctor/doctor-appointments"
           element={<DoctorAppointmentsPage />}
