@@ -231,7 +231,7 @@ const nearestPharmacy = asyncHandler(async (req, res) => {
     try {
         const response = await axios.get(url);
         console.log(response);
-        return res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
+        return res.status(200).json(new ApiResponse(200, response.data.features, 'Hopital data'));
         //return res.json(response.data.features); // Return hospital data
     } catch (error) {
         console.error("Error fetching hospitals:", error);
