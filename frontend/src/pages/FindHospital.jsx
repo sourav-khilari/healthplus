@@ -13,9 +13,9 @@ const FindHospital = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get(
-        `/hospitals?lat=${lat}&lng=${lng}`
+        `/users/hospitals?lat=${lat}&lng=${lng}`
       );
-      setHospitals(response.data);
+      setHospitals(response.data.data);
     } catch (fetchError) {
       setError("Error fetching hospitals. Please try again later.");
       console.error("Error fetching hospitals:", fetchError);
