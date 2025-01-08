@@ -46,7 +46,7 @@ const socketidToEmailMap = new Map();
 const onlineUser = new Set()
 
 
-io.on("connection", async(socket) => {
+io.on("connection", async (socket) => {
   console.log(`Socket Connected`, socket.id);
   socket.on("room:join", (data) => {
     const { email, room } = data;
@@ -88,21 +88,22 @@ io.on("connection", async(socket) => {
 
   console.log("connect User ", socket.id)
 
-    //const token = socket.handshake.auth.token 
-    //console.log("connect User token 12", token)
+  //const token = socket.handshake.auth.token 
+  //console.log("connect User token 12", token)
 
-    //current user details    
-   // const user = await getUserDetailsFromToken(token)
-   const user="";
-    console.log("connect User after user ", socket.id)
+  //current user details    
+  const user = await getUserDetailsFromToken(token)
+  //const user = ""; 
+  console.log("connect User after user ", socket.id)
 
-    if(user.message=="session out"){
-        console.error("User not found or token is invalid");
-        //socket.emit('error', { message: "Authentication failed" });
-        return socket.disconnect(true); // Disconnect the socket
-    }
-  socket.join(user?._id.toString())
-  io.emit('onlineUser',Array.from(onlineUser))
+  if (user.message == "session out") {
+    console.error("User not found or token is invalid");
+    //socket.emit('error', { message: "Authentication failed" });
+    return socket.disconnect(true); // Disconnect the socket
+  }
+  //
+  // socket.join(user?._id.toString())
+  io.emit('onlineUser', Array.from(onlineUser))
 
   socket.on('message-page', async (userId) => {
     console.log('userId', userId)
