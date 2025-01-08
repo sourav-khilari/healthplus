@@ -22,6 +22,8 @@ const PostDetails = () => {
           response = await axiosInstance.get(`/admin/getPostById/${id}`);
         } else {
           // User route for fetching the post
+          console.log("id=\n"+id+"\n")
+          console.log("id=\n"+role+"\n")
           response = await axiosInstance.get(`/users/getPostById/${id}`);
         }
 
