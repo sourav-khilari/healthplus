@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../axios/axios_interceptor.js";
 
 const DoctorRegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -20,8 +20,8 @@ const DoctorRegistrationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "/api/v1/onlineregisterDoctor",
+      const response = await axiosInstance.post(
+        "/onlineregisterDoctor",
         formData
       );
       alert(response.data.message);

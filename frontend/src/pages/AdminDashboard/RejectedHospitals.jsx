@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../axios/axios_interceptor.js";
 
 const RejectedHospitals = () => {
   const [rejectedHospitals, setRejectedHospitals] = useState([]);
@@ -9,8 +9,8 @@ const RejectedHospitals = () => {
   const fetchRejectedHospitals = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:8000/api/v1/superadmin/getRejectedHospitals"
+      const response = await axiosInstance.get(
+        "/superadmin/getRejectedHospitals"
       );
       setRejectedHospitals(response.data.data || []);
     } catch (err) {

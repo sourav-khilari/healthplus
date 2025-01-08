@@ -85,6 +85,7 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
     const { idToken } = req.body;
     //console.log("\nisToken\n"+idToken);
+    
     try {
         let decodedToken;
 

@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import "../styles/Header.css";
 
 const Header = () => {
+  // Simulate retrieving the authentication status and user role (could be from localStorage or global state)
+  const isAuthenticated = localStorage.getItem("authToken"); // Replace with real auth check
+  const userRole = localStorage.getItem("userRole"); // 'doctor', 'admin', 'hospital', etc.
+
   return (
     <header className="header">
       <div className="logo">
@@ -35,12 +39,26 @@ const Header = () => {
             </Link>
             <hr className="nav-underline" />
           </li>
-          <li className="nav-item">
-            <Link to="/login" className="nav-link">
-              Login
-            </Link>
-            <hr className="nav-underline" />
-          </li>
+
+          {!isAuthenticated ? (
+            <li className="nav-item">
+              <Link to="/login" className="nav-link">
+                Login
+              </Link>
+              <hr className="nav-underline" />
+            </li>
+          ) : (
+            <li className="nav-item">
+              <Link to="/profile" className="nav-link">
+                {userRole === "doctor" && "Doctor Profile"}
+                {userRole === "admin" && "Admin Dashboard"}
+                {userRole === "hospital" && "Hospital Profile"}
+                {!["doctor", "admin", "hospital"].includes(userRole) &&
+                  "Profile"}
+              </Link>
+              <hr className="nav-underline" />
+            </li>
+          )}
         </ul>
       </nav>
     </header>

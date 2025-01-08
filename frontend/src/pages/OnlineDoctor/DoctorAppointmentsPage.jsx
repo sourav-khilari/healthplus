@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../axios/axios_interceptor.js";
 
 const DoctorAppointmentsPage = () => {
   const [appointments, setAppointments] = useState([]);
@@ -7,8 +7,8 @@ const DoctorAppointmentsPage = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get(
-          "/api/v1/online doctor/onlinegetDoctorAppointments"
+        const response = await axiosInstance.get(
+          "/online doctor/onlinegetDoctorAppointments"
         );
         setAppointments(response.data.appointments);
       } catch (error) {

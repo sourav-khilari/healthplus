@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../axios/axios_interceptor";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -9,9 +9,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:8000/api/v1/superadmin/getUser"
-      );
+      const response = await axiosInstance.get("/superadmin/getUser");
       setUsers(response.data.data || []);
     } catch (err) {
       setError("Failed to fetch users.");
@@ -22,13 +20,10 @@ const UserManagement = () => {
 
   const handleUserStatusChange = async (firebaseUid, newStatus) => {
     try {
-      await axios.post(
-        "http://localhost:8000/api/v1/superadmin/updateUserStatus",
-        {
-          firebaseUid,
-          status: newStatus,
-        }
-      );
+      await axiosInstance.post("/superadmin/updateUserStatus", {
+        firebaseUid,
+        status: newStatus,
+      });
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user.firebaseUid === firebaseUid

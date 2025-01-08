@@ -1,6 +1,7 @@
-import { useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
+
+import axiosInstance from "../axios/axios_interceptor.js";
+
 import "react-toastify/dist/ReactToastify.css";
 import { initializeApp } from "firebase/app";
 import { useNavigate } from "react-router-dom";
@@ -27,11 +28,6 @@ const HospitalLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:8000", // Change to your backend URL
-    withCredentials: true, // For handling cookies
-  });
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -46,7 +42,7 @@ const HospitalLogin = () => {
       const idToken = await getIdToken(userCredential.user); // Get Firebase ID token
 
       // Send token to backend
-      const response = await axiosInstance.post("/api/v1/hospital/login", {
+      const response = await axiosInstance.post("/hospital/login", {
         email,
         password,
         idToken,

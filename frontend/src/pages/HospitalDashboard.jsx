@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../axios/axios_interceptor.js";
+
 import "../styles/HospitalDashboard.css";
 
 const HospitalDashboard = () => {
@@ -20,10 +21,6 @@ const HospitalDashboard = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:8000/api/v1/hospital", // Change to your backend URL
-    withCredentials: true, // For handling cookies
-  });
 
   // Fetch doctors and appointments on mount
   useEffect(() => {

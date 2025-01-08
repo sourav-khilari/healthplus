@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../axios/axios_interceptor.js";
+
 import { useNavigate } from "react-router-dom";
 
 const OnlineDoctorDashboard = () => {
@@ -13,15 +14,15 @@ const OnlineDoctorDashboard = () => {
 
   useEffect(() => {
     // Fetch upcoming online appointments and notifications
-    axios
-      .get("/api/online-doctor/appointments")
+    axiosInstance
+      .get("/online doctor/appointments")
       .then((response) => {
         setAppointments(response.data.appointments);
       })
       .catch((error) => console.log(error));
 
-    axios
-      .get("/api/online-doctor/notifications")
+    axiosInstance
+      .get("/online doctor/notifications")
       .then((response) => {
         setNotifications(response.data.notifications);
       })

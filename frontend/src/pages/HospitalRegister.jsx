@@ -1,13 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../axios/axios_interceptor.js";
+
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-// Axios Instance
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1/hospital", // Change to your backend URL
-  withCredentials: true, // For handling cookies
-});
 
 // HospitalRegister Component
 const HospitalRegister = () => {
