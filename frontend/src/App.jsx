@@ -202,7 +202,7 @@ const App = () => {
         />
         <Route path="/Community/PostCard/:role" element={<PostCard />} />
         <Route
-          path="/Community/PostDetail/:_id/:role"
+          path="/Community/PostDetail/:id/:role"
           element={<PostDetail />}
         />
         <Route path="/Community/UserPost/:role" element={<UserPost />} />
