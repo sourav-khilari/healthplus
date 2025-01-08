@@ -8,6 +8,8 @@ const FindPharmacy = () => {
 
   // Function to get the user's location
   const getUserLocation = () => {
+    setLoading(true);
+    setError("");
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -83,8 +85,8 @@ const FindPharmacy = () => {
           pharmacies.map((pharmacy, index) => {
             const { name, address_line1, address_line2, contact } =
               pharmacy.properties || {};
-            const lat = pharmacy.geometry.coordinates[1];
-            const lng = pharmacy.geometry.coordinates[0];
+            const lat = pharmacy.geometry?.coordinates?.[1] || null;
+            const lng = pharmacy.geometry?.coordinates?.[0] || null;
 
             return (
               <div
@@ -99,7 +101,8 @@ const FindPharmacy = () => {
                   {address_line2 || ""}
                 </p>
                 <p className="text-gray-600">
-                  <strong>Contact:</strong> {contact || "Not available"}
+                  <strong>Contact:</strong> {contact?.phone || "Not available"}{" "}
+                  {contact?.email && `| ${contact.email}`}
                 </p>
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
