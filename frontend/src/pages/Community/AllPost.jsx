@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PostDetails from "./PostDetail"; // Ensure the correct import path
+import { Link } from "react-router-dom"; // Import the Link component
 import axiosInstance from "../../axios/axios_interceptor.js"; // Axios instance for API calls
 import { useParams } from "react-router-dom";
 
@@ -10,6 +10,7 @@ const AllPost = () => {
   const [page, setPage] = useState(1); // For pagination
   const [hasMore, setHasMore] = useState(true); // Check if more posts are available
   const { role } = useParams();
+
   // Fetch posts from the backend
   const fetchAllPosts = async () => {
     try {
@@ -63,15 +64,21 @@ const AllPost = () => {
     <div className="container mx-auto mt-6">
       {allPosts.length > 0 ? (
         allPosts.map((post) => (
-          <PostDetails
-            key={post._id}
-            id={post._id}
-            title={post.title}
-            description={post.description}
-            image={post.image || "/placeholder.jpg"} // Add a fallback image
-            userId={post.userId} // Post owner details
-            comments={post.comments} // Pass comments to PostDetail
-          />
+          <Link
+            key={post._id} // Make sure to set the key for each Link
+            to={`/postdetails/${role}/${post._id}`} // This will create a URL with role and post ID
+            className="block mb-6 p-4 border rounded-lg hover:shadow-lg hover:bg-gray-50"
+          >
+            <div className="flex flex-col">
+              <h2 className="text-2xl font-semibold">{post.title}</h2>
+              <p className="text-gray-600 mt-2">{post.description}</p>
+              <img
+                src={post.image || "/placeholder.jpg"}
+                alt={post.title}
+                className="w-full h-60 object-cover mt-4 rounded-lg"
+              />
+            </div>
+          </Link>
         ))
       ) : (
         <div>No posts available.</div>
