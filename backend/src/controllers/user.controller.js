@@ -208,8 +208,8 @@ const nearestHospital = asyncHandler(async (req, res) => {
         const response = await axios.get(url);
         //console.log("\nurl\n");
         //console.log(response);
-        //res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
-        return res.json(response.data.features); // Return hospital data
+        res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
+       // return res.json(response.data.features); // Return hospital data
     } catch (error) {
         //console.error("Error fetching hospitals:", error);
         throw new ApiError(500, "Failed to fetch hospital data.");
@@ -230,9 +230,9 @@ const nearestPharmacy = asyncHandler(async (req, res) => {
     const url = `https://api.geoapify.com/v2/places?categories=healthcare.pharmacy&filter=circle:${lng},${lat},15000&limit=10&apiKey=${GEOAPIFY_API_KEY}`;
     try {
         const response = await axios.get(url);
-        //console.log(response);
-        //return res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
-        return res.json(response.data.features); // Return hospital data
+        console.log(response);
+        return res.status(200).json(new ApiResponse(200, response.data.features, 'Login successful'));
+        //return res.json(response.data.features); // Return hospital data
     } catch (error) {
         console.error("Error fetching hospitals:", error);
         throw new ApiError(500, "Failed to fetch hospital data.", error);
