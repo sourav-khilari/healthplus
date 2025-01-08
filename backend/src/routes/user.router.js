@@ -76,8 +76,8 @@ const router = Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/hospitals", roleMiddleware("user"), nearestHospital);
-router.get("/pharmacy", roleMiddleware("user"), nearestPharmacy);
+router.get("/hospitals", nearestHospital);
+router.get("/pharmacy", nearestPharmacy);
 router.get("/pharmacy", roleMiddleware("user"), getAllHospitals);
 router.get("/getCurrentUser", roleMiddleware("user"), getCurrentUser);
 router.get("/logoutUser", roleMiddleware("user"), logoutUser);
