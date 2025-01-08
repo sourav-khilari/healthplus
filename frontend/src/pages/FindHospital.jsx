@@ -6,8 +6,6 @@ const FindHospital = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Create Axios instance
-
   // Function to fetch hospitals
   const fetchHospitals = async (lat, lng) => {
     try {
@@ -15,12 +13,14 @@ const FindHospital = () => {
       const response = await axiosInstance.get(
         `/users/hospitals?lat=${lat}&lng=${lng}`
       );
-      console.log(JSON.stringify(response.data.data))
-      //console.log("\n\n"+"response"+response.data.data+"\n\n")
+      console.log(JSON.stringify(response.data.data));
       setHospitals(response.data.data);
     } catch (fetchError) {
       setError("Error fetching hospitals. Please try again later.");
-      console.error("Error fetching hospitals:", fetchError);
+      console.error(
+        "Error fetching hospitals:",
+        fetchError.response || fetchError
+      );
     } finally {
       setLoading(false);
     }
@@ -90,8 +90,8 @@ const FindHospital = () => {
           hospitals.map((hospital, index) => {
             const { name, address_line1, address_line2, contact } =
               hospital.properties || {};
-            const lat = hospital.geometry.coordinates[1];
-            const lng = hospital.geometry.coordinates[0];
+            const lat = hospital.geometry?.coordinates?.[1] || null;
+            const lng = hospital.geometry?.coordinates?.[0] || null;
 
             return (
               <div
@@ -106,8 +106,10 @@ const FindHospital = () => {
                   {address_line2 || ""}
                 </p>
                 <p className="text-gray-600">
-                  <strong>Contact:</strong> {contact || "Not available"}
+                  <strong>Contact:</strong> {contact?.phone || "Not available"}{" "}
+                  {contact?.email && `| ${contact.email}`}
                 </p>
+
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
                   target="_blank"

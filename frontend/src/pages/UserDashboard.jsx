@@ -21,7 +21,7 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await axiosInstance.get("/doctors");
+        const response = await axiosInstance.get("/getAllDoctors");
         setDoctors(response.data);
       } catch (err) {
         console.error(err);

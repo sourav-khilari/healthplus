@@ -35,7 +35,7 @@ const FindPharmacy = () => {
       const response = await axiosInstance.get(
         `/users/pharmacy?lat=${lat}&lng=${lng}`
       );
-      setPharmacies(response.data);
+      setPharmacies(response.data.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
