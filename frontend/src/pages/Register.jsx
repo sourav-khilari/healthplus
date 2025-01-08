@@ -52,7 +52,7 @@ const Register = () => {
       // const result = await signInWithPopup(auth, provider);
       // const idToken = await getIdToken(result.user);
 
-      const response = await axiosInstance.post("/register", {
+      const response = await axiosInstance.post("/users/register", {
         email,
         password,
         name,
@@ -86,7 +86,7 @@ const Register = () => {
       const idToken = await getIdToken(userCredential.user);
 
       // Send data to backend
-      const response = await axiosInstance.post("/login", { idToken });
+      const response = await axiosInstance.post("/users/login", { idToken });
       console.log(response.data);
       alert("Login successful");
 
@@ -105,8 +105,8 @@ const Register = () => {
       const idToken = await getIdToken(result.user);
 
       // Send data to backend
-      const response = await axiosInstance.post("/register", { idToken });
-      const response2 = await axiosInstance.post("/login", { idToken });
+      const response = await axiosInstance.post("/users/register", { idToken });
+      const response2 = await axiosInstance.post("/users/login", { idToken });
       console.log(response.data);
       console.log(response2.data);
       alert("Google Login/Registration successful");
