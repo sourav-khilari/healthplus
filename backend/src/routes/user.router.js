@@ -20,6 +20,7 @@ import {
   updateUserAvatar,
   updateUserCoverImage,
   contactUs,
+  getUserAppointments,
 } from "../controllers/user.controller.js";
 import {
   authMiddleware,
@@ -111,6 +112,8 @@ router.get(
   roleMiddleware("user"),
   getAvailableSlots,
 );
+
+router.get("./getUserAppointments",roleMiddleware("user"),getUserAppointments);
 
 router.post("/bookAppointment", roleMiddleware("user"), bookAppointment);
 router.put(

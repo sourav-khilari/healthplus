@@ -1026,4 +1026,5 @@ export {
     updateUserAvatar,
     updateUserCoverImage,
     contactUs,
+    getUserAppointments,
 }
