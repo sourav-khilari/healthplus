@@ -2,89 +2,137 @@ import { useState } from "react";
 import axiosInstance from "../../axios/axios_interceptor.js";
 import { useNavigate } from "react-router-dom";
 
+import "../../styles/Login.css"; // Use the same stylesheet as the Login component
+
 const OnlineDoctorLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState(""); // for registration
+  const [confirmPassword, setConfirmPassword] = useState(""); // for registration
+  const [isLogin, setIsLogin] = useState(true); // toggle between login and registration
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Make the API call to authenticate the doctor
-    axiosInstance
-      .post("/online doctor/login", { email, password })
-      .then((response) => {
-        setLoading(false);
-        if (response.data.success) {
-          // If successful, navigate to the doctor dashboard
-          navigate("/online doctor/dashboard");
-        } else {
-          // If authentication fails, show an error
-          setError("Invalid email or password.");
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        setError("An error occurred. Please try again.");
-        console.log(err);
+    try {
+      const response = await axiosInstance.post("/online doctor/login", {
+        email,
+        password,
       });
+      setLoading(false);
+      if (response.data.success) {
+        navigate("/online doctor/dashboard");
+      } else {
+        setError("Invalid email or password.");
+      }
+    } catch (err) {
+      setLoading(false);
+      setError("An error occurred. Please try again.");
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    if (password !== confirmPassword) {
+      setLoading(false);
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post("/online doctor/register", {
+        email,
+        password,
+        name,
+      });
+      setLoading(false);
+      if (response.data.success) {
+        navigate("/online doctor/login");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    } catch (err) {
+      setLoading(false);
+      setError("An error occurred. Please try again.");
+    }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-6">
-          Online Doctor Login
+    <div className="login-page">
+      <div className="login-container">
+        <h1 className="login-title">
+          {isLogin ? "Online Doctor Login" : "Online Doctor Registration"}
         </h1>
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
+        <div className="form-container">
+          {!isLogin && (
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="input-field"
               required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
+          )}
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input-field"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="input-field"
+            required
+          />
+          {!isLogin && (
             <input
               type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="input-field"
               required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-          </div>
-
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
+          )}
+          {error && <p className="error-text">{error}</p>}
           <button
-            type="submit"
+            onClick={isLogin ? handleLogin : handleRegister}
             disabled={loading}
-            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md focus:outline-none hover:bg-blue-600 disabled:bg-gray-400"
+            className="email-login-btn"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading
+              ? isLogin
+                ? "Logging in..."
+                : "Registering..."
+              : isLogin
+              ? "Login"
+              : "Register"}
           </button>
-        </form>
+          <p className="or-text">or</p>
+          <p className="toggle-text">
+            {isLogin ? "Don't have an account?" : "Already have an account?"}
+          </p>
+          <button
+            onClick={() => navigate("/online-doctor/register")}
+            className="toggle-btn"
+          >
+            {isLogin ? "Register Here" : "Login Here"}
+          </button>
+        </div>
       </div>
     </div>
   );

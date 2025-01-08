@@ -1,5 +1,30 @@
 import { useState } from "react";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  getIdToken,
+} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
 import axiosInstance from "../../axios/axios_interceptor.js";
+import "../../styles/Register.css";
+
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDJ9L91dE5EIVqH2QJNZiNsyObiiBmGuHo",
+  authDomain: "healthplus-a7bd7.firebaseapp.com",
+  projectId: "healthplus-a7bd7",
+  storageBucket: "healthplus-a7bd7.firebasestorage.app",
+  messagingSenderId: "18341081891",
+  appId: "1:18341081891:web:9eedc02c6d5a064ed81296",
+  measurementId: "G-6D223N3RLB",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
 const DoctorRegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +36,8 @@ const DoctorRegistrationPage = () => {
     availability: "",
     slotDuration: "",
   });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,159 +51,109 @@ const DoctorRegistrationPage = () => {
         "/onlineregisterDoctor",
         formData
       );
-      alert(response.data.message);
+      alert("Registration successful: " + response.data.message);
+      setSuccess(true);
+      setError(null);
     } catch (error) {
-      alert("Registration failed");
+      console.error("Registration Error:", error.message);
+      setError("Registration failed: " + error.message);
+      setSuccess(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await getIdToken(result.user);
+
+      const response = await axiosInstance.post("/registerDoctorWithGoogle", {
+        idToken,
+      });
+      alert("Google Login/Registration successful");
+      console.log(response.data);
+
+      setSuccess(true);
+      setError(null);
+    } catch (error) {
+      console.error("Google Auth Error:", error.message);
+      setError("Google Authentication failed: " + error.message);
+      setSuccess(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Doctor Registration
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Name"
-              onChange={handleChange}
-              value={formData.name}
-              required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+    <div className="register-page">
+      <div className="register-container">
+        <h2 className="register-title">Doctor Registration</h2>
 
-          <div className="mb-4">
-            <label
-              htmlFor="department"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Department
-            </label>
-            <input
-              type="text"
-              name="department"
-              id="department"
-              placeholder="Department"
-              onChange={handleChange}
-              value={formData.department}
-              required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="register-form">
+          {[
+            { label: "Name", name: "name", type: "text", placeholder: "Name" },
+            {
+              label: "Department",
+              name: "department",
+              type: "text",
+              placeholder: "Department",
+            },
+            {
+              label: "Speciality",
+              name: "speciality",
+              type: "text",
+              placeholder: "Speciality",
+            },
+            {
+              label: "Email",
+              name: "email",
+              type: "email",
+              placeholder: "Email",
+            },
+            {
+              label: "Phone",
+              name: "phone",
+              type: "text",
+              placeholder: "Phone",
+            },
+            {
+              label: "Availability",
+              name: "availability",
+              type: "text",
+              placeholder: "Availability",
+            },
+            {
+              label: "Slot Duration (minutes)",
+              name: "slotDuration",
+              type: "number",
+              placeholder: "Slot Duration",
+            },
+          ].map((field, index) => (
+            <div className="form-group" key={index}>
+              <label htmlFor={field.name}>{field.label}</label>
+              <input
+                type={field.type}
+                name={field.name}
+                id={field.name}
+                placeholder={field.placeholder}
+                value={formData[field.name]}
+                onChange={handleChange}
+                required
+                className="input-field"
+              />
+            </div>
+          ))}
 
-          <div className="mb-4">
-            <label
-              htmlFor="speciality"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Speciality
-            </label>
-            <input
-              type="text"
-              name="speciality"
-              id="speciality"
-              placeholder="Speciality"
-              onChange={handleChange}
-              value={formData.speciality}
-              required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Email"
-              onChange={handleChange}
-              value={formData.email}
-              required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Phone
-            </label>
-            <input
-              type="text"
-              name="phone"
-              id="phone"
-              placeholder="Phone"
-              onChange={handleChange}
-              value={formData.phone}
-              required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="availability"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Availability
-            </label>
-            <input
-              type="text"
-              name="availability"
-              id="availability"
-              placeholder="Availability"
-              onChange={handleChange}
-              value={formData.availability}
-              required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="slotDuration"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Slot Duration (minutes)
-            </label>
-            <input
-              type="number"
-              name="slotDuration"
-              id="slotDuration"
-              placeholder="Slot Duration"
-              onChange={handleChange}
-              value={formData.slotDuration}
-              required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
+          <button type="submit" className="submit-btn">
             Register
           </button>
         </form>
+
+        <div className="alternate-actions">
+          <button onClick={handleGoogleLogin} className="google-login-btn">
+            Google Login
+          </button>
+        </div>
+
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">Registration Successful!</p>}
       </div>
     </div>
   );

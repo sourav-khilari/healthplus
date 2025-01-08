@@ -54,9 +54,15 @@ const LandingPage = () => {
           <div className="button-group">
             <button
               className="landing-button doctor-button"
-              onClick={() => navigate("/doctor/login")}
+              onClick={() => navigate("/online-doctor/login")}
             >
               Doctor Login
+            </button>
+            <button
+              className="landing-button doctor-button"
+              onClick={() => navigate("/online-doctor/register")}
+            >
+              Doctor Register
             </button>
           </div>
         </div>
