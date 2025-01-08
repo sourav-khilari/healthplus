@@ -51,32 +51,33 @@ const FindPharmacy = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-3xl font-semibold text-center mb-6 text-blue-600">
+    <div className="min-h-screen bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300 p-6 flex flex-col items-center justify-center">
+      <h1 className="text-4xl font-bold text-white text-center mb-6">
         Nearby Pharmacy Locator
       </h1>
 
       {loading && (
-        <div className="text-center text-xl text-gray-500">
+        <div className="text-center text-xl text-white">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-white mx-auto my-8"></div>
           Loading your location and nearby pharmacies...
         </div>
       )}
 
       {error && (
-        <div className="text-center text-red-600">
-          {error}
+        <div className="text-center text-red-600 bg-white p-4 rounded-lg shadow-md">
+          <p>{error}</p>
           <button
             onClick={getUserLocation}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all"
           >
             Retry
           </button>
         </div>
       )}
 
-      <div className="space-y-6 mt-6">
+      <div className="space-y-6 mt-8 max-w-4xl w-full">
         {!loading && !error && pharmacies.length === 0 && (
-          <p className="text-center text-lg text-gray-500">
+          <p className="text-center text-lg text-white">
             No pharmacies found nearby.
           </p>
         )}
@@ -91,16 +92,16 @@ const FindPharmacy = () => {
             return (
               <div
                 key={index}
-                className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all duration-200"
+                className="bg-white p-6 rounded-lg shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300"
               >
-                <h2 className="text-2xl font-semibold text-blue-500 mb-2">
+                <h2 className="text-2xl font-semibold text-blue-600 mb-2">
                   {name || "Unknown Pharmacy"}
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-2">
                   <strong>Address:</strong> {address_line1 || "Not available"},{" "}
                   {address_line2 || ""}
                 </p>
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-4">
                   <strong>Contact:</strong> {contact?.phone || "Not available"}{" "}
                   {contact?.email && `| ${contact.email}`}
                 </p>
@@ -108,7 +109,7 @@ const FindPharmacy = () => {
                   href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline mt-4 inline-block"
+                  className="text-white bg-blue-600 hover:bg-blue-700 rounded-full py-2 px-4 inline-block transition-all duration-200"
                 >
                   Get Directions
                 </a>
