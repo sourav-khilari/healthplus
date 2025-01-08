@@ -44,9 +44,9 @@ const Home = () => {
       title: "Blood Bank",
       description: "Donate or request blood at nearby centers.",
       link:
-        // role === "hospital"
-        //   ? "/Bloodbank/hospitaldashboard":
-           "/Bloodbank/dashboard", // Conditional link
+         role === "hospital"
+           ? "/Bloodbank/hospitaldashboard"
+        :   "/Bloodbank/dashboard", // Conditional link
     },
   ];
 
@@ -55,7 +55,7 @@ const Home = () => {
     const fetchUserRole = async () => {
       // Example: Fetch the user's role (this can be from Firebase, Redux, or localStorage)
       // In a real scenario, replace this with actual logic to get the user's role
-      const fetchedRole = "hospital"; // Example, should come from auth context or similar
+      const fetchedRole = "admin"; // Example, should come from auth context or similar
       setRole(fetchedRole);
     };
 

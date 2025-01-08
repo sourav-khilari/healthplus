@@ -1,39 +1,43 @@
+
 const CommentCard = ({ comment, role }) => {
-  // Destructure the fields and provide defaults
-  const {
-    key = {},
-    comment: commentText = "",
-    createdAt = "N/A",
-    userId = {},
-  } = comment;
+  const { userId, commentText, createdAt } = comment;
+
+  // Format the date
+  const formattedDate = new Date(createdAt).toLocaleDateString();
 
   return (
-    <div className="comment-card mb-4 p-4 border rounded shadow-sm">
-      <div className="flex justify-between items-center mb-2">
-        <div>
-          <p className="font-semibold text-lg">
-            {userId.name || key.name || "Unknown User"}
-          </p>
-          <p className="text-sm text-gray-500">{userId.role || "User"}</p>
-        </div>
-        <p className="text-xs text-gray-400">
-          {new Date(createdAt).toLocaleString()}
-        </p>
+    <div className="bg-white p-4 rounded-lg shadow-lg mb-4 flex items-start">
+      <div className="flex-shrink-0">
+        {/* Avatar Placeholder */}
+        <img
+          src={userId?.avatar || "/default-avatar.jpg"} // Assuming user has an avatar, fallback to default
+          alt={userId?.name || "User Avatar"}
+          className="w-12 h-12 rounded-full object-cover"
+        />
       </div>
-
-      <p className="text-gray-700 mb-4">{commentText}</p>
-
-      {/* Conditional rendering for admin role */}
-      {role === "admin" && (
-        <div className="flex justify-end">
-          <button
-            onClick={() => alert("Delete comment feature coming soon!")}
-            className="text-red-500 hover:text-red-700 text-sm"
-          >
-            Delete
-          </button>
+      <div className="ml-4 flex-grow">
+        <div className="flex items-center justify-between">
+          {/* User Name */}
+          <span className="font-semibold text-lg text-gray-800">
+            {userId?.name || "Anonymous"}
+          </span>
+          {/* Timestamp */}
+          <span className="text-sm text-gray-500">{formattedDate}</span>
         </div>
-      )}
+        {/* Comment Text */}
+        <p className="text-gray-700 mt-2">{commentText}</p>
+        <div className="flex mt-2 space-x-2">
+          {/* Optionally, you can add action buttons like 'Like' or 'Reply' */}
+          {role === "admin" && (
+            <button
+              onClick={() => alert("Action: Approve or Delete comment")}
+              className="bg-blue-500 text-white py-1 px-4 rounded-md text-sm"
+            >
+              Admin Action
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

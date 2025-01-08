@@ -188,7 +188,6 @@ const App = () => {
         <Route path="/findHospital" element={<FindHospital />} />
         {/* Other routes */}
         <Route path="/Community/:role" element={<AllPost />} />
-        <Route path="/Community/:role" element={<AllPost />} />
         <Route path="/Community/CommentCard" element={<CommentCard />} />
         <Route
           path="/Community/CommentForm/:postId/:role"

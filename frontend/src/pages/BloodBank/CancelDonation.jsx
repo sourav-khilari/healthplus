@@ -13,9 +13,12 @@ const CancelDonationRequest = () => {
 
     try {
       // Corrected API endpoint
-      const response = await axiosInstance.post("/cancelDonationRequest", {
-        requestId,
-      });
+      const response = await axiosInstance.post(
+        "/hospital/cancelDonationRequest",
+        {
+          requestId,
+        }
+      );
       setMessage(response.data.message || "Request canceled successfully.");
     } catch (error) {
       console.error("Error canceling request:", error);

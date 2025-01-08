@@ -15,12 +15,7 @@ const HospitalBloodDashboard = () => {
       const response = await axiosInstance.get(
         "/hospital/getDonationRequestsForHospital"
       );
-
-      if (response.data && response.data.data) {
-        setRequests(response.data.data); // Set the requests from the API response
-      } else {
-        setError("No requests found.");
-      }
+      setRequests(response.data?.data || []);
     } catch (err) {
       console.error("Error fetching donation requests:", err);
       setError("Failed to load donation requests. Please try again.");
@@ -29,19 +24,17 @@ const HospitalBloodDashboard = () => {
     }
   };
 
-  // UseEffect should only run once, on component mount
+  // Only call fetchRequests once on component mount
   useEffect(() => {
     fetchRequests();
-  }, []); // Empty dependency array ensures it runs only once
+  }, []); // Empty dependency array to ensure it runs only once
 
-  // Function to mark request as read
+  // Handle marking a request as read
   const handleMarkAsRead = async (requestId) => {
     try {
-      const response = await axiosInstance.post("/hospital/markRequestAsRead", {
-        requestId,
-      });
+      await axiosInstance.post("/hospital/markRequestAsRead", { requestId });
 
-      // Update request status optimistically
+      // Optimistically update the status in the UI
       setRequests((prevRequests) =>
         prevRequests.map((req) =>
           req._id === requestId ? { ...req, status: "read" } : req
