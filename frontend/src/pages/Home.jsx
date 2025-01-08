@@ -44,9 +44,9 @@ const Home = () => {
       title: "Blood Bank",
       description: "Donate or request blood at nearby centers.",
       link:
-        role === "hospital"
-          ? "/Bloodbank/hospitaldashboard"
-          : "/Bloodbank/dashboard", // Conditional link
+        // role === "hospital"
+        //   ? "/Bloodbank/hospitaldashboard":
+           "/Bloodbank/dashboard", // Conditional link
     },
   ];
 

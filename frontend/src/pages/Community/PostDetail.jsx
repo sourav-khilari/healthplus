@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
 import axiosInstance from "../../axios/axios_interceptor.js";
 import CommentForm from "./CommentForm";
 import CommentCard from "./CommentCard";
@@ -25,8 +24,12 @@ const PostDetails = () => {
           response = await axiosInstance.get(`/users/getPostById/${id}`);
         }
 
-        setPost(response.data?.data); // Set post data to state
-        setError(null); // Clear any previous errors
+        if (response.data?.data) {
+          setPost(response.data.data); // Set post data to state
+          setError(null); // Clear any previous errors
+        } else {
+          setError("Post not found.");
+        }
       } catch (err) {
         console.error("Error fetching post:", err);
         setError("Failed to load post. Please try again later.");
@@ -37,13 +40,6 @@ const PostDetails = () => {
 
     fetchPost();
   }, [id, role]); // Depend on both id and role to refetch post if params change
-
-  // Log comments to verify structure (for debugging)
-  useEffect(() => {
-    if (post?.comments) {
-      console.log(post.comments);
-    }
-  }, [post]);
 
   // Handle adding a new comment
   const handleAddComment = async (newComment) => {
