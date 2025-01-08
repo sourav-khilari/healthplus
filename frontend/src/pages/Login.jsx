@@ -41,7 +41,7 @@ const Login = () => {
       const idToken = await getIdToken(result.user);
 
       // Send token to backend
-      const response = await axiosInstance.post("/register", { idToken });
+      const response = await axiosInstance.post("/users/register", { idToken });
       console.log(response.data);
 
       alert("Login successful!");
@@ -64,7 +64,7 @@ const Login = () => {
       );
       const idToken = await getIdToken(userCredential.user);
 
-      const response = await axiosInstance.post("/login", { idToken });
+      const response = await axiosInstance.post("/users/login", { idToken });
       console.log(response.data);
 
       if (response.data.message === "SuperAdmin login successful") {
