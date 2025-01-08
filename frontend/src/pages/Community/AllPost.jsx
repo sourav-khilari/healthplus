@@ -66,7 +66,7 @@ const AllPost = () => {
         allPosts.map((post) => (
           <Link
             key={post._id} // Make sure to set the key for each Link
-            to={`/postdetails/${role}/${post._id}`} // This will create a URL with role and post ID
+            to={`/Community/PostDetail/${post._id}/${role}`} // This will create a URL with role and post ID
             className="block mb-6 p-4 border rounded-lg hover:shadow-lg hover:bg-gray-50"
           >
             <div className="flex flex-col">
