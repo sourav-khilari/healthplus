@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../axios/axios_interceptor.js";
 
 const VideoIdPage = ({ appointmentId }) => {
   const [videoId, setVideoId] = useState("");
@@ -7,8 +7,8 @@ const VideoIdPage = ({ appointmentId }) => {
   useEffect(() => {
     const fetchVideoId = async () => {
       try {
-        const response = await axios.get(
-          `/api/v1/online-doctor/onlinegetVideoId/${appointmentId}`
+        const response = await axiosInstance.get(
+          `/online doctor/onlinegetVideoId/${appointmentId}`
         );
         setVideoId(response.data.videoId);
       } catch (error) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../axios/axios_interceptor.js";
 import { useNavigate } from "react-router-dom";
 
 const OnlineDoctorLogin = () => {
@@ -15,13 +15,13 @@ const OnlineDoctorLogin = () => {
     setError("");
 
     // Make the API call to authenticate the doctor
-    axios
-      .post("/api/online-doctor/login", { email, password })
+    axiosInstance
+      .post("/online doctor/login", { email, password })
       .then((response) => {
         setLoading(false);
         if (response.data.success) {
           // If successful, navigate to the doctor dashboard
-          navigate("/online-doctor/dashboard");
+          navigate("/online doctor/dashboard");
         } else {
           // If authentication fails, show an error
           setError("Invalid email or password.");

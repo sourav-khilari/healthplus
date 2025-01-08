@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // For navigation
-import axios from "axios"; // Import axios
+import axiosInstance from "../axios/axios_interceptor.js";
 import "../styles/Common.css"; // Import common CSS (you can still use this if you want extra custom styles)
 
 const DoctorDashboard = () => {
@@ -10,12 +10,6 @@ const DoctorDashboard = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate(); // Use React Router for navigation
-
-  // Axios Instance
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:5000", // Adjust the base URL for your backend
-    withCredentials: true, // For handling cookies if needed
-  });
 
   // Fetch doctor data and today's appointments
   useEffect(() => {
@@ -27,8 +21,8 @@ const DoctorDashboard = () => {
     try {
       // Fetch doctor's profile data and today's appointments
       const [doctorRes, appointmentsRes] = await Promise.all([
-        axiosInstance.get("/api/v1/doctor/dashboard"), // Replace with correct route
-        axiosInstance.post("/api/v1/doctor/getDoctorAppointments", {
+        axiosInstance.get("/doctor/dashboard"), // Replace with correct route
+        axiosInstance.post("/doctor/getDoctorAppointments", {
           doctorId: "doctorId",
         }), // Replace with dynamic doctorId
       ]);

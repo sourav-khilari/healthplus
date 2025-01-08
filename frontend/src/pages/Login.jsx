@@ -8,7 +8,8 @@ import {
   getIdToken,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../axios/axios_interceptor.js";
+
 import "../styles/Login.css";
 
 // Firebase Config
@@ -32,11 +33,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const axiosInstance = axios.create({
-    baseURL: "http://localhost:8000/api/v1/users", // Backend API URL
-    withCredentials: true, // Handle cookies
-  });
 
   const handleGoogleLogin = async () => {
     try {

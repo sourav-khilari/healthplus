@@ -7,7 +7,8 @@ import {
   GoogleAuthProvider,
   getIdToken,
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-import axios from "axios";
+
+import axiosInstance from "../axios/axios_interceptor.js";
 import "../styles/Register.css";
 
 import { useNavigate } from "react-router-dom";
@@ -26,12 +27,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-
-// Axios Instance
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1/users", // Change to your backend URL
-  withCredentials: true, // For handling cookies
-});
 
 const Register = () => {
   const [formData, setFormData] = useState({

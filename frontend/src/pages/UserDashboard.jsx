@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../axios/axios_interceptor.js";
 import "../styles/UserDashboard.css";
 import { useNavigate } from "react-router-dom"; // For redirection
 
@@ -21,7 +21,7 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await axios.get("/api/v1/doctors");
+        const response = await axiosInstance.get("/doctors");
         setDoctors(response.data);
       } catch (err) {
         console.error(err);
@@ -42,7 +42,7 @@ const UserDashboard = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post("/api/v1/appointments", {
+      const response = await axiosInstance.post("/appointments", {
         doctorId: selectedDoctor,
         date,
         timeSlot,
@@ -61,7 +61,7 @@ const UserDashboard = () => {
   const cancelAppointment = async (appointmentId) => {
     try {
       setLoading(true);
-      await axios.delete(`/api/v1/appointments/${appointmentId}`);
+      await axiosInstance.delete(`/appointments/${appointmentId}`);
       alert("Appointment canceled successfully!");
       setAppointments((prev) =>
         prev.filter((appointment) => appointment._id !== appointmentId)
