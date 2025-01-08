@@ -22,7 +22,7 @@ const PostDetails = () => {
           response = await axiosInstance.get(`/admin/getPostById/${id}`);
         } else {
           // User route for fetching the post
-          response = await axiosInstance.get(`/user/getPostById/${id}`);
+          response = await axiosInstance.get(`/users/getPostById/${id}`);
         }
 
         setPost(response.data?.data); // Set post data to state
