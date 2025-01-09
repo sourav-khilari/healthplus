@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axios/axios_interceptor.js";
-
+import "../styles/AdminDashboard.css";
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [pendingHospitals, setPendingHospitals] = useState([]);

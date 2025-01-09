@@ -1,7 +1,7 @@
 /* Learn.css */
 
 .learn-container {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   padding: 40px;
   color: #333;
   background-color: #f7f7f7;
@@ -75,7 +75,7 @@
   display: inline-block;
   padding: 10px 20px;
   margin-top: 20px;
-  background-color: #3498db;
+  background-color: #007bff;
   color: white;
   text-decoration: none;
   border-radius: 5px;

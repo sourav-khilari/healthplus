@@ -1,0 +1,108 @@
+/* UserManagement.css */
+
+/* Container for the section */
+.user-management-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styling */
+.title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2d3748;
+  margin-bottom: 30px;
+}
+
+/* Table container styling */
+.table-container {
+  overflow-x: auto;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px 15px;
+  text-align: left;
+  font-size: 1rem;
+  color: #4a5568;
+}
+
+.table-header {
+  background-color: #f7fafc;
+  color: #2d3748;
+  font-weight: 600;
+  border-bottom: 2px solid #edf2f7;
+}
+
+.table-row {
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.table-row:hover {
+  background-color: #f9fafb;
+  transform: translateY(-2px);
+}
+
+/* Status text styles */
+.status-text {
+  font-weight: 600;
+}
+
+.status-text.active {
+  color: #38a169;
+}
+
+.status-text.inactive {
+  color: #e53e3e;
+}
+
+/* Button styling */
+.status-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.status-button.activate {
+  background-color: #38a169;
+}
+
+.status-button.deactivate {
+  background-color: #e53e3e;
+}
+
+.status-button:hover {
+  opacity: 0.8;
+}
+
+.status-button.activate:hover {
+  background-color: #2f855a;
+}
+
+.status-button.deactivate:hover {
+  background-color: #c53030;
+}
+
+/* Error message */
+.text-red-500 {
+  color: #e53e3e;
+  text-align: center;
+  font-size: 1.2rem;
+}

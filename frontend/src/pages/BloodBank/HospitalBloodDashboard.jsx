@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../axios/axios_interceptor.js";
+import "../../styles/HospitalBloodDashboard.css"; // Import the custom CSS file
 
 const HospitalBloodDashboard = () => {
   const [requests, setRequests] = useState([]);
@@ -53,52 +54,46 @@ const HospitalBloodDashboard = () => {
   }, []);
 
   return (
-    <div className="container mx-auto mt-6 px-4">
-      <h1 className="text-3xl font-semibold text-center mb-6">
-        Hospital BloodBank Dashboard
-      </h1>
+    <div className="hospital-dashboard-container">
+      <h1 className="title">Hospital BloodBank Dashboard</h1>
 
       {loading && (
-        <div className="text-center text-gray-500">
-          Loading donation requests...
-        </div>
+        <div className="loading-message">Loading donation requests...</div>
       )}
-      {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+      {error && <div className="error-message">{error}</div>}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="requests-grid">
         {requests.length > 0 ? (
           requests.map((request) => (
             <div
               key={request._id}
-              className={`border p-6 rounded-lg shadow-lg ${
+              className={`request-card ${
                 request.status === "read" || request.status === "accepted"
-                  ? "bg-gray-100"
+                  ? "read-accepted"
                   : request.status === "declined"
-                  ? "bg-red-100"
-                  : "bg-white"
-              } hover:shadow-xl transition duration-300 ease-in-out`}
+                  ? "declined"
+                  : "pending"
+              }`}
             >
-              <h3 className="font-semibold text-xl mb-2">
-                Blood Group: {request.bloodGroup}
-              </h3>
-              <p className="text-gray-700">
+              <h3 className="blood-group">Blood Group: {request.bloodGroup}</h3>
+              <p className="donor-info">
                 <strong>Donor:</strong> {request.donorId?.name || "N/A"}
               </p>
-              <p className="text-gray-700">
+              <p className="donor-info">
                 <strong>Phone:</strong> {request.donorId?.phone || "N/A"}
               </p>
-              <p className="text-gray-700">
+              <p className="donor-info">
                 <strong>Address:</strong> {request.address || "Not provided"}
               </p>
-              <p className="text-gray-700">
+              <p className="status">
                 <strong>Status:</strong>{" "}
                 <span
-                  className={`font-semibold ${
+                  className={`status-text ${
                     request.status === "accepted"
-                      ? "text-green-500"
+                      ? "accepted-status"
                       : request.status === "declined"
-                      ? "text-red-500"
-                      : "text-yellow-500"
+                      ? "declined-status"
+                      : "pending-status"
                   }`}
                 >
                   {request.status}
@@ -107,22 +102,22 @@ const HospitalBloodDashboard = () => {
 
               {/* Action Buttons */}
               {request.status === "pending" && (
-                <div className="mt-4">
+                <div className="action-buttons">
                   <button
                     onClick={() => updateRequestStatus(request._id, "accepted")}
-                    className="bg-green-500 text-white py-2 px-4 rounded-md mr-2 hover:bg-green-600 transition duration-200"
+                    className="accept-btn"
                   >
                     Accept
                   </button>
                   <button
                     onClick={() => updateRequestStatus(request._id, "declined")}
-                    className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-200"
+                    className="decline-btn"
                   >
                     Decline
                   </button>
                   <button
                     onClick={() => updateRequestStatus(request._id, "read")}
-                    className="bg-blue-500 text-white py-2 px-4 rounded-md w-full hover:bg-blue-600 transition duration-200"
+                    className="read-btn"
                   >
                     Mark as Read
                   </button>
@@ -131,7 +126,7 @@ const HospitalBloodDashboard = () => {
             </div>
           ))
         ) : (
-          <div className="text-center text-gray-500">
+          <div className="no-requests-message">
             No pending donation requests.
           </div>
         )}

@@ -1,59 +1,152 @@
-.admin-dashboard {
+/* AdminDashboard.css */
+
+/* General styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f3f4f6;
+  color: #2d3748;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
 }
 
-h1,
-h2 {
-  color: #333;
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1a202c;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
+.text-center {
+  text-align: center;
 }
 
-table th,
-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: left;
+.text-red-500 {
+  color: #e53e3e;
 }
 
-table th {
-  background-color: #f4f4f4;
+/* Grid styles */
+.grid {
+  display: grid;
+  gap: 20px;
 }
 
+.grid-cols-1 {
+  grid-template-columns: 1fr;
+}
+
+.sm\:grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.md\:grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.lg\:grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Button card styles */
 button {
-  margin-right: 10px;
-  padding: 8px 12px;
-  font-size: 14px;
+  display: block;
+  text-align: left;
   cursor: pointer;
   border: none;
-  border-radius: 4px;
+  outline: none;
+  font-size: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+button p {
+  font-size: 1.1rem;
 }
 
 button:hover {
-  opacity: 0.9;
+  transform: scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-button:first-child {
-  background-color: #28a745;
-  color: #fff;
+button:focus {
+  outline: none;
 }
 
-button:last-child {
-  background-color: #dc3545;
-  color: #fff;
+/* Gradients and card effects */
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--from), var(--to));
+  border: 2px solid var(--border);
 }
 
-.success {
-  color: green;
-  font-weight: bold;
+.from-blue-500 {
+  --from: #4299e1;
+  --to: #2b6cb0;
+  --border: #2c5282;
 }
 
-.error {
-  color: red;
-  font-weight: bold;
+.from-yellow-500 {
+  --from: #ecc94b;
+  --to: #d69e2e;
+  --border: #b7791f;
+}
+
+.from-green-500 {
+  --from: #48bb78;
+  --to: #38a169;
+  --border: #2f855a;
+}
+
+.from-red-500 {
+  --from: #f56565;
+  --to: #e53e3e;
+  --border: #c53030;
+}
+
+.from-purple-500 {
+  --from: #9f7aea;
+  --to: #805ad5;
+  --border: #6b46c1;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.shadow-lg {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 1rem;
+  }
 }

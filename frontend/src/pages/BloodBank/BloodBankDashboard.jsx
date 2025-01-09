@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../axios/axios_interceptor.js";
+import "../../styles/BloodBankDashboard.css"; // Import custom styles
 
 const BloodBankDashboard = () => {
   const [requests, setRequests] = useState([]);
@@ -13,9 +14,8 @@ const BloodBankDashboard = () => {
 
   const [isTokenExpired, setIsTokenExpired] = useState(false); // Token expiration flag
 
-  // Function to fetch user donation requests
   const fetchRequests = async () => {
-    if (isTokenExpired) return; // Prevent infinite loop if token is expired
+    if (isTokenExpired) return;
 
     setLoading(true);
     setError(null);
@@ -26,9 +26,7 @@ const BloodBankDashboard = () => {
       );
       setRequests(response.data?.data?.donationRequests || []);
     } catch (err) {
-      console.error("Error fetching donation requests:", err);
       if (err.response?.status === 401) {
-        // Token expired or unauthorized
         setIsTokenExpired(true);
         setError("Your session has expired. Please log in again.");
       } else {
@@ -41,7 +39,6 @@ const BloodBankDashboard = () => {
     }
   };
 
-  // Function to submit a new blood donation request
   const handleSubmitRequest = async () => {
     if (!newRequest.bloodGroup || !newRequest.phone || !newRequest.address) {
       setError("Please fill in all fields.");
@@ -54,10 +51,9 @@ const BloodBankDashboard = () => {
         newRequest
       );
       setNewRequest({ bloodGroup: "", phone: "", address: "" });
-      fetchRequests(); // Refresh the list after submitting
-      alert(response.data.message); // Show success message from the backend
+      fetchRequests();
+      alert(response.data.message);
     } catch (err) {
-      console.error("Error submitting donation request:", err);
       if (err.response?.status === 401) {
         setIsTokenExpired(true);
         setError("Your session has expired. Please log in again.");
@@ -69,21 +65,17 @@ const BloodBankDashboard = () => {
     }
   };
 
-  // Function to cancel a donation request
   const handleCancelRequest = async (requestId) => {
     try {
       const response = await axiosInstance.post(
         "/users/cancelDonationRequest",
-        {
-          requestId,
-        }
+        { requestId }
       );
       setRequests((prevRequests) =>
         prevRequests.filter((request) => request._id !== requestId)
       );
-      alert(response.data.message); // Show success message from the backend
+      alert(response.data.message);
     } catch (err) {
-      console.error("Error cancelling donation request:", err);
       if (err.response?.status === 401) {
         setIsTokenExpired(true);
         setError("Your session has expired. Please log in again.");
@@ -95,25 +87,28 @@ const BloodBankDashboard = () => {
     }
   };
 
-  // Fetch requests on component mount
   useEffect(() => {
     fetchRequests();
   }, []);
 
   return (
-    <div className="container mx-auto mt-6 px-4">
-      <h1 className="text-2xl mb-6">Blood Bank Dashboard</h1>
+    <div className="blood-bank-dashboard">
+      <h1 className="text-3xl font-bold text-center text-white mb-6">
+        Blood Bank Dashboard
+      </h1>
 
       {/* Error Notification */}
-      {error && <div className="text-red-500 mb-4">{error}</div>}
+      {error && <div className="error-text mb-4">{error}</div>}
 
       {/* New Donation Request Form */}
-      <div className="border p-4 rounded-md mb-6">
-        <h2 className="text-xl mb-4">Submit a New Blood Donation Request</h2>
+      <div className="blood-form-container p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl mb-4 text-white">
+          Submit a New Blood Donation Request
+        </h2>
         <input
           type="text"
           placeholder="Blood Group (e.g., A+, B-, O+)"
-          className="border p-2 rounded-md mb-2 w-full"
+          className="blood-input-field mb-4"
           value={newRequest.bloodGroup}
           onChange={(e) =>
             setNewRequest({ ...newRequest, bloodGroup: e.target.value })
@@ -122,7 +117,7 @@ const BloodBankDashboard = () => {
         <input
           type="text"
           placeholder="Phone Number"
-          className="border p-2 rounded-md mb-2 w-full"
+          className="blood-input-field mb-4"
           value={newRequest.phone}
           onChange={(e) =>
             setNewRequest({ ...newRequest, phone: e.target.value })
@@ -131,7 +126,7 @@ const BloodBankDashboard = () => {
         <input
           type="text"
           placeholder="Address"
-          className="border p-2 rounded-md mb-2 w-full"
+          className="blood-input-field mb-4"
           value={newRequest.address}
           onChange={(e) =>
             setNewRequest({ ...newRequest, address: e.target.value })
@@ -139,7 +134,7 @@ const BloodBankDashboard = () => {
         />
         <button
           onClick={handleSubmitRequest}
-          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          className="submit-btn"
           disabled={isTokenExpired}
         >
           Submit Request
@@ -147,18 +142,16 @@ const BloodBankDashboard = () => {
       </div>
 
       {/* Donation Requests List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="requests-container grid grid-cols-1 md:grid-cols-2 gap-6">
         {loading ? (
           <div>Loading donation requests...</div>
         ) : requests.length > 0 ? (
           requests.map((request) => (
             <div
               key={request._id}
-              className="border p-4 rounded-md shadow-md bg-white"
+              className="request-item shadow-lg p-6 rounded-md"
             >
-              <h3 className="font-semibold">
-                Blood Group: {request.bloodGroup}
-              </h3>
+              <h3 className="font-semibold text-xl">{request.bloodGroup}</h3>
               <p>
                 <strong>Phone:</strong> {request.phone}
               </p>
@@ -172,7 +165,7 @@ const BloodBankDashboard = () => {
               {request.status === "pending" && (
                 <button
                   onClick={() => handleCancelRequest(request._id)}
-                  className="bg-red-500 text-white py-2 px-4 rounded-md mt-2 hover:bg-red-600"
+                  className="cancel-btn"
                   disabled={isTokenExpired}
                 >
                   Cancel Request

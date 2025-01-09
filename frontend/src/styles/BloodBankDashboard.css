@@ -1,0 +1,99 @@
+/* BloodBankDashboard.css */
+
+/* Main container */
+.blood-bank-dashboard {
+  // background: linear-gradient(145deg, #f8d7da, #f4b9be);
+  background: #ffff;
+  color: #fff;
+  padding: 40px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Title Styling */
+.blood-bank-dashboard h1 {
+  font-size: 3rem;
+  color: #dc143c;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Error Text Styling */
+.error-text {
+  color: #e53e3e;
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 10px;
+  background: #fbe9e7;
+  border-radius: 5px;
+}
+
+/* Form container */
+.blood-form-container {
+  background: linear-gradient(145deg, #dc143c, #e53e3e);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Input fields */
+.blood-input-field {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #f8d7da;
+  margin-bottom: 15px;
+  background-color: #fff;
+  color: #9b1c1c;
+}
+
+/* Submit Button */
+.submit-btn {
+  background-color: #ffd1c7;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: BLACK;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #e53e3e;
+}
+
+/* Requests List */
+.requests-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.request-item {
+  background-color: white;
+  color: #9b1c1c;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.request-item h3 {
+  font-size: 1.5rem;
+  color: #9b1c1c;
+}
+
+.cancel-btn {
+  background-color: #e53e3e;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background-color: #c53030;
+}

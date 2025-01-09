@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axiosInstance from "../../axios/axios_interceptor.js";
-
 const SubmitDonationRequest = () => {
   const [bloodGroup, setBloodGroup] = useState("");
   const [phone, setPhone] = useState("");
@@ -19,7 +18,7 @@ const SubmitDonationRequest = () => {
         bloodGroup,
         phone,
         address,
-        donationDate, // If you want to keep the donation date
+        donationDate,
       });
       setMessage(response.data.message || "Request submitted successfully.");
     } catch (error) {
@@ -31,54 +30,54 @@ const SubmitDonationRequest = () => {
   };
 
   return (
-    <div className="container mx-auto mt-6">
-      <h1 className="text-2xl mb-4">Submit Blood Donation Request</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Blood Group</label>
+    <div className="donation-container">
+      <h1 className="donation-header">Submit Blood Donation Request</h1>
+      <form onSubmit={handleSubmit} className="donation-form">
+        <div className="form-group">
+          <label className="form-label">Blood Group</label>
           <input
             type="text"
             value={bloodGroup}
             onChange={(e) => setBloodGroup(e.target.value)}
             required
-            className="input"
+            className="form-input"
           />
         </div>
-        <div>
-          <label>Phone</label>
+        <div className="form-group">
+          <label className="form-label">Phone</label>
           <input
             type="text"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
-            className="input"
+            className="form-input"
           />
         </div>
-        <div>
-          <label>Address</label>
+        <div className="form-group">
+          <label className="form-label">Address</label>
           <input
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             required
-            className="input"
+            className="form-input"
           />
         </div>
-        <div>
-          <label>Donation Date</label>
+        <div className="form-group">
+          <label className="form-label">Donation Date</label>
           <input
             type="date"
             value={donationDate}
             onChange={(e) => setDonationDate(e.target.value)}
             required
-            className="input"
+            className="form-input"
           />
         </div>
-        <button type="submit" className="btn btn-primary" disabled={loading}>
+        <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? "Submitting..." : "Submit Request"}
         </button>
       </form>
-      {message && <p className="mt-4 text-blue-500">{message}</p>}
+      {message && <p className="message">{message}</p>}
     </div>
   );
 };

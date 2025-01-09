@@ -1,0 +1,95 @@
+/* Container styles */
+.user-post-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Title styling */
+.user-post-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Message styling for empty posts */
+.user-post-empty-message {
+  text-align: center;
+  font-size: 1.25rem;
+  color: #555;
+  margin-top: 20px;
+}
+
+/* Grid for posts */
+.user-post-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .user-post-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .user-post-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Individual post card styles */
+.user-post-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Hover effect for cards */
+.user-post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Post card title */
+.user-post-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+/* Post card description */
+.user-post-card-description {
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+/* Link to view post */
+.user-post-card-link {
+  color: #1d4ed8;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.user-post-card-link:hover {
+  color: #1e40af;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .user-post-card-title {
+    font-size: 1.25rem;
+  }
+
+  .user-post-card-description {
+    font-size: 0.9rem;
+  }
+}

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../axios/axios_interceptor.js";
+import "../../styles/ApprovedHospitals.css";
 
 const ApprovedHospitals = () => {
   const [approvedHospitals, setApprovedHospitals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(" ");
+  const [error, setError] = useState("");
 
   const fetchApprovedHospitals = async () => {
     setLoading(true);
@@ -28,14 +29,16 @@ const ApprovedHospitals = () => {
   if (error) return <p className="error">{error}</p>;
 
   return (
-    <section>
-      <h2>Approved Hospitals</h2>
-      <ul>
-        {approvedHospitals.map((hospital) => (
-          <li key={hospital._id}>{hospital.name}</li>
-        ))}
-      </ul>
-    </section>
+    <div className="approved-hospitals">
+      <section>
+        <h2>Approved Hospitals</h2>
+        <ul>
+          {approvedHospitals.map((hospital) => (
+            <li key={hospital._id}>{hospital.name}</li>
+          ))}
+        </ul>
+      </section>
+    </div>
   );
 };
 

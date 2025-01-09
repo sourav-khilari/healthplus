@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom"; // Import necessary hooks and components
 import axiosInstance from "../../axios/axios_interceptor.js";
-
+import "../../styles/UserPost.css"
 const UserPost = () => {
   const { role } = useParams(); // Fetch the role from the URL params
   const navigate = useNavigate(); // Hook for programmatic navigation
@@ -40,22 +40,21 @@ const UserPost = () => {
   }, [role, navigate]); // Re-fetch when the role or navigate changes
 
   return (
-    <div className="container mx-auto">
-      <h1 className="text-3xl mb-4">Your Posts</h1>
+    <div className="user-post-container">
+      <h1 className="user-post-title">Your Posts</h1>
       {userPosts.length === 0 ? (
-        <p>You have not created any posts yet.</p>
+        <p className="user-post-empty-message">
+          You have not created any posts yet.
+        </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <div className="user-post-grid">
           {userPosts.map((post) => (
-            <div
-              key={post._id}
-              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
-            >
-              <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-              <p className="text-gray-600 mb-4">{post.discription}</p>
+            <div key={post._id} className="user-post-card">
+              <h3 className="user-post-card-title">{post.title}</h3>
+              <p className="user-post-card-description">{post.discription}</p>
               <Link
-                to={`/Community/PostDetail/${post._id}/${role} `} // Dynamic route based on role
-                className="text-blue-500 hover:underline"
+                to={`/Community/PostDetail/${post._id}/${role}`} // Dynamic route based on role
+                className="user-post-card-link"
               >
                 View Post
               </Link>

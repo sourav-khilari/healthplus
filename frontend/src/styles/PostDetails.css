@@ -1,0 +1,83 @@
+/* Container styling */
+.post-details-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading and error messages */
+.post-details-loading {
+  font-size: 1.25rem;
+  text-align: center;
+  color: #333;
+}
+
+.post-details-error {
+  color: red;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Title styling */
+.post-details-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+/* Image styling */
+.post-details-image {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  object-fit: cover;
+}
+
+/* Description styling */
+.post-details-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Comments title */
+.post-details-comments-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+/* No comments message */
+.post-details-no-comments {
+  color: #777;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Post not found message */
+.post-details-not-found {
+  font-size: 1.25rem;
+  color: #555;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .post-details-title {
+    font-size: 2rem;
+  }
+
+  .post-details-description {
+    font-size: 0.9rem;
+  }
+}

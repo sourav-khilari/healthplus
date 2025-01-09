@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import the Link component
 import axiosInstance from "../../axios/axios_interceptor.js"; // Axios instance for API calls
 import { useParams } from "react-router-dom";
-
+import "../../styles/AllPost.css";
 const AllPost = () => {
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,47 +53,46 @@ const AllPost = () => {
 
   // UI for loading, error, or no posts
   if (loading && allPosts.length === 0) {
-    return <div>Loading posts...</div>;
+    return <div className="loading-message">Loading posts...</div>;
   }
 
   if (error) {
-    return <div className="text-red-500">Error: {error}</div>;
+    return <div className="error-message">Error: {error}</div>;
   }
 
   return (
-    <div className="container mx-auto mt-6">
+    <div className="posts-container">
       {allPosts.length > 0 ? (
         allPosts.map((post) => (
           <Link
             key={post._id} // Make sure to set the key for each Link
             to={`/Community/PostDetail/${post._id}/${role}`} // This will create a URL with role and post ID
-            className="block mb-6 p-4 border rounded-lg hover:shadow-lg hover:bg-gray-50"
+            className="post-card"
           >
-            <div className="flex flex-col">
-              <h2 className="text-2xl font-semibold">{post.title}</h2>
-              <p className="text-gray-600 mt-2">{post.description}</p>
+            <div className="post-content">
+              <h2 className="post-title">{post.title}</h2>
+              <p className="post-description">{post.description}</p>
               <img
                 src={post.image || "/placeholder.jpg"}
                 alt={post.title}
-                className="w-full h-60 object-cover mt-4 rounded-lg"
+                className="post-image"
               />
             </div>
           </Link>
         ))
       ) : (
-        <div>No posts available.</div>
+        <div className="no-posts-message">No posts available.</div>
       )}
 
-      {loading && <div>Loading more posts...</div>}
+      {loading && <div className="loading-message">Loading more posts...</div>}
       {hasMore && !loading && (
-        <button
-          onClick={loadMorePosts}
-          className="bg-blue-500 text-white py-2 px-4 rounded mt-6 mx-auto block"
-        >
+        <button onClick={loadMorePosts} className="load-more-button">
           Load More
         </button>
       )}
-      {!hasMore && <div>No more posts to display.</div>}
+      {!hasMore && (
+        <div className="no-more-posts-message">No more posts to display.</div>
+      )}
     </div>
   );
 };

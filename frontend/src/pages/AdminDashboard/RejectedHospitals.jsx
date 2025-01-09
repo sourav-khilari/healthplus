@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "../../axios/axios_interceptor.js";
+import axiosInstance from "../../axios/axios_interceptor";
+import "../../styles/RejectedHospitals.css"; // Import custom styles
 
 const RejectedHospitals = () => {
   const [rejectedHospitals, setRejectedHospitals] = useState([]);
@@ -24,15 +25,18 @@ const RejectedHospitals = () => {
     fetchRejectedHospitals();
   }, []);
 
-  if (loading) return <p>Loading rejected hospitals...</p>;
-  if (error) return <p className="error">{error}</p>;
+  if (loading)
+    return <p className="loading-text">Loading rejected hospitals...</p>;
+  if (error) return <p className="error-text">{error}</p>;
 
   return (
-    <section>
-      <h2>Rejected Hospitals</h2>
-      <ul>
+    <section className="rejectedHospitals-container">
+      <h2 className="rejectedHospitals-title">Rejected Hospitals</h2>
+      <ul className="rejectedHospitals-list">
         {rejectedHospitals.map((hospital) => (
-          <li key={hospital._id}>{hospital.name}</li>
+          <li key={hospital._id} className="hospital-item">
+            {hospital.name}
+          </li>
         ))}
       </ul>
     </section>

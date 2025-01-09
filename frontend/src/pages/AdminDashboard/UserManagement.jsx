@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../axios/axios_interceptor";
+import "../../styles/UserManagement.css"; // Import custom styles
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -44,53 +45,43 @@ const UserManagement = () => {
   if (error) return <p className="text-red-500 text-center">{error}</p>;
 
   return (
-    <section className="container mx-auto p-6">
-      <h2 className="text-3xl font-semibold mb-4 text-center">
-        User Management
-      </h2>
+    <section className="user-management-container">
+      <h2 className="title">User Management</h2>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-auto bg-white shadow-md rounded-lg border border-gray-300">
-          <thead className="bg-gray-100">
+      <div className="table-container">
+        <table className="user-table">
+          <thead className="table-header">
             <tr>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">
-                Name
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">
-                Email
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">
-                Role
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">
-                Status
-              </th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">
-                Actions
-              </th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.firebaseUid} className="hover:bg-gray-50">
-                <td className="px-4 py-2">{user.name}</td>
-                <td className="px-4 py-2">{user.email}</td>
-                <td className="px-4 py-2">{user.role}</td>
-                <td className="px-4 py-2">
+              <tr key={user.firebaseUid} className="table-row">
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.role}</td>
+                <td>
                   <span
-                    className={`${
-                      user.status ? "text-green-500" : "text-red-500"
-                    } font-semibold`}
+                    className={`status-text ${
+                      user.status ? "active" : "inactive"
+                    }`}
                   >
                     {user.status ? "Active" : "Inactive"}
                   </span>
                 </td>
-                <td className="px-4 py-2">
+                <td>
                   <button
                     onClick={() =>
                       handleUserStatusChange(user.firebaseUid, !user.status)
                     }
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                    className={`status-button ${
+                      user.status ? "deactivate" : "activate"
+                    }`}
                   >
                     {user.status ? "Deactivate" : "Activate"}
                   </button>

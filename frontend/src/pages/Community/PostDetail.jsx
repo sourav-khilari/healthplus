@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axios_interceptor.js";
 import CommentForm from "./CommentForm";
 import CommentCard from "./CommentCard";
+import "../../styles/PostDetails.css";
 
 const PostDetails = () => {
   const { id, role } = useParams(); // Extract post ID and role from URL params
@@ -20,9 +21,6 @@ const PostDetails = () => {
           // Admin route for fetching the post
           response = await axiosInstance.get(`/admin/getPostById/${id}`);
         } else {
-          // User route for fetching the post
-          console.log("id=\n"+id+"\n")
-          console.log("id=\n"+role+"\n")
           response = await axiosInstance.get(`/users/getPostById/${id}`);
         }
 
@@ -54,12 +52,10 @@ const PostDetails = () => {
       let response;
 
       if (role === "admin") {
-        // Admin route for posting comments
         response = await axiosInstance.post(`/admin/posts/${id}/comments`, {
           comment: newComment,
         });
       } else {
-        // User route for posting comments
         response = await axiosInstance.post(`/user/posts/${id}/comments`, {
           comment: newComment,
         });
@@ -76,43 +72,41 @@ const PostDetails = () => {
     }
   };
 
-  // UI for loading or error state
   if (loading) {
-    return <div>Loading post...</div>; // Replace with a spinner or skeleton if preferred
+    return <div className="post-details-loading">Loading post...</div>;
   }
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <div className="post-details-error">{error}</div>;
   }
 
   return (
-    <div className="container mx-auto mt-6">
+    <div className="post-details-container">
       {post ? (
         <>
-          <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+          <h1 className="post-details-title">{post.title}</h1>
           {post.image && (
             <img
               src={post.image}
               alt={post.title}
-              className="w-full rounded-lg mb-4"
+              className="post-details-image"
             />
           )}
-          <p className="text-gray-700 mb-6">{post.description}</p>
+          <p className="post-details-description">{post.description}</p>
 
-          <h2 className="text-xl font-semibold mt-6 mb-4">Comments</h2>
+          <h2 className="post-details-comments-title">Comments</h2>
           {post.comments?.length === 0 ? (
-            <p className="text-gray-500">No comments yet</p>
+            <p className="post-details-no-comments">No comments yet</p>
           ) : (
             post.comments.map((comment) => (
-              
-              <CommentCard key={comment._id} comment={comment}/>
+              <CommentCard key={comment._id} comment={comment} />
             ))
           )}
 
           <CommentForm onAddComment={handleAddComment} />
         </>
       ) : (
-        <p>Post not found.</p>
+        <p className="post-details-not-found">Post not found.</p>
       )}
     </div>
   );

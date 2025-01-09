@@ -39,7 +39,7 @@
 }
 
 .input-field:focus {
-  border-color: #3498db;
+  border-color: #007bff;
 }
 
 .email-login-btn,
@@ -52,7 +52,7 @@
 }
 
 .email-login-btn {
-  background-color: #3498db;
+  background-color: #007bff;
   color: white;
   border: none;
 }

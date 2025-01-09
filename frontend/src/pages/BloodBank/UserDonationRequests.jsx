@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../axios/axios_interceptor.js";
+import "../../styles/UserDonationRequests.css"; // Import the custom CSS file
 
 const UserDonationRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -31,23 +32,29 @@ const UserDonationRequests = () => {
   };
 
   return (
-    <div className="container mx-auto mt-6">
-      <h1 className="text-2xl mb-4">Your Donation Requests</h1>
-      {loading && <div>Loading requests...</div>}
-      {error && <div className="text-red-500">{error}</div>}
+    <div className="user-requests-container">
+      <h1 className="requests-header">Your Donation Requests</h1>
+      {loading && <div className="loading-message">Loading requests...</div>}
+      {error && <div className="error-message">{error}</div>}
       {requests.length > 0 ? (
-        <ul className="list-disc list-inside">
+        <ul className="requests-list">
           {requests.map((req) => (
-            <li key={req._id}>
-              <strong>Request ID:</strong> {req._id} <br />
-              <strong>Blood Group:</strong> {req.bloodGroup} <br />
-              <strong>Date:</strong> {formatDate(req.createdAt)} <br />
-              <strong>Status:</strong> {req.status || "Not specified"}
+            <li key={req._id} className="request-item">
+              <strong className="request-label">Request ID:</strong> {req._id}{" "}
+              <br />
+              <strong className="request-label">Blood Group:</strong>{" "}
+              {req.bloodGroup} <br />
+              <strong className="request-label">Date:</strong>{" "}
+              {formatDate(req.createdAt)} <br />
+              <strong className="request-label">Status:</strong>{" "}
+              {req.status || "Not specified"}
             </li>
           ))}
         </ul>
       ) : (
-        !loading && <div>No donation requests found.</div>
+        !loading && (
+          <div className="no-requests-message">No donation requests found.</div>
+        )
       )}
     </div>
   );

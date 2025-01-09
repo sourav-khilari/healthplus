@@ -1,0 +1,78 @@
+/* ApprovedHospitals.css */
+
+/* General Styles */
+.approved-hospitals {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8fafc;
+  color: #1a202c;
+  padding: 20px;
+}
+
+.approved-hospitals section {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.approved-hospitals h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2d3748;
+  text-align: center;
+}
+
+/* Loading and Error States */
+.approved-hospitals p {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 20px 0;
+}
+
+.approved-hospitals .error {
+  color: #e53e3e;
+  font-weight: bold;
+}
+
+/* List Styles */
+.approved-hospitals ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.approved-hospitals li {
+  background: #edf2f7;
+  margin: 10px 0;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.approved-hospitals li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .approved-hospitals section {
+    padding: 15px;
+  }
+
+  .approved-hospitals h2 {
+    font-size: 1.5rem;
+  }
+
+  .approved-hospitals li {
+    font-size: 1rem;
+  }
+}

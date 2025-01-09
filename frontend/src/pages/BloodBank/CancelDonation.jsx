@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axiosInstance from "../../axios/axios_interceptor.js";
+import "../../styles/CancelDonationRequest.css"; // Import custom styles
 
 const CancelDonationRequest = () => {
   const [requestId, setRequestId] = useState("");
@@ -12,12 +13,9 @@ const CancelDonationRequest = () => {
     setMessage(null);
 
     try {
-      // Corrected API endpoint
       const response = await axiosInstance.post(
         "/hospital/cancelDonationRequest",
-        {
-          requestId,
-        }
+        { requestId }
       );
       setMessage(response.data.message || "Request canceled successfully.");
     } catch (error) {
@@ -29,24 +27,24 @@ const CancelDonationRequest = () => {
   };
 
   return (
-    <div className="container mx-auto mt-6">
-      <h1 className="text-2xl mb-4">Cancel Donation Request</h1>
-      <form onSubmit={handleCancel}>
-        <div>
-          <label>Request ID</label>
+    <div className="cancel-donation-container">
+      <h1 className="title">Cancel Donation Request</h1>
+      <form onSubmit={handleCancel} className="blood-form-container">
+        <div className="input-group">
+          <label className="label">Request ID</label>
           <input
             type="text"
             value={requestId}
             onChange={(e) => setRequestId(e.target.value)}
             required
-            className="input"
+            className="blood-input-field"
           />
         </div>
-        <button type="submit" className="btn btn-primary" disabled={loading}>
+        <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? "Canceling..." : "Cancel Request"}
         </button>
       </form>
-      {message && <p className="mt-4 text-red-500">{message}</p>}
+      {message && <p className="message">{message}</p>}
     </div>
   );
 };

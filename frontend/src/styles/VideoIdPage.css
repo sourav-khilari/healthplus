@@ -1,0 +1,55 @@
+/* Main container */
+.video-id-container {
+  min-height: 100vh;
+  background-color: #f7f9fc;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Content box */
+.video-id-content {
+  max-width: 600px;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Titles */
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 10px;
+}
+
+/* Video ID display */
+.video-id-box {
+  background-color: #f9fafc;
+  padding: 15px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+}
+
+.video-id {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.loading-text {
+  font-size: 1.2rem;
+  color: #95a5a6;
+  font-style: italic;
+}

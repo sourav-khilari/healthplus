@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "../../axios/axios_interceptor.js"; // Use the shared axios instance
+import axiosInstance from "../../axios/axios_interceptor.js";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useParams, useNavigate } from "react-router-dom"; // Import useParams and useNavigate
-import "../../styles/DeletePostPage.css"; // Custom styles for the delete post page
+import { useParams, useNavigate } from "react-router-dom";
+import "../../styles/DeletePostPage.css";
 
-const DeletePostPage = () => {
-  const { role } = useParams(); // Extract role from URL params
-  const navigate = useNavigate(); // For navigation if needed
+const DeletePost = () => {
+  const { role } = useParams();
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,19 +17,16 @@ const DeletePostPage = () => {
       let response;
 
       if (role === "admin") {
-        // Fetch posts for admin
         response = await axiosInstance.get("/admin/getAllPosts");
       } else if (role === "user") {
-        // Fetch posts for regular user
         response = await axiosInstance.get("/user/getUserPosts");
       } else {
-        // Handle invalid role case
         toast.error("Invalid role.");
-        navigate("/Community"); // Navigate to another page (e.g., homepage)
+        navigate("/Community");
         return;
       }
 
-      setPosts(response.data.posts); // Assuming the response contains an array of posts
+      setPosts(response.data.posts);
     } catch (error) {
       console.error("Error fetching posts:", error);
       toast.error(error.response?.data?.message || "Failed to load posts");
@@ -44,10 +41,8 @@ const DeletePostPage = () => {
       let response;
 
       if (role === "admin") {
-        // Admin deletes a post
         response = await axiosInstance.delete(`/admin/posts/${postId}`);
       } else if (role === "user") {
-        // Regular user deletes a post
         response = await axiosInstance.delete(`/user/posts/${postId}`);
       } else {
         toast.error("Invalid role.");
@@ -55,7 +50,6 @@ const DeletePostPage = () => {
       }
 
       toast.success(response.data.message || "Post deleted successfully!");
-      // Re-fetch the posts after deletion
       fetchPosts();
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -65,32 +59,32 @@ const DeletePostPage = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [role]); // Re-fetch posts if the role changes
+  }, [role]);
 
   return (
-    <div className="delete-post-page">
-      <h2>Your Posts</h2>
+    <div className="delete-post-page-container">
+      <h2 className="delete-post-title">Your Posts</h2>
 
       {loading ? (
-        <p>Loading your posts...</p>
+        <p className="delete-post-loading">Loading your posts...</p>
       ) : (
         <>
           {posts.length === 0 ? (
-            <p>You have no posts to delete.</p>
+            <p className="delete-post-empty">You have no posts to delete.</p>
           ) : (
-            <ul className="posts-list">
+            <ul className="delete-post-list">
               {posts.map((post) => (
-                <li key={post.id} className="post-item">
-                  <div className="post-content">
-                    <h3>{post.title}</h3>
-                    <p>{post.content}</p>
-                    <span className="post-time">
+                <li key={post.id} className="delete-post-item">
+                  <div className="delete-post-content">
+                    <h3 className="delete-post-title">{post.title}</h3>
+                    <p className="delete-post-body">{post.content}</p>
+                    <span className="delete-post-time">
                       {new Date(post.timestamp).toLocaleString()}
                     </span>
                   </div>
                   <button
                     onClick={() => handleDeletePost(post.id)}
-                    className="delete-btn"
+                    className="delete-post-btn"
                   >
                     Delete Post
                   </button>
@@ -104,4 +98,4 @@ const DeletePostPage = () => {
   );
 };
 
-export default DeletePostPage;
+export default DeletePost;

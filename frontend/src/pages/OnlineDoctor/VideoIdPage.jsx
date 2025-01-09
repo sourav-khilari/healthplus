@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../axios/axios_interceptor.js";
+import "../../styles/VideoIdPage.css"; // Import custom styles
 
 const VideoIdPage = ({ appointmentId }) => {
   const [videoId, setVideoId] = useState("");
@@ -13,6 +14,7 @@ const VideoIdPage = ({ appointmentId }) => {
         setVideoId(response.data.videoId);
       } catch (error) {
         alert("Failed to fetch video ID");
+        console.log(error);
       }
     };
 
@@ -20,15 +22,18 @@ const VideoIdPage = ({ appointmentId }) => {
   }, [appointmentId]);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
-          Video Consultation Details
-        </h1>
-
-        <div className="bg-gray-50 p-4 rounded-lg shadow-md">
-          <h3 className="text-xl font-medium text-gray-700 mb-2">Video ID</h3>
-          <p className="text-lg text-gray-600">{videoId || "Loading..."}</p>
+    <div className="video-id-container">
+      <div className="video-id-content">
+        <h1 className="title">Video Consultation Details</h1>
+        <div className="video-id-box">
+          <h3 className="subtitle">Video ID</h3>
+          <p className="video-id">
+            {videoId ? (
+              videoId
+            ) : (
+              <span className="loading-text">Loading...</span>
+            )}
+          </p>
         </div>
       </div>
     </div>

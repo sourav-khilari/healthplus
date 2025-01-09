@@ -73,6 +73,7 @@ const UserDashboard = () => {
       setLoading(false);
     }
   };
+
   // Redirect to room
   const handleJoinRoom = () => {
     if (roomNo) {
@@ -81,17 +82,22 @@ const UserDashboard = () => {
       alert("Please enter a valid room number.");
     }
   };
+
   return (
     <div className="user-dashboard">
-      <h1>User Dashboard</h1>
-      <section className="check-availability">
-        <h2>Check Doctor Availability</h2>
+      <h1 className="text-center font-bold text-3xl mb-6">User Dashboard</h1>
+
+      <div className="section-box shadow-md p-4 rounded-md mb-6">
+        <h2 className="text-xl font-semibold mb-4">
+          Check Doctor Availability
+        </h2>
         {loadingDoctors ? (
           <p>Loading doctors...</p>
         ) : Array.isArray(doctors) && doctors.length > 0 ? (
           <select
             value={selectedDoctor}
             onChange={(e) => setSelectedDoctor(e.target.value)}
+            className="p-2 border rounded-md w-full mb-4"
           >
             <option value="">Select a Doctor</option>
             {doctors.map((doctor) => (
@@ -107,6 +113,7 @@ const UserDashboard = () => {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
+          className="p-2 border rounded-md w-full mb-4"
         />
         <input
           type="time"
@@ -114,6 +121,7 @@ const UserDashboard = () => {
           onChange={(e) =>
             setTimeSlot({ ...timeSlot, start: `${date}T${e.target.value}:00Z` })
           }
+          className="p-2 border rounded-md w-full mb-4"
         />
         <input
           type="time"
@@ -121,30 +129,38 @@ const UserDashboard = () => {
           onChange={(e) =>
             setTimeSlot({ ...timeSlot, end: `${date}T${e.target.value}:00Z` })
           }
+          className="p-2 border rounded-md w-full mb-4"
         />
-        <button onClick={bookAppointment} disabled={loading}>
+        <button
+          onClick={bookAppointment}
+          disabled={loading}
+          className=" userbtn w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600"
+        >
           {loading ? "Booking..." : "Book Appointment"}
         </button>
-        {appointmentError && <p className="error">{appointmentError}</p>}
-      </section>
+        {appointmentError && (
+          <p className="error mt-2 text-red-500">{appointmentError}</p>
+        )}
+      </div>
 
-      <section className="appointments">
-        <h2>Your Appointments</h2>
+      <div className="section-box shadow-md p-4 rounded-md mb-6">
+        <h2 className="text-xl font-semibold mb-4">Your Appointments</h2>
         {appointments.length === 0 ? (
           <p>No appointments booked yet.</p>
         ) : (
           <ul>
             {appointments.map((appointment) => (
-              <li key={appointment._id}>
+              <li key={appointment._id} className="border-b py-2">
                 <p>
-                  Doctor: {appointment.doctorId} <br />
-                  Date: {appointment.date} <br />
-                  Time: {appointment.timeSlot.start} -{" "}
+                  <strong>Doctor:</strong> {appointment.doctorId} <br />
+                  <strong>Date:</strong> {appointment.date} <br />
+                  <strong>Time:</strong> {appointment.timeSlot.start} -{" "}
                   {appointment.timeSlot.end}
                 </p>
                 <button
                   onClick={() => cancelAppointment(appointment._id)}
                   disabled={loading}
+                  className="userbtn mt-2 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
                 >
                   Cancel Appointment
                 </button>
@@ -152,10 +168,10 @@ const UserDashboard = () => {
             ))}
           </ul>
         )}
-      </section>
-      {/* Room navigation */}
-      <section className="room-join bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+      </div>
+
+      <div className="section-box shadow-md p-4 rounded-md">
+        <h2 className="text-xl font-semibold mb-4">
           Join a Room for Consultation
         </h2>
         <input
@@ -167,12 +183,13 @@ const UserDashboard = () => {
         />
         <button
           onClick={handleJoinRoom}
-          className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600"
+          className=" userbtn w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600"
         >
           Join Room
         </button>
-      </section>
-      {error && <p className="error">{error}</p>}
+      </div>
+
+      {error && <p className="error text-red-500 mt-4">{error}</p>}
     </div>
   );
 };

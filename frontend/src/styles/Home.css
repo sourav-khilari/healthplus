@@ -108,19 +108,19 @@
 
 .service-cards .service-card h3 {
   font-size: 2rem;
-  color: #2980b9;
+  color: #007bff;
   margin-bottom: 10px;
 }
 
 .service-cards .service-card p {
-  color: #7f8c8d;
+  color: #007bff;
   margin-bottom: 15px;
 }
 
 .service-cards .service-card a {
   display: inline-block;
   color: #fff;
-  background-color: #2980b9;
+  background-color: #007bff;
   padding: 10px 20px;
   text-decoration: none;
   border-radius: 5px;
@@ -128,7 +128,7 @@
 }
 
 .service-cards .service-card a:hover {
-  background-color: #3498db;
+  background-color: #007bff;
 }
 
 ///mnew

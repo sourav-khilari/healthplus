@@ -1,0 +1,108 @@
+/* Container for the delete post page */
+.delete-post-page-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styling */
+.delete-post-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Loading message */
+.delete-post-loading {
+  font-size: 1.25rem;
+  color: #555;
+  text-align: center;
+}
+
+/* Empty state message */
+.delete-post-empty {
+  font-size: 1.1rem;
+  color: #777;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Posts list */
+.delete-post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Post item */
+.delete-post-item {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: box-shadow 0.3s ease;
+}
+
+.delete-post-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Post content */
+.delete-post-content {
+  max-width: 80%;
+}
+
+.delete-post-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.delete-post-body {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.delete-post-time {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+/* Delete button */
+.delete-post-btn {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-post-btn:hover {
+  background-color: #e04343;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .delete-post-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .delete-post-btn {
+    margin-top: 10px;
+  }
+}

@@ -49,7 +49,7 @@
 
 .form-group input:focus,
 .form-group textarea:focus {
-  border-color: #3498db;
+  border-color: #007bff;
   outline: none;
 }
 
@@ -59,7 +59,7 @@
 }
 
 .submit-btn {
-  background-color: #3498db;
+  background-color: #007bff;
   color: white;
   padding: 14px 20px;
   font-size: 1.1rem;
@@ -70,7 +70,7 @@
 }
 
 .submit-btn:hover {
-  background-color: #2980b9;
+  background-color: #007bff;
 }
 
 .additional-contact-info {
@@ -84,7 +84,7 @@
 }
 
 .contact-link {
-  color: #3498db;
+  color: #007bff;
   text-decoration: none;
 }
 
@@ -94,10 +94,13 @@
 
 .hero-section {
   text-align: center;
-  background-color: #3498db;
+  background-color: #007bff;
   color: white;
   display: flex;
   flex-direction: column;
   margin-bottom: 40px;
   border-radius: 8px;
+}
+.submit-btn {
+  background-color: #007bff;
 }

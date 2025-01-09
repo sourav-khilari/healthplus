@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "../../axios/axios_interceptor.js"; // Ensure consistent axios instance
+import axiosInstance from "../../axios/axios_interceptor.js";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../../styles/NotificationPage.css"; // Custom styles for the notifications page
+import "../../styles/NotificationsPage.css";
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -12,7 +12,7 @@ const NotificationsPage = () => {
   const fetchNotifications = async () => {
     try {
       const response = await axiosInstance.get("/user/getNotifications");
-      setNotifications(response.data.notifications); // Assuming the response contains an array of notifications
+      setNotifications(response.data.notifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
       toast.error(
@@ -25,27 +25,27 @@ const NotificationsPage = () => {
 
   useEffect(() => {
     fetchNotifications();
-  }, []); // Empty dependency array to fetch notifications on component mount
+  }, []);
 
   return (
-    <div className="notifications-page">
-      <h2>Notifications</h2>
+    <div className="notifications-page-container">
+      <h2 className="notifications-page-title">Notifications</h2>
 
       {loading ? (
-        <p>Loading notifications...</p> // Replace with a spinner or skeleton loader if needed
+        <p className="notifications-loading">Loading notifications...</p>
       ) : (
         <>
           {notifications.length === 0 ? (
-            <p>No notifications available.</p> // Message when there are no notifications
+            <p className="notifications-empty">No notifications available.</p>
           ) : (
             <ul className="notifications-list">
               {notifications.map((notification) => (
                 <li key={notification.id} className="notification-item">
-                  <div className="notification-content">
-                    <p>{notification.message}</p>{" "}
-                    {/* Display the notification message */}
-                    <span className="notification-time">
-                      {/* Format and display the notification timestamp */}
+                  <div className="notification-details">
+                    <p className="notification-message">
+                      {notification.message}
+                    </p>
+                    <span className="notification-timestamp">
                       {new Date(notification.timestamp).toLocaleString()}
                     </span>
                   </div>

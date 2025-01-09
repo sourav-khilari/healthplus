@@ -1,0 +1,113 @@
+/* General container styles */
+.posts-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Title styling */
+.posts-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+/* Post card styles */
+.post-card {
+  display: block;
+  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-decoration: none;
+}
+
+/* Hover effects for post card */
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  background-color: #f9f9f9;
+}
+
+/* Post content */
+.post-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.post-description {
+  color: #4a4a4a;
+  margin-top: 8px;
+}
+
+/* Image styling */
+.post-image {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  margin-top: 16px;
+  border-radius: 10px;
+}
+
+/* Button styling for "Load More" */
+.load-more-button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-top: 24px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: background-color 0.2s;
+}
+
+.load-more-button:hover {
+  background-color: #2563eb;
+}
+
+/* Loading message and error message */
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.error-message {
+  text-align: center;
+  color: #ef4444;
+  font-size: 1rem;
+}
+
+/* No posts or no more posts message */
+.no-posts-message,
+.no-more-posts-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #777;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .post-title {
+    font-size: 1.25rem;
+  }
+
+  .post-card {
+    padding: 16px;
+  }
+
+  .post-image {
+    height: 180px;
+  }
+}
