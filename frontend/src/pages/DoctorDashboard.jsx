@@ -21,8 +21,8 @@ const DoctorDashboard = () => {
     try {
       // Fetch doctor's profile data and today's appointments
       const [doctorRes, appointmentsRes] = await Promise.all([
-        axiosInstance.get("/doctor/dashboard"), // Replace with correct route
-        axiosInstance.post("/doctor/getDoctorAppointments", {
+        await axiosInstance.get("/doctor/dashboard"), // Replace with correct route
+        await axiosInstance.post("/doctor/getDoctorAppointments", {
           doctorId: "doctorId",
         }), // Replace with dynamic doctorId
       ]);
