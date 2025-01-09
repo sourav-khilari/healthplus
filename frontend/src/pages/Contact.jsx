@@ -23,7 +23,7 @@ const Contact = () => {
     e.preventDefault();
 
     try {
-      const response =axiosInstance.post("/users/contactUs", formData);
+      const response =await axiosInstance.post("/users/contactUs", formData);
       if (response.ok) {
         setSubmissionStatus("Message sent successfully!");
         setFormData({ fullName: "", email: "", message: "" }); // Reset form
