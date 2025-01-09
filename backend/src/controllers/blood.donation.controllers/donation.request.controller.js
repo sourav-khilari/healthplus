@@ -153,7 +153,7 @@ const cancelDonationRequest = asyncHandler(async (req, res) => {
 });
 
 
-const getUserDonationRequests = async (req, res) => {
+const getUserDonationRequests = asyncHandler(async (req, res) => {
     const donorId = req.user._id; // Assuming `req.user` contains the logged-in user's details
 
     try {
@@ -185,7 +185,7 @@ const getUserDonationRequests = async (req, res) => {
             message: "Internal server error. Could not fetch donation requests.",
         });
     }
-};
+});
 
 
 export {
