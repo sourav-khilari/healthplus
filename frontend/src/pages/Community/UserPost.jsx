@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom"; // Import necessary hooks and components
 import axiosInstance from "../../axios/axios_interceptor.js";
 
-const UserPosts = () => {
+const UserPost = () => {
   const { role } = useParams(); // Fetch the role from the URL params
   const navigate = useNavigate(); // Hook for programmatic navigation
   const [userPosts, setUserPosts] = useState([]);
@@ -23,10 +23,14 @@ const UserPosts = () => {
         if (role === "admin") {
           response = await axiosInstance.get("/admin/getUserPosts"); // Admin endpoint
         } else {
-          response = await axiosInstance.get("/user/getUserPosts"); // User endpoint
+          response = await axiosInstance.get("/users/getUserPosts"); // User endpoint
         }
 
-        setUserPosts(response.data.data); // Update state with the fetched posts
+        // Ensure unique posts are returned
+        const uniquePosts = Array.from(
+          new Set(response.data.data.map((a) => a._id))
+        ).map((id) => response.data.data.find((a) => a._id === id));
+        setUserPosts(uniquePosts); // Update state with the unique posts
       } catch (error) {
         console.error("Error fetching user posts", error);
       }
@@ -41,14 +45,17 @@ const UserPosts = () => {
       {userPosts.length === 0 ? (
         <p>You have not created any posts yet.</p>
       ) : (
-        <div className="mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {userPosts.map((post) => (
-            <div key={post._id} className="mb-4">
-              <h3>{post.title}</h3>
-              <p>{post.discription}</p>
+            <div
+              key={post._id}
+              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
+              <p className="text-gray-600 mb-4">{post.discription}</p>
               <Link
-                to={`/${role}/getPostById/${post._id}`} // Dynamic route based on role
-                className="text-blue-500"
+                to={`/Community/PostDetail/${post._id}/${role} `} // Dynamic route based on role
+                className="text-blue-500 hover:underline"
               >
                 View Post
               </Link>
@@ -60,4 +67,4 @@ const UserPosts = () => {
   );
 };
 
-export default UserPosts;
+export default UserPost;

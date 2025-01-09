@@ -104,7 +104,8 @@ const PostDetails = () => {
             <p className="text-gray-500">No comments yet</p>
           ) : (
             post.comments.map((comment) => (
-              <CommentCard key={comment._id} comment={comment} role={role} />
+              
+              <CommentCard key={comment._id} comment={comment}/>
             ))
           )}
 
