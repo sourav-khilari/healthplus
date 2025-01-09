@@ -23,7 +23,7 @@ const Contact = () => {
     e.preventDefault();
 
     try {
-      const response =axiosInstance.post("/users/contactUs", formData);
+      const response =await axiosInstance.post("/users/contactUs", formData);
       if (response.ok) {
         setSubmissionStatus("Message sent successfully!");
         setFormData({ fullName: "", email: "", message: "" }); // Reset form
@@ -51,9 +51,9 @@ const Contact = () => {
           <div className="form-group">
             <input
               type="text"
-              name="fullName"
+              name="name"
               placeholder="Full Name"
-              value={formData.fullName}
+              value={formData.name}
               onChange={handleChange}
               required
             />
