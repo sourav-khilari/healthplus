@@ -3,7 +3,7 @@ import axiosInstance from "../../axios/axios_interceptor.js";
 import { useParams, useNavigate } from "react-router-dom"; // Updated to use react-router-dom
 
 const CommentForm = () => {
-  const { postId, role } = useParams(); // Extract postId and role from URL params
+  const { id, role } = useParams(); // Extract postId and role from URL params
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,9 +20,13 @@ const CommentForm = () => {
       // Conditional API call based on role
       const endpoint =
         role === "admin" ? "/admin/addcomment" : "/users/addcomment";
+        //console.log("postid\n"+postId)
+        const postId=id 
+        console.log("postid\n"+postId)
       await axiosInstance.post(endpoint, { postId, comment });
 
       setComment(""); // Clear the comment field after submission
+      console.log("postid\n"+postId)
       navigate(`/Community/PostDetail/${postId}/${role}`); // Redirect to the Post Detail page
     } catch (error) {
       console.error("Error adding comment:", error);

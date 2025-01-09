@@ -246,7 +246,7 @@ const addcomment = async (req, res) => {
     }
 
     // Validate permissions
-    if (role === "user" && post.userId.toString() !== userId) {
+    if (role === "user" && post.userId.toString() != userId) {
       return res.status(403).send({
         success: false,
         message: "Only the post owner can comment on this post.",
@@ -270,7 +270,7 @@ const addcomment = async (req, res) => {
       comment,
       postId,
     });
-    await Comment.save();
+    await newComment.save();
     // Add doctor ID to post's comments array if not already present
     if (role === "doctor" && !post.comments.includes(userId)) {
       post.comments.push(userId);
