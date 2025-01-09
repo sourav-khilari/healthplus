@@ -120,146 +120,210 @@ import { uploadOnCloudinary } from "../../utils/cloudnary.js";
 
 import fs from 'fs/promises';
 
+// const addProduct = asyncHandler(async (req, res) => {
+//   try {
+//     const { name, description, price, category, quantity, brand } = req.body;
+
+//     // Validation
+//     switch (true) {
+//       case !name:
+//         return res.status(400).json({ error: "Name is required" });
+//       case !brand:
+//         return res.status(400).json({ error: "Brand is required" });
+//       case !description:
+//         return res.status(400).json({ error: "Description is required" });
+//       case !price:
+//         return res.status(400).json({ error: "Price is required" });
+//       case !category:
+//         return res.status(400).json({ error: "Category is required" });
+//       case !quantity:
+//         return res.status(400).json({ error: "Quantity is required" });
+//     }
+
+//     // Check files and limit to 4
+//     const images = req.files ? Object.values(req.files).flat() : [];
+//     if (images.length > 4) {
+//       return res.status(400).json({ error: "You can upload up to 4 images" });
+//     }
+
+//     // Upload images to Cloudinary
+//     const imageUrls = await Promise.all(
+//       images.map(async (image) => {
+//         try {
+//           const url = await uploadOnCloudinary(image.path);
+//           await fs.unlink(image.path); // Delete the file after uploading
+//           return url; // { secure_url: '...', public_id: '...' }
+//         } catch (error) {
+//           console.error("Error uploading image:", error);
+//           await fs.unlink(image.path); // Delete the file even if upload fails
+//           return null;
+//         }
+//       })
+//     );
+
+//     // Filter out failed uploads
+//     const filteredImageUrls = imageUrls.filter((url) => url !== null);
+
+//     // Create the product
+//     const product = new Product({
+//       name,
+//       description,
+//       price,
+//       category,
+//       quantity,
+//       brand,
+//       image: filteredImageUrls.map((url) => url.url), // Secure URLs for product
+//     });
+
+//     await product.save();
+//     res.status(201).json(product);
+//   } catch (error) {
+//     console.error("Error adding product:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
+
+// const updateProductDetails = asyncHandler(async (req, res) => {
+//   try {
+//     const { name, description, price, category, quantity, brand } = req.body;
+//     const files = req.files; // Files uploaded via multipart form-data
+
+//     // Validation
+//     switch (true) {
+//       case !name:
+//         return res.status(400).json({ error: "Name is required" });
+//       case !brand:
+//         return res.status(400).json({ error: "Brand is required" });
+//       case !description:
+//         return res.status(400).json({ error: "Description is required" });
+//       case !price:
+//         return res.status(400).json({ error: "Price is required" });
+//       case !category:
+//         return res.status(400).json({ error: "Category is required" });
+//       case !quantity:
+//         return res.status(400).json({ error: "Quantity is required" });
+//     }
+
+//     // Find the existing product
+//     const product = await Product.findById(req.params.id);
+//     if (!product) {
+//       return res.status(404).json({ error: "Product not found" });
+//     }
+
+//     // Handle updated images
+//     const updatedImages = [...product.image]; // Existing images
+//     const imageKeys = ["image1", "image2", "image3", "image4"]; // Defined keys for images
+
+//     for (const key of imageKeys) {
+//       if (files && files[key]) {
+//         // Upload the new image to Cloudinary
+//         const uploadedImage = await uploadOnCloudinary(files[key][0].path);
+
+//         // If uploaded successfully, replace the corresponding image
+//         if (uploadedImage?.url) {
+//           const index = imageKeys.indexOf(key);
+//           if (index !== -1) {
+//             // Delete the old image from Cloudinary
+//             const oldImage = updatedImages[index];
+//             if (oldImage?.public_id) {
+//               await deleteFromCloudinary(oldImage.public_id); // Custom delete function
+//             }
+
+//             // Update the image array
+//             updatedImages[index] = {
+//               url: uploadedImage.url,
+//               public_id: uploadedImage.public_id,
+//             };
+//           }
+//         }
+
+//         // Unlink the local file after uploading
+//         fs.unlinkSync(files[key][0].path);
+//       }
+//     }
+
+//     // Update the product fields and images
+//     const updatedProduct = await Product.findByIdAndUpdate(
+//       req.params.id,
+//       {
+//         ...req.body,
+//         image: updatedImages,
+//       },
+//       { new: true }
+//     );
+
+//     res.json(updatedProduct);
+//   } catch (error) {
+//     console.error("Error updating product:", error);
+//     res.status(500).json({ error: "Failed to update product" });
+//   }
+// });
+
+
 const addProduct = asyncHandler(async (req, res) => {
   try {
-    const { name, description, price, category, quantity, brand } = req.body;
+    const { name, description, price, category, quantity, brand } = req.fields;
 
     // Validation
     switch (true) {
       case !name:
-        return res.status(400).json({ error: "Name is required" });
+        return res.json({ error: "Name is required" });
       case !brand:
-        return res.status(400).json({ error: "Brand is required" });
+        return res.json({ error: "Brand is required" });
       case !description:
-        return res.status(400).json({ error: "Description is required" });
+        return res.json({ error: "Description is required" });
       case !price:
-        return res.status(400).json({ error: "Price is required" });
+        return res.json({ error: "Price is required" });
       case !category:
-        return res.status(400).json({ error: "Category is required" });
+        return res.json({ error: "Category is required" });
       case !quantity:
-        return res.status(400).json({ error: "Quantity is required" });
+        return res.json({ error: "Quantity is required" });
     }
 
-    // Check files and limit to 4
-    const images = req.files ? Object.values(req.files).flat() : [];
-    if (images.length > 4) {
-      return res.status(400).json({ error: "You can upload up to 4 images" });
-    }
-
-    // Upload images to Cloudinary
-    const imageUrls = await Promise.all(
-      images.map(async (image) => {
-        try {
-          const url = await uploadOnCloudinary(image.path);
-          await fs.unlink(image.path); // Delete the file after uploading
-          return url; // { secure_url: '...', public_id: '...' }
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          await fs.unlink(image.path); // Delete the file even if upload fails
-          return null;
-        }
-      })
-    );
-
-    // Filter out failed uploads
-    const filteredImageUrls = imageUrls.filter((url) => url !== null);
-
-    // Create the product
-    const product = new Product({
-      name,
-      description,
-      price,
-      category,
-      quantity,
-      brand,
-      image: filteredImageUrls.map((url) => url.url), // Secure URLs for product
-    });
-
+    const product = new Product({ ...req.fields });
     await product.save();
-    res.status(201).json(product);
+    res.json(product);
   } catch (error) {
-    console.error("Error adding product:", error);
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(400).json(error.message);
   }
 });
-
 
 const updateProductDetails = asyncHandler(async (req, res) => {
   try {
-    const { name, description, price, category, quantity, brand } = req.body;
-    const files = req.files; // Files uploaded via multipart form-data
+    const { name, description, price, category, quantity, brand } = req.fields;
 
     // Validation
     switch (true) {
       case !name:
-        return res.status(400).json({ error: "Name is required" });
+        return res.json({ error: "Name is required" });
       case !brand:
-        return res.status(400).json({ error: "Brand is required" });
+        return res.json({ error: "Brand is required" });
       case !description:
-        return res.status(400).json({ error: "Description is required" });
+        return res.json({ error: "Description is required" });
       case !price:
-        return res.status(400).json({ error: "Price is required" });
+        return res.json({ error: "Price is required" });
       case !category:
-        return res.status(400).json({ error: "Category is required" });
+        return res.json({ error: "Category is required" });
       case !quantity:
-        return res.status(400).json({ error: "Quantity is required" });
+        return res.json({ error: "Quantity is required" });
     }
 
-    // Find the existing product
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ error: "Product not found" });
-    }
-
-    // Handle updated images
-    const updatedImages = [...product.image]; // Existing images
-    const imageKeys = ["image1", "image2", "image3", "image4"]; // Defined keys for images
-
-    for (const key of imageKeys) {
-      if (files && files[key]) {
-        // Upload the new image to Cloudinary
-        const uploadedImage = await uploadOnCloudinary(files[key][0].path);
-
-        // If uploaded successfully, replace the corresponding image
-        if (uploadedImage?.url) {
-          const index = imageKeys.indexOf(key);
-          if (index !== -1) {
-            // Delete the old image from Cloudinary
-            const oldImage = updatedImages[index];
-            if (oldImage?.public_id) {
-              await deleteFromCloudinary(oldImage.public_id); // Custom delete function
-            }
-
-            // Update the image array
-            updatedImages[index] = {
-              url: uploadedImage.url,
-              public_id: uploadedImage.public_id,
-            };
-          }
-        }
-
-        // Unlink the local file after uploading
-        fs.unlinkSync(files[key][0].path);
-      }
-    }
-
-    // Update the product fields and images
-    const updatedProduct = await Product.findByIdAndUpdate(
+    const product = await Product.findByIdAndUpdate(
       req.params.id,
-      {
-        ...req.body,
-        image: updatedImages,
-      },
+      { ...req.fields },
       { new: true }
     );
 
-    res.json(updatedProduct);
+    await product.save();
+
+    res.json(product);
   } catch (error) {
-    console.error("Error updating product:", error);
-    res.status(500).json({ error: "Failed to update product" });
+    console.error(error);
+    res.status(400).json(error.message);
   }
 });
-
 
 
 
