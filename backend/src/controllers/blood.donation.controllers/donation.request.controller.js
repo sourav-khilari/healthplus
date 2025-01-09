@@ -123,12 +123,13 @@ const cancelDonationRequest = asyncHandler(async (req, res) => {
     //decide based on frontend
     //const { requestId } = req.params;
     const { requestId } = req.body;
+    console.log(requestId);
     const donorId = req.user._id;
-
+    console.log("\ndonorid=\n"+donorId);
     try {
         const request = await DonationRequest.findById(requestId);
 
-        if (!request || request.donorId.toString() !== donorId || request.status !== "pending") {
+        if (!request || request.donorId.toString() != donorId.toString() || request.status !== "pending") {
             return res.status(400).send({
                 success: false,
                 message: "Request not found or cannot be cancelled.",
