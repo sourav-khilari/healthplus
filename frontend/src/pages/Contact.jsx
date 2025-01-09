@@ -51,9 +51,9 @@ const Contact = () => {
           <div className="form-group">
             <input
               type="text"
-              name="fullName"
+              name="name"
               placeholder="Full Name"
-              value={formData.fullName}
+              value={formData.name}
               onChange={handleChange}
               required
             />

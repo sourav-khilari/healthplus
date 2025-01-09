@@ -989,10 +989,13 @@ const getUserAppointments = asyncHandler(async (req, res) => {
 const contactUs = asyncHandler(async (req, res) => {
     try {
         const { name, email, message } = req.body;
+        console.log("\n\n" + name + "\n\n");
+        console.log("\n\n" + email + "\n\n");
+        console.log("\n\n" + message + "\n\n");
         if (!name || !email || !message) {
             throw new ApiError(500, 'Please fill ALL Details');
         }
-        await sendMail("souravkhilari123456@gmail.com", "complain", `${name}+"\n" + ${email} +"\n"+ ${message}`);
+        await sendMail("souravkhilari123456@gmail.com", "complain", `"name"${name}"\n" "email"${email} "message" "\n"${message}`);
         //res.status(200).json({ message: "Email sent successfully" });
         return res.status(200).json(new ApiResponse(400, null, 'Email sent successfully'));
     } catch (error) {
