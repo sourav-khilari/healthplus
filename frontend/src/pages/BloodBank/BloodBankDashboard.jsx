@@ -5,16 +5,15 @@ const BloodBankDashboard = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [newRequest, setNewRequest] = useState({ bloodGroup: "", address: "" });
 
-  // Function to fetch donation requests
+  // Function to fetch user donation requests
   const fetchRequests = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axiosInstance.get(
-        "/hospital/getDonationRequestsForHospital"
-      ); // Assuming same route for blood bank
+      const response = await axiosInstance.get("/user/getUserDonationRequests");
       setRequests(response.data?.data || []);
     } catch (err) {
       console.error("Error fetching donation requests:", err);
@@ -24,112 +23,109 @@ const BloodBankDashboard = () => {
     }
   };
 
-  // Function to accept a donation request
-  const handleAccept = async (requestId) => {
-    try {
-      await axiosInstance.post("/hospital/acceptDonationRequest", {
-        requestId,
-      });
+  // Function to submit a new blood donation request
+  const handleSubmitRequest = async () => {
+    if (!newRequest.bloodGroup || !newRequest.address) {
+      setError("Please fill in all fields.");
+      return;
+    }
 
-      // Optimistically update the request status to "accepted"
-      setRequests((prevRequests) =>
-        prevRequests.map((request) =>
-          request._id === requestId
-            ? { ...request, status: "accepted" }
-            : request
-        )
-      );
+    try {
+      await axiosInstance.post("/user/submitBloodDonationRequest", newRequest);
+      setNewRequest({ bloodGroup: "", address: "" });
+      fetchRequests(); // Refresh the list after submitting
     } catch (err) {
-      console.error("Error accepting donation request:", err);
-      setError("Failed to accept donation request. Please try again.");
+      console.error("Error submitting donation request:", err);
+      setError("Failed to submit donation request. Please try again.");
     }
   };
 
-  // Function to decline a donation request
-  const handleDecline = async (requestId) => {
+  // Function to cancel a donation request
+  const handleCancelRequest = async (requestId) => {
     try {
-      await axiosInstance.post("/hospital/declineDonationRequest", {
-        requestId,
-      });
-
-      // Optimistically update the request status to "declined"
+      await axiosInstance.post("/user/cancelDonationRequest", { requestId });
       setRequests((prevRequests) =>
-        prevRequests.map((request) =>
-          request._id === requestId
-            ? { ...request, status: "declined" }
-            : request
-        )
+        prevRequests.filter((request) => request._id !== requestId)
       );
     } catch (err) {
-      console.error("Error declining donation request:", err);
-      setError("Failed to decline donation request. Please try again.");
+      console.error("Error cancelling donation request:", err);
+      setError("Failed to cancel donation request. Please try again.");
     }
   };
 
+  // Fetch requests on component mount
   useEffect(() => {
     fetchRequests();
   }, []);
 
   return (
-    <div className="container mx-auto mt-6">
-      <h1 className="text-2xl mb-4">Blood Bank Dashboard</h1>
-      {loading && <div>Loading donation requests...</div>}
-      {error && <div className="text-red-500">{error}</div>}
+    <div className="container mx-auto mt-6 px-4">
+      <h1 className="text-2xl mb-6">Blood Bank Dashboard</h1>
 
+      {/* Error Notification */}
+      {error && <div className="text-red-500 mb-4">{error}</div>}
+
+      {/* New Donation Request Form */}
+      <div className="border p-4 rounded-md mb-6">
+        <h2 className="text-xl mb-4">Submit a New Blood Donation Request</h2>
+        <input
+          type="text"
+          placeholder="Blood Group (e.g., A+, B-, O+)"
+          className="border p-2 rounded-md mb-2 w-full"
+          value={newRequest.bloodGroup}
+          onChange={(e) =>
+            setNewRequest({ ...newRequest, bloodGroup: e.target.value })
+          }
+        />
+        <input
+          type="text"
+          placeholder="Address"
+          className="border p-2 rounded-md mb-2 w-full"
+          value={newRequest.address}
+          onChange={(e) =>
+            setNewRequest({ ...newRequest, address: e.target.value })
+          }
+        />
+        <button
+          onClick={handleSubmitRequest}
+          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+        >
+          Submit Request
+        </button>
+      </div>
+
+      {/* Donation Requests List */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {requests.length > 0 ? (
+        {loading ? (
+          <div>Loading donation requests...</div>
+        ) : requests.length > 0 ? (
           requests.map((request) => (
             <div
               key={request._id}
-              className={`border p-4 rounded-md shadow-md ${
-                request.status === "accepted"
-                  ? "bg-green-100"
-                  : request.status === "declined"
-                  ? "bg-red-100"
-                  : "bg-white"
-              }`}
+              className="border p-4 rounded-md shadow-md bg-white"
             >
               <h3 className="font-semibold">
                 Blood Group: {request.bloodGroup}
               </h3>
-              <p>
-                <strong>Donor:</strong> {request.donorId.name}
-              </p>
-              <p>
-                <strong>Phone:</strong> {request.donorId.phone}
-              </p>
               <p>
                 <strong>Address:</strong> {request.address}
               </p>
               <p>
                 <strong>Status:</strong> {request.status}
               </p>
+
               {request.status === "pending" && (
-                <>
-                  <button
-                    onClick={() => handleAccept(request._id)}
-                    className="btn btn-success mt-2"
-                  >
-                    Accept Request
-                  </button>
-                  <button
-                    onClick={() => handleDecline(request._id)}
-                    className="btn btn-danger mt-2 ml-2"
-                  >
-                    Decline Request
-                  </button>
-                </>
-              )}
-              {request.status === "accepted" && (
-                <span className="text-green-600 mt-2">Request Accepted</span>
-              )}
-              {request.status === "declined" && (
-                <span className="text-red-600 mt-2">Request Declined</span>
+                <button
+                  onClick={() => handleCancelRequest(request._id)}
+                  className="bg-red-500 text-white py-2 px-4 rounded-md mt-2 hover:bg-red-600"
+                >
+                  Cancel Request
+                </button>
               )}
             </div>
           ))
         ) : (
-          <div>No pending donation requests.</div>
+          <div>No donation requests found.</div>
         )}
       </div>
     </div>

@@ -85,7 +85,7 @@ const Login = () => {
   };
 
   const redirectToRegister = () => {
-    navigate("/register");
+    navigate("/user/register");
   };
 
   return (

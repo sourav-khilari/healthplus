@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import for navigation
 import axiosInstance from "../axios/axios_interceptor.js";
 
 import "../styles/HospitalDashboard.css";
@@ -21,6 +22,8 @@ const HospitalDashboard = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const navigate = useNavigate(); // Navigation hook
 
   // Fetch doctors and appointments on mount
   useEffect(() => {
@@ -112,6 +115,14 @@ const HospitalDashboard = () => {
   return (
     <div className="hospital-dashboard">
       <h1>Hospital Dashboard</h1>
+
+      {/* Navigation Button */}
+      <button
+        className="btn btn-primary mb-4"
+        onClick={() => navigate("/hospital/bloodbankdashboard")}
+      >
+        Go to Blood Bank Dashboard
+      </button>
 
       {/* Add Doctor Section */}
       <section className="add-doctor">

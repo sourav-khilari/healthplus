@@ -12,9 +12,8 @@ const HospitalBloodDashboard = () => {
     setError(null);
 
     try {
-      const response = await axiosInstance.get(
-        "/hospital/getDonationRequestsForHospital"
-      );
+      const endpoint = "/hospital/getDonationRequestsForHospital";
+      const response = await axiosInstance.get(endpoint);
       setRequests(response.data?.data || []);
     } catch (err) {
       console.error("Error fetching donation requests:", err);
@@ -24,32 +23,39 @@ const HospitalBloodDashboard = () => {
     }
   };
 
-  // Only call fetchRequests once on component mount
-  useEffect(() => {
-    fetchRequests();
-  }, []); // Empty dependency array to ensure it runs only once
+  // Function to update request status
+  const updateRequestStatus = async (requestId, newStatus) => {
+    const endpointMap = {
+      accepted: "/hospital/acceptDonationRequest",
+      declined: "/hospital/declineDonationRequest",
+      read: "/hospital/markRequestAsRead",
+    };
 
-  // Handle marking a request as read
-  const handleMarkAsRead = async (requestId) => {
     try {
-      await axiosInstance.post("/hospital/markRequestAsRead", { requestId });
+      await axiosInstance.post(endpointMap[newStatus], { requestId });
 
       // Optimistically update the status in the UI
       setRequests((prevRequests) =>
-        prevRequests.map((req) =>
-          req._id === requestId ? { ...req, status: "read" } : req
+        prevRequests.map((request) =>
+          request._id === requestId
+            ? { ...request, status: newStatus }
+            : request
         )
       );
     } catch (err) {
-      console.error("Error marking request as read:", err);
-      setError("Failed to mark request as read. Please try again.");
+      console.error(`Error updating request to ${newStatus}:`, err);
+      setError(`Failed to update request. Please try again.`);
     }
   };
+
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
   return (
     <div className="container mx-auto mt-6 px-4">
       <h1 className="text-3xl font-semibold text-center mb-6">
-        Hospital Dashboard
+        Hospital BloodBank Dashboard
       </h1>
 
       {loading && (
@@ -65,7 +71,11 @@ const HospitalBloodDashboard = () => {
             <div
               key={request._id}
               className={`border p-6 rounded-lg shadow-lg ${
-                request.status === "read" ? "bg-gray-100" : "bg-white"
+                request.status === "read" || request.status === "accepted"
+                  ? "bg-gray-100"
+                  : request.status === "declined"
+                  ? "bg-red-100"
+                  : "bg-white"
               } hover:shadow-xl transition duration-300 ease-in-out`}
             >
               <h3 className="font-semibold text-xl mb-2">
@@ -84,8 +94,10 @@ const HospitalBloodDashboard = () => {
                 <strong>Status:</strong>{" "}
                 <span
                   className={`font-semibold ${
-                    request.status === "read"
+                    request.status === "accepted"
                       ? "text-green-500"
+                      : request.status === "declined"
+                      ? "text-red-500"
                       : "text-yellow-500"
                   }`}
                 >
@@ -93,13 +105,28 @@ const HospitalBloodDashboard = () => {
                 </span>
               </p>
 
-              {request.status !== "read" && (
-                <button
-                  onClick={() => handleMarkAsRead(request._id)}
-                  className="bg-blue-500 text-white py-2 px-4 rounded-md mt-4 w-full hover:bg-blue-600 transition duration-200"
-                >
-                  Mark as Read
-                </button>
+              {/* Action Buttons */}
+              {request.status === "pending" && (
+                <div className="mt-4">
+                  <button
+                    onClick={() => updateRequestStatus(request._id, "accepted")}
+                    className="bg-green-500 text-white py-2 px-4 rounded-md mr-2 hover:bg-green-600 transition duration-200"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    onClick={() => updateRequestStatus(request._id, "declined")}
+                    className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-200"
+                  >
+                    Decline
+                  </button>
+                  <button
+                    onClick={() => updateRequestStatus(request._id, "read")}
+                    className="bg-blue-500 text-white py-2 px-4 rounded-md w-full hover:bg-blue-600 transition duration-200"
+                  >
+                    Mark as Read
+                  </button>
+                </div>
               )}
             </div>
           ))
