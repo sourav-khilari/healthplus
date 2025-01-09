@@ -5,7 +5,11 @@ const BloodBankDashboard = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [newRequest, setNewRequest] = useState({ bloodGroup: "", address: "" });
+  const [newRequest, setNewRequest] = useState({
+    bloodGroup: "",
+    phone: "",
+    address: "",
+  });
 
   // Function to fetch user donation requests
   const fetchRequests = async () => {
@@ -14,10 +18,12 @@ const BloodBankDashboard = () => {
 
     try {
       const response = await axiosInstance.get("/user/getUserDonationRequests");
-      setRequests(response.data?.data || []);
+      setRequests(response.data?.data?.donationRequests || []);
     } catch (err) {
       console.error("Error fetching donation requests:", err);
-      setError("Failed to load donation requests. Please try again.");
+      setError(
+        err.response?.data?.message || "Failed to load donation requests."
+      );
     } finally {
       setLoading(false);
     }
@@ -25,31 +31,42 @@ const BloodBankDashboard = () => {
 
   // Function to submit a new blood donation request
   const handleSubmitRequest = async () => {
-    if (!newRequest.bloodGroup || !newRequest.address) {
+    if (!newRequest.bloodGroup || !newRequest.phone || !newRequest.address) {
       setError("Please fill in all fields.");
       return;
     }
 
     try {
-      await axiosInstance.post("/user/submitBloodDonationRequest", newRequest);
-      setNewRequest({ bloodGroup: "", address: "" });
+      const response = await axiosInstance.post(
+        "/user/submitBloodDonationRequest",
+        newRequest
+      );
+      setNewRequest({ bloodGroup: "", phone: "", address: "" });
       fetchRequests(); // Refresh the list after submitting
+      alert(response.data.message); // Show success message from the backend
     } catch (err) {
       console.error("Error submitting donation request:", err);
-      setError("Failed to submit donation request. Please try again.");
+      setError(
+        err.response?.data?.message || "Failed to submit donation request."
+      );
     }
   };
 
   // Function to cancel a donation request
   const handleCancelRequest = async (requestId) => {
     try {
-      await axiosInstance.post("/user/cancelDonationRequest", { requestId });
+      const response = await axiosInstance.post("/user/cancelDonationRequest", {
+        requestId,
+      });
       setRequests((prevRequests) =>
         prevRequests.filter((request) => request._id !== requestId)
       );
+      alert(response.data.message); // Show success message from the backend
     } catch (err) {
       console.error("Error cancelling donation request:", err);
-      setError("Failed to cancel donation request. Please try again.");
+      setError(
+        err.response?.data?.message || "Failed to cancel donation request."
+      );
     }
   };
 
@@ -75,6 +92,15 @@ const BloodBankDashboard = () => {
           value={newRequest.bloodGroup}
           onChange={(e) =>
             setNewRequest({ ...newRequest, bloodGroup: e.target.value })
+          }
+        />
+        <input
+          type="text"
+          placeholder="Phone Number"
+          className="border p-2 rounded-md mb-2 w-full"
+          value={newRequest.phone}
+          onChange={(e) =>
+            setNewRequest({ ...newRequest, phone: e.target.value })
           }
         />
         <input
@@ -107,6 +133,9 @@ const BloodBankDashboard = () => {
               <h3 className="font-semibold">
                 Blood Group: {request.bloodGroup}
               </h3>
+              <p>
+                <strong>Phone:</strong> {request.phone}
+              </p>
               <p>
                 <strong>Address:</strong> {request.address}
               </p>
