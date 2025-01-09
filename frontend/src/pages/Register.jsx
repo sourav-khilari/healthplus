@@ -63,7 +63,7 @@ const Register = () => {
 
       setSuccess(true);
       alert("Login successful! Welcome, User.");
-      navigate("/login"); // Redirect to user dashboard
+      navigate("/user/login"); // Redirect to user dashboard
 
       setError(null);
     } catch (error) {
