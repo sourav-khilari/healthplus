@@ -1,6 +1,6 @@
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { User, } from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 import { admin } from "../config/firebase.js"
 import { Hospital } from "../models/hospital.model.js"
 import { Doctor } from "../models/doctor.model.js"
@@ -58,8 +58,11 @@ const roleMiddleware = (requiredRole) => asyncHandler(async (req, res, next) => 
       return res.status(401).json({ error: 'Token expired' });
     }
     let user = "";
+    console.log("\n\nuid=\n\n"+uid)
     // Check user's role in MongoDB
+    //NzJ5MyxkTYOi0mrWiGEPfy3Xnk73
     if (requiredRole === "hospital") {
+      //console.log("\n\nare hospital"+"\n\n");
       user = await Hospital.findOne({ firebaseUid: uid });
     }
     else {
