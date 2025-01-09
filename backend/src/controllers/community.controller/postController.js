@@ -7,7 +7,8 @@ import { Notification } from "../../models/community.model/notification.model.js
 // route :
 const createPost = async (req, res) => {
   // Get data from req body: title, discription, and image (optional)
-  const { title, discription } = req.body;
+  const { title, description } = req.body;
+  const discription=description
   const _id=req.user._id
   console.log(req.body);
   console.log("\n\ntitle="+title);
