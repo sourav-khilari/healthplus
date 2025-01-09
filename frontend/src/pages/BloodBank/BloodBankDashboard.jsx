@@ -11,8 +11,12 @@ const BloodBankDashboard = () => {
     address: "",
   });
 
+  const [isTokenExpired, setIsTokenExpired] = useState(false); // Token expiration flag
+
   // Function to fetch user donation requests
   const fetchRequests = async () => {
+    if (isTokenExpired) return; // Prevent infinite loop if token is expired
+
     setLoading(true);
     setError(null);
 
@@ -23,9 +27,15 @@ const BloodBankDashboard = () => {
       setRequests(response.data?.data?.donationRequests || []);
     } catch (err) {
       console.error("Error fetching donation requests:", err);
-      setError(
-        err.response?.data?.message || "Failed to load donation requests."
-      );
+      if (err.response?.status === 401) {
+        // Token expired or unauthorized
+        setIsTokenExpired(true);
+        setError("Your session has expired. Please log in again.");
+      } else {
+        setError(
+          err.response?.data?.message || "Failed to load donation requests."
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -48,9 +58,14 @@ const BloodBankDashboard = () => {
       alert(response.data.message); // Show success message from the backend
     } catch (err) {
       console.error("Error submitting donation request:", err);
-      setError(
-        err.response?.data?.message || "Failed to submit donation request."
-      );
+      if (err.response?.status === 401) {
+        setIsTokenExpired(true);
+        setError("Your session has expired. Please log in again.");
+      } else {
+        setError(
+          err.response?.data?.message || "Failed to submit donation request."
+        );
+      }
     }
   };
 
@@ -69,9 +84,14 @@ const BloodBankDashboard = () => {
       alert(response.data.message); // Show success message from the backend
     } catch (err) {
       console.error("Error cancelling donation request:", err);
-      setError(
-        err.response?.data?.message || "Failed to cancel donation request."
-      );
+      if (err.response?.status === 401) {
+        setIsTokenExpired(true);
+        setError("Your session has expired. Please log in again.");
+      } else {
+        setError(
+          err.response?.data?.message || "Failed to cancel donation request."
+        );
+      }
     }
   };
 
@@ -120,6 +140,7 @@ const BloodBankDashboard = () => {
         <button
           onClick={handleSubmitRequest}
           className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          disabled={isTokenExpired}
         >
           Submit Request
         </button>
@@ -152,6 +173,7 @@ const BloodBankDashboard = () => {
                 <button
                   onClick={() => handleCancelRequest(request._id)}
                   className="bg-red-500 text-white py-2 px-4 rounded-md mt-2 hover:bg-red-600"
+                  disabled={isTokenExpired}
                 >
                   Cancel Request
                 </button>

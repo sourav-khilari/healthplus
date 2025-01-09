@@ -16,8 +16,8 @@ const CreatePost = () => {
     if (image) formData.append("image", image);
 
     try {
-      const response = await axiosInstance.post("/user/createPost", formData);
-      navigate(`/user/getPostById/${response.data.data._id}`); // Navigate to the created post's detail page
+      const response = await axiosInstance.post("/users/createPost", formData);
+      navigate(`/users/getPostById/${response.data.data._id}`); // Navigate to the created post's detail page
     } catch (error) {
       console.error("Error creating post:", error);
       // Optionally, add user feedback like toast notifications here
