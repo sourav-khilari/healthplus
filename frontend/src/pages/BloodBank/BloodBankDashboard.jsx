@@ -17,7 +17,9 @@ const BloodBankDashboard = () => {
     setError(null);
 
     try {
-      const response = await axiosInstance.get("/user/getUserDonationRequests");
+      const response = await axiosInstance.get(
+        "/users/getUserDonationRequests"
+      );
       setRequests(response.data?.data?.donationRequests || []);
     } catch (err) {
       console.error("Error fetching donation requests:", err);
@@ -38,7 +40,7 @@ const BloodBankDashboard = () => {
 
     try {
       const response = await axiosInstance.post(
-        "/user/submitBloodDonationRequest",
+        "/users/submitBloodDonationRequest",
         newRequest
       );
       setNewRequest({ bloodGroup: "", phone: "", address: "" });
@@ -55,9 +57,12 @@ const BloodBankDashboard = () => {
   // Function to cancel a donation request
   const handleCancelRequest = async (requestId) => {
     try {
-      const response = await axiosInstance.post("/user/cancelDonationRequest", {
-        requestId,
-      });
+      const response = await axiosInstance.post(
+        "/users/cancelDonationRequest",
+        {
+          requestId,
+        }
+      );
       setRequests((prevRequests) =>
         prevRequests.filter((request) => request._id !== requestId)
       );
