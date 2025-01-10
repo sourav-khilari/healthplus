@@ -21,6 +21,7 @@ import {
   updateUserCoverImage,
   contactUs,
   getUserAppointments,
+  getAllOnlineDoctors,
 } from "../controllers/user.controller.js";
 import {
   authMiddleware,
@@ -127,6 +128,7 @@ router.delete(
   deleteAppointment,
 );
 
+router.post("/getAllOnlineDoctors", getAllOnlineDoctors);
 router.post("/send-otp", roleMiddleware("user"), sendOtpForPatientId); // Send OTP when patient ID is entered
 router.post("/verify-otp", roleMiddleware("user"), verifyOtpAndFetchData); // Verify OTP and fetch patient data
 router.post("/create-patient-id", roleMiddleware("user"), createPatientId);
