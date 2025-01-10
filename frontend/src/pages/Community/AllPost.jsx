@@ -18,9 +18,15 @@ const AllPost = () => {
       setError(null);
 
       // Select the correct endpoint based on the role
-      const endpoint =
-        role === "admin"
-          ? `/admin/getAllPosts?page=${page}`
+      // const endpoint =
+      //   role === "admin"
+      //     ? `/admin/getAllPosts?page=${page}`
+      //     : role==="superadmin"? `superadmin/getAllPosts?page=${page}`: `/users/getAllPosts?page=${page}`;
+      //const endpoint = `/ ${role === "superadmin" ? "superadmin" : role === "admin" ? "admin" : "users"}/getAllPosts?page=${page}`
+      const endpoint = role === "admin"
+        ? `/admin/getAllPosts?page=${page}`
+        : role === "superadmin"
+          ? `/superadmin/getAllPosts?page=${page}`
           : `/users/getAllPosts?page=${page}`;
 
       const response = await axiosInstance.get(endpoint);
