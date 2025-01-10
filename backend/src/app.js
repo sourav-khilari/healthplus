@@ -21,7 +21,7 @@ app.use(
   cors({
     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     credentials: true,
-    sameSite: "None",
+    method:["GET","POST","PUT","DELETE"],
   })
 );
 
@@ -31,6 +31,7 @@ const io = new SocketIOServer(server, {
   cors: {
     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   },
 });
 

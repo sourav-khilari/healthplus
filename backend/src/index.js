@@ -3,10 +3,12 @@ import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 import { app,server } from "./app.js";
 
-dotenv.config({
-  path: "./.env",
-});
-
+if(process.env.NODE_ENV === "development")
+{
+  dotenv.config({
+    path: "./.env",
+  });
+}
 connectDB()
   .then(() => {
     server.on("error", (error) => {
