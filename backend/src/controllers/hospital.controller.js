@@ -235,8 +235,8 @@ const addDoctor = async (req, res) => {
 
 
 const getHospitalAllAppointments = asyncHandler(async (req, res) => {
-    const { hospitalId } = req.params;
-
+    //const { hospitalId } = req.params;
+    const hospitalId=req.user._id;
     try {
         // Validate if the hospital exists
         const hospital = await Hospital.findById(hospitalId);
