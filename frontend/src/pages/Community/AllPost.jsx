@@ -34,6 +34,7 @@ const AllPost = () => {
 
       if (posts.length > 0) {
         setAllPosts((prevPosts) => [...prevPosts, ...posts]);
+        console.log("All Posts\n", allPosts);
       } else {
         setHasMore(false); // No more posts to load
       }

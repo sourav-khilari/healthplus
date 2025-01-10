@@ -21,6 +21,7 @@ import {
   updateUserCoverImage,
   contactUs,
   getUserAppointments,
+  getAllOnlineDoctors,
 } from "../controllers/user.controller.js";
 import {
   authMiddleware,
@@ -30,29 +31,16 @@ import { upload } from "../middlewares/multer.middleware.js";
 
 import {
   createOrder,
-  getAllOrders,
   getUserOrders,
-  countTotalOrders,
-  calculateTotalSales,
-  calcualteTotalSalesByDate,
   findOrderById,
   markOrderAsPaid,
-  markOrderAsDelivered,
 } from "../controllers/medicalstore.controller/order.controller.js";
 
 import {
-  createCategory,
-  updateCategory,
-  removeCategory,
-  listCategory,
   readCategory,
 } from "../controllers/medicalstore.controller/category.controller.js";
 
 import {
-  addProduct,
-  updateProductDetails,
-  removeProduct,
-  fetchProducts,
   fetchProductById,
   fetchAllProducts,
   addProductReview,
@@ -127,6 +115,7 @@ router.delete(
   deleteAppointment,
 );
 
+router.post("/getAllOnlineDoctors", getAllOnlineDoctors);
 router.post("/send-otp", roleMiddleware("user"), sendOtpForPatientId); // Send OTP when patient ID is entered
 router.post("/verify-otp", roleMiddleware("user"), verifyOtpAndFetchData); // Verify OTP and fetch patient data
 router.post("/create-patient-id", roleMiddleware("user"), createPatientId);

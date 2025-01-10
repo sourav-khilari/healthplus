@@ -311,7 +311,7 @@ const getAllPosts = async (req, res) => {
           },
         },
       });
-
+      console.log(posts);
     return res.status(200).send({
       success: true,
       message: "Posts retrieved successfully.",

@@ -1004,6 +1004,26 @@ const contactUs = asyncHandler(async (req, res) => {
     }
 });
 
+const getAllOnlineDoctors = asyncHandler(async (req, res) => {
+    try {
+        // Fetch all doctors, optionally filtering by query params
+        const filters = {};
+        if (req.query?.department) {
+            filters.department = req.query.department;
+        }
+        if (req.query?.hospitalId) {
+            filters.hospitalId = req.query.hospitalId;
+        }
+        filters.role="online doctor"
+        //const doctors = await Doctor.find(filters).populate('hospitalId', 'name location');
+        const doctors = await Doctor.find(filters)
+
+        return res.status(200).json(new ApiResponse(200, doctors, 'All doctor'));
+    } catch (error) {
+        throw new ApiError(500, "Failed to fetch doctor", error.message);
+    }
+});
+
 
 
 
@@ -1028,6 +1048,7 @@ export {
     getPatientDetailsId,
     updateUserAvatar,
     updateUserCoverImage,
+    getAllOnlineDoctors,
     contactUs,
     getUserAppointments,
 }
