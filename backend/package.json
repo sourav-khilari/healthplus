@@ -30,7 +30,8 @@
   "scripts": {
     "test": "index.js",
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
-    "build": "echo 'Building backend' && exit 1"
+    "start": "node src/index.js",
+    "build": "echo 'No build step required for backend-only app'"
   },
   "author": "",
   "license": "ISC",
