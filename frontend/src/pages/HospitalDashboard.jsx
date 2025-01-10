@@ -34,7 +34,9 @@ const HospitalDashboard = () => {
   const fetchDoctors = async () => {
     try {
       setLoadingDoctors(true);
-      const response = await axiosInstance.get(`/hospital/getDoctorAppointments`);
+      const response = await axiosInstance.get(
+        `/hospital/getDoctorAppointments`
+      );
       setDoctors(response.data);
     } catch (err) {
       console.error(err);
@@ -79,7 +81,9 @@ const HospitalDashboard = () => {
   const fetchAppointments = async () => {
     try {
       setLoadingAppointments(true);
-      const response = await axiosInstance.get(`hospital/getHospitalAllAppointments`);
+      const response = await axiosInstance.get(
+        `hospital/getHospitalAllAppointments:{user._id}`
+      );
       setAppointments(response.data.data);
     } catch (err) {
       console.error(err);
@@ -119,7 +123,7 @@ const HospitalDashboard = () => {
       {/* Navigation Button */}
       <button
         className="btn btn-primary mb-4"
-        onClick={() => navigate("/hospital/bloodbankdashboard")}
+        onClick={() => navigate("/Bloodbank/hospitaldashboard")}
       >
         Go to Blood Bank Dashboard
       </button>

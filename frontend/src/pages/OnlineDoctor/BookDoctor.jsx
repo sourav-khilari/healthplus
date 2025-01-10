@@ -20,6 +20,7 @@ const BookDoctor = () => {
       setLoading(true);
       const response = await axiosInstance.get(
         "/users/onlinegetUserAppointments"
+     
       );
       setAppointments(response.data.appointments);
       setLoading(false);

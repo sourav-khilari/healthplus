@@ -25,7 +25,7 @@ router.get("/logoutUser", roleMiddleware("hospital"), logoutUser)
 router.post('/addDoctor', roleMiddleware("hospital"), addDoctor);
 
 router.get('/getDoctorAppointments/:doctorId', roleMiddleware("hospital"), getDoctorAppointments);
-router.get('/getHospitalAllAppointments/:hospitalId', roleMiddleware("hospital"), getHospitalAllAppointments);
+router.get('/getHospitalAllAppointments', roleMiddleware("hospital"), getHospitalAllAppointments);
 
 router.post("/updateHospitalAvatar", upload.fields([
     {
@@ -47,11 +47,12 @@ import {
     getDonationRequestsForHospital,
     markRequestAsRead,
     declineDonationRequest,
+    getAcceptDonationRequest,
 } from "../controllers/blood.donation.controllers/donation.request.controller.js"
 
 router.get("/getDonationRequestsForHospital", roleMiddleware("hospital"), getDonationRequestsForHospital);
 router.post("/markRequestAsRead", roleMiddleware("hospital"), markRequestAsRead);
 router.post("/declineDonationRequest", roleMiddleware("hospital"), declineDonationRequest);
-
+router.post("/getAcceptDonationRequest", roleMiddleware("hospital"), getAcceptDonationRequest);
 
 export default router

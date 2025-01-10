@@ -3,6 +3,7 @@ import axiosInstance from "../axios/axios_interceptor.js";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 // HospitalRegister Component
 const HospitalRegister = () => {
@@ -10,6 +11,7 @@ const HospitalRegister = () => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [contactNumber, setContactNumber] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -21,6 +23,8 @@ const HospitalRegister = () => {
         address,
         contactNumber,
       });
+      navigate("/hospital/dashboard"); // Redirect to profile page
+
       toast.success(response.data.message);
     } catch (error) {
       toast.error(error.response?.data?.message || "Registration failed");
