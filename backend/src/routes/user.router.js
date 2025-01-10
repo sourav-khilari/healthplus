@@ -31,29 +31,16 @@ import { upload } from "../middlewares/multer.middleware.js";
 
 import {
   createOrder,
-  getAllOrders,
   getUserOrders,
-  countTotalOrders,
-  calculateTotalSales,
-  calcualteTotalSalesByDate,
   findOrderById,
   markOrderAsPaid,
-  markOrderAsDelivered,
 } from "../controllers/medicalstore.controller/order.controller.js";
 
 import {
-  createCategory,
-  updateCategory,
-  removeCategory,
-  listCategory,
   readCategory,
 } from "../controllers/medicalstore.controller/category.controller.js";
 
 import {
-  addProduct,
-  updateProductDetails,
-  removeProduct,
-  fetchProducts,
   fetchProductById,
   fetchAllProducts,
   addProductReview,
