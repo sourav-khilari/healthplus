@@ -16,7 +16,7 @@ const HospitalDashboard = () => {
     speciality: "",
     email: "",
     phone: "",
-    availability: [],
+    availability: [{ day: "", startTime: "", endTime: "" }],
     slotDuration: "",
   });
 
@@ -34,13 +34,30 @@ const HospitalDashboard = () => {
   const fetchDoctors = async () => {
     try {
       setLoadingDoctors(true);
-      const response = await axiosInstance.get(`/hospital/getDoctorAppointments`);
+      const response = await axiosInstance.get(
+        `/hospital/getDoctorAppointments`
+      );
       setDoctors(response.data);
     } catch (err) {
       console.error(err);
       setError("Failed to load doctors.");
     } finally {
       setLoadingDoctors(false);
+    }
+  };
+
+  const fetchAppointments = async () => {
+    try {
+      setLoadingAppointments(true);
+      const response = await axiosInstance.get(
+        `/hospital/getHospitalAllAppointments:${hospitalId}`
+      );
+      setAppointments(response.data.data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load appointments.");
+    } finally {
+      setLoadingAppointments(false);
     }
   };
 
@@ -76,18 +93,6 @@ const HospitalDashboard = () => {
     );
     setNewDoctor({ ...newDoctor, availability: updatedAvailability });
   };
-  const fetchAppointments = async () => {
-    try {
-      setLoadingAppointments(true);
-      const response = await axiosInstance.get(`hospital/getHospitalAllAppointments`);
-      setAppointments(response.data.data);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load appointments.");
-    } finally {
-      setLoadingAppointments(false);
-    }
-  };
 
   const addDoctor = async () => {
     try {
@@ -103,7 +108,7 @@ const HospitalDashboard = () => {
         speciality: "",
         email: "",
         phone: "",
-        availability: [],
+        availability: [{ day: "", startTime: "", endTime: "" }],
         slotDuration: "",
       });
     } catch (err) {
@@ -119,7 +124,7 @@ const HospitalDashboard = () => {
       {/* Navigation Button */}
       <button
         className="btn btn-primary mb-4"
-        onClick={() => navigate("/hospital/bloodbankdashboard")}
+        onClick={() => navigate("/Bloodbank/hospitaldashboard")}
       >
         Go to Blood Bank Dashboard
       </button>
@@ -173,6 +178,7 @@ const HospitalDashboard = () => {
             setNewDoctor({ ...newDoctor, slotDuration: e.target.value })
           }
         />
+
         {/* Availability Input */}
         <h3>Availability</h3>
         {newDoctor.availability.map((slot, index) => (
@@ -219,6 +225,7 @@ const HospitalDashboard = () => {
         </button>
 
         <button onClick={addDoctor}>Add Doctor</button>
+
         {success && <p className="success">{success}</p>}
         {error && <p className="error">{error}</p>}
       </section>

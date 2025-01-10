@@ -27,7 +27,7 @@ const HospitalBloodDashboard = () => {
   // Function to update request status
   const updateRequestStatus = async (requestId, newStatus) => {
     const endpointMap = {
-      accepted: "/hospital/acceptDonationRequest",
+      accepted: "/hospital/getAcceptDonationRequest",
       declined: "/hospital/declineDonationRequest",
       read: "/hospital/markRequestAsRead",
     };
