@@ -190,7 +190,7 @@ router.post("/auth/refreshToken", async (req, res) => {
     // Set the token as a cookie
     res.cookie("authToken", idToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "deployment",
       //sameSite: "Strict",
     });
 
