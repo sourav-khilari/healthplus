@@ -16,7 +16,7 @@ const HospitalDashboard = () => {
     speciality: "",
     email: "",
     phone: "",
-    availability: [],
+    availability: [{ day: "", startTime: "", endTime: "" }],
     slotDuration: "",
   });
 
@@ -43,6 +43,21 @@ const HospitalDashboard = () => {
       setError("Failed to load doctors.");
     } finally {
       setLoadingDoctors(false);
+    }
+  };
+
+  const fetchAppointments = async () => {
+    try {
+      setLoadingAppointments(true);
+      const response = await axiosInstance.get(
+        `/hospital/getHospitalAllAppointments:${hospitalId}`
+      );
+      setAppointments(response.data.data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load appointments.");
+    } finally {
+      setLoadingAppointments(false);
     }
   };
 
@@ -78,20 +93,6 @@ const HospitalDashboard = () => {
     );
     setNewDoctor({ ...newDoctor, availability: updatedAvailability });
   };
-  const fetchAppointments = async () => {
-    try {
-      setLoadingAppointments(true);
-      const response = await axiosInstance.get(
-        `hospital/getHospitalAllAppointments:{user._id}`
-      );
-      setAppointments(response.data.data);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load appointments.");
-    } finally {
-      setLoadingAppointments(false);
-    }
-  };
 
   const addDoctor = async () => {
     try {
@@ -107,7 +108,7 @@ const HospitalDashboard = () => {
         speciality: "",
         email: "",
         phone: "",
-        availability: [],
+        availability: [{ day: "", startTime: "", endTime: "" }],
         slotDuration: "",
       });
     } catch (err) {
@@ -177,6 +178,7 @@ const HospitalDashboard = () => {
             setNewDoctor({ ...newDoctor, slotDuration: e.target.value })
           }
         />
+
         {/* Availability Input */}
         <h3>Availability</h3>
         {newDoctor.availability.map((slot, index) => (
@@ -223,6 +225,7 @@ const HospitalDashboard = () => {
         </button>
 
         <button onClick={addDoctor}>Add Doctor</button>
+
         {success && <p className="success">{success}</p>}
         {error && <p className="error">{error}</p>}
       </section>

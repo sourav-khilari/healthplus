@@ -6,9 +6,9 @@ const AboutUs = () => {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-text">
-          <div className="hero-image">
+          {/* <div className="hero-image">
             <img src="../assets/images/aboutus.jpg" alt="HealthPlus Team" />
-          </div>
+          </div> */}
           <h1>About Us</h1>
           <p className="intro-text ">
             At HealthPlus, we are committed to providing personalized, holistic

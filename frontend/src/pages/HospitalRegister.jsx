@@ -23,7 +23,7 @@ const HospitalRegister = () => {
         address,
         contactNumber,
       });
-      navigate("/hospital/dashboard"); // Redirect to profile page
+      navigate("/hospital/login"); // Redirect to profile page
 
       toast.success(response.data.message);
     } catch (error) {
