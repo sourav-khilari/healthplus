@@ -34,7 +34,7 @@ const HospitalDashboard = () => {
   const fetchDoctors = async () => {
     try {
       setLoadingDoctors(true);
-      const response = await axiosInstance.get(`/getDoctorAppointments`);
+      const response = await axiosInstance.get(`/hospital/getDoctorAppointments`);
       setDoctors(response.data);
     } catch (err) {
       console.error(err);
@@ -79,7 +79,7 @@ const HospitalDashboard = () => {
   const fetchAppointments = async () => {
     try {
       setLoadingAppointments(true);
-      const response = await axiosInstance.get(`/getHospitalAllAppointments`);
+      const response = await axiosInstance.get(`hospital/getHospitalAllAppointments`);
       setAppointments(response.data.data);
     } catch (err) {
       console.error(err);
@@ -91,7 +91,7 @@ const HospitalDashboard = () => {
 
   const addDoctor = async () => {
     try {
-      const response = await axiosInstance.post("/addDoctor", {
+      const response = await axiosInstance.post("/hospital/addDoctor", {
         ...newDoctor,
         hospitalId,
       });

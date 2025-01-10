@@ -15,7 +15,7 @@ const HospitalRegister = () => {
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.post("/register", {
+      const response = await axiosInstance.post("/hospital/register", {
         name,
         email,
         address,
