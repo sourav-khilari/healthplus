@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === 'deployment') {
     );
 } else {
     // Load credentials from the local file in development
-    credentials = require(path.join(__dirname, '..', 'config', 'service-account.json'));
+    credentials = path.join(__dirname, '..', 'config', 'service-account.json');
 }
 
 const calendar = google.calendar({
