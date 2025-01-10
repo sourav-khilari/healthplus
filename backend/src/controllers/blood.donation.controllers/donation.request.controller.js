@@ -189,6 +189,30 @@ const getUserDonationRequests = asyncHandler(async (req, res) => {
 });
 
 
+const getAcceptDonationRequest = asyncHandler(async (req, res) => {
+    const hospitalId=req.user._id;
+    const findData={
+        status: "read",
+        readByHospitalId: hospitalId
+    }
+    try {
+        const requests = await DonationRequest.find(findData).populate("donorId", "name email");
+
+        res.status(200).send({
+            success: true,
+            data: requests,
+        });
+    } catch (error) {
+        console.error("Error fetching donation requests:", error);
+        res.status(500).send({
+            success: false,
+            message: "Internal server error.",
+        });
+    }
+});
+
+
+
 export {
     submitBloodDonationRequest,
     getDonationRequestsForHospital,
@@ -196,4 +220,5 @@ export {
     cancelDonationRequest,
     getUserDonationRequests,
     declineDonationRequest,
+    getAcceptDonationRequest,
 }

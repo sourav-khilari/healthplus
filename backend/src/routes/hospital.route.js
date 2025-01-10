@@ -47,11 +47,12 @@ import {
     getDonationRequestsForHospital,
     markRequestAsRead,
     declineDonationRequest,
+    getAcceptDonationRequest,
 } from "../controllers/blood.donation.controllers/donation.request.controller.js"
 
 router.get("/getDonationRequestsForHospital", roleMiddleware("hospital"), getDonationRequestsForHospital);
 router.post("/markRequestAsRead", roleMiddleware("hospital"), markRequestAsRead);
 router.post("/declineDonationRequest", roleMiddleware("hospital"), declineDonationRequest);
-
+router.post("/getAcceptDonationRequest", roleMiddleware("hospital"), getAcceptDonationRequest);
 
 export default router
