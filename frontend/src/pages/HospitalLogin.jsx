@@ -1,9 +1,5 @@
 import { toast } from "react-toastify";
 import { useState } from "react";
-<<<<<<< HEAD
-
-=======
->>>>>>> 9c7933a1371005db85ec969bf57160fda89f0d08
 import axiosInstance from "../axios/axios_interceptor.js";
 
 import "react-toastify/dist/ReactToastify.css";

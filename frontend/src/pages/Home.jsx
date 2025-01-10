@@ -5,11 +5,11 @@ import "../styles/Home.css"; // Ensure this file includes styles for the home pa
 const Home = () => {
   const [role, setRole] = useState(null); // Track the user's role
   const services = [
-    {
-      title: "Ayurveda Cure",
-      description: "Personalized Ayurvedic treatments and wellness plans.",
-      link: "/services/ayurveda",
-    },
+    // {
+    //   title: "Ayurveda Cure",
+    //   description: "Personalized Ayurvedic treatments and wellness plans.",
+    //   link: "/services/ayurveda",
+    // },
     {
       title: "Doctor Consultation",
       description: "Book virtual or in-person consultations with top doctors.",
@@ -20,11 +20,11 @@ const Home = () => {
       description: "Order your prescription and over-the-counter medicines.",
       link: "/medstore",
     },
-    {
-      title: "Report Guidance",
-      description: "Get insights and guidance on your health reports.",
-      link: "/services/report-guidance",
-    },
+    // {
+    //   title: "Report Guidance",
+    //   description: "Get insights and guidance on your health reports.",
+    //   link: "/services/report-guidance",
+    // },
     {
       title: "Find Hospital Near You",
       description: "Get the possible hospitals near you.",
