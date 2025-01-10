@@ -13,7 +13,7 @@ const Home = () => {
     {
       title: "Doctor Consultation",
       description: "Book virtual or in-person consultations with top doctors.",
-      link: "/services/doctor-consultation",
+      link: "/online-doctor/doctor-consultation",
     },
     {
       title: "Medicine Store",

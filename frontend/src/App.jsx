@@ -78,6 +78,9 @@ import LobbyScreen from "./pages/Lobby.jsx";
 // import DoctorConsultationEntry from "./pages/ServiceDetails/DoctorConsultation.jsx";
 
 //online doc
+import DoctorConsultencyPage from "./pages/OnlineDoctor/DoctorConsultencyPage.jsx";
+import BookDoctor from "./pages/OnlineDoctor/BookDoctor.jsx";
+
 import DoctorRegistrationPage from "./pages/OnlineDoctor/DoctorRegistrationPage";
 import DoctorAppointmentsPage from "./pages/OnlineDoctor/DoctorAppointmentsPage";
 import VideoIdPage from "./pages/OnlineDoctor/VideoIdPage";
@@ -224,6 +227,11 @@ const App = () => {
         />
         {/* online doctor*/}
         <Route path="/online-doctor/login" element={<OnlineDoctorLogin />} />
+        <Route
+          path="/online-doctor/doctor-consultation"
+          element={<DoctorConsultencyPage />}
+        />
+        <Route path="/online-doctor/book-doctor" element={<BookDoctor />} />
 
         <Route
           path="/online-doctor/register"

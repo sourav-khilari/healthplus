@@ -5,7 +5,7 @@ const Learn = () => {
     <div className="learn-container">
       {/* Hero Section */}
       <section className="hero-section">
-        <h1>Welcome to HealthPlus Learn</h1>
+        <h1>Learn About HealthPlus</h1>
         <p>
           Explore our resources on health, wellness, and Ayurveda. Enhance your
           well-being with our curated content.
