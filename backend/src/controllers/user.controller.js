@@ -1011,9 +1011,6 @@ const getAllOnlineDoctors = asyncHandler(async (req, res) => {
         if (req.query?.department) {
             filters.department = req.query.department;
         }
-        if (req.query?.hospitalId) {
-            filters.hospitalId = req.query.hospitalId;
-        }
         filters.role="online doctor"
         //const doctors = await Doctor.find(filters).populate('hospitalId', 'name location');
         const doctors = await Doctor.find(filters)
