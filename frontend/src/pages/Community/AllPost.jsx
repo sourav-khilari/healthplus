@@ -26,7 +26,7 @@ const AllPost = () => {
       const endpoint = role === "admin"
         ? `/admin/getAllPosts?page=${page}`
         : role === "superadmin"
-          ? `/superadmin/getAllPosts?page=${page}`
+          ? `/admin/getAllPosts?page=${page}`
           : `/users/getAllPosts?page=${page}`;
 
       const response = await axiosInstance.get(endpoint);
