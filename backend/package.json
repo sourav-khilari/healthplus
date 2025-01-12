@@ -31,7 +31,7 @@
     "test": "index.js",
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
     "start": "node src/index.js",
-    "build": "node src/index.js"
+    "build": "echo 'No build step required for backend-only app"
   },
   "author": "",
   "license": "ISC",
