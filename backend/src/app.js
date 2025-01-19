@@ -93,7 +93,7 @@ io.on("connection", async (socket) => {
   //console.log("connect User token 12", token)
 
   //current user details    
-  const user = await getUserDetailsFromToken(token)
+  //const user = await getUserDetailsFromToken(token)
   //const user = ""; 
   console.log("connect User after user ", socket.id)
 
@@ -242,6 +242,10 @@ import doctorRouter from "./routes/doctor.route.js";
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
+});
+
+app.use("/", (req, res) => {
+  res.send("Welcome to the backend");
 });
 
 app.use("/api/v1/users", userRouter);

@@ -28,3 +28,6 @@ connectDB()
     res.send({ clientId: process.env.PAYPAL_CLIENT_ID });
   });
   
+app.get("/", (req, res) => {
+  res.send("Welcome to the backend");
+});
