@@ -244,9 +244,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", (req, res) => {
-  res.send("Welcome to the backend");
-});
+
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/hospital", hospitalRouter);
