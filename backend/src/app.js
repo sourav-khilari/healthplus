@@ -127,7 +127,7 @@ app.use("/api/v1/doctor", doctorRouter);
 import { failedUploads } from "./scheduler/fail.uploads.js";
 import { pendingHospitalScheduler } from "./scheduler/reminder.hospital.js";
 
-pendingHospitalScheduler();
+//pendingHospitalScheduler();
 
 // Export the app for external use
 export { app, server, io };
