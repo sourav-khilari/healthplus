@@ -26,6 +26,7 @@ connectDB()
     res.send({ clientId: process.env.PAYPAL_CLIENT_ID });
   });
   
+console.log("hello")
 app.get("/", (req, res) => {
   res.send("Welcome to the backend");
 });

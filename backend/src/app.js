@@ -110,10 +110,10 @@ import adminRouter from "./routes/sub.admin.route.js";
 import superadminRouter from "./routes/admin.route.js";
 import hospitalRouter from "./routes/hospital.route.js";
 import doctorRouter from "./routes/doctor.route.js";
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`${req.method} ${req.url}`);
+//   next();
+// });
 
 
 
