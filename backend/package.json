@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@vercel/node": "^5.0.4",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
