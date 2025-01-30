@@ -13,9 +13,9 @@ connectDB()
       console.log("ERROR:", error);
       throw error;
     });
-    server.listen(process.env.PORT || 8000, () => {
-      console.log(`Server is running on port ${process.env.PORT}`);
-    });
+    // server.listen(process.env.PORT || 8000, () => {
+    //   console.log(`Server is running on port ${process.env.PORT}`);
+    // });
   })
   .catch((err) => {
     console.log("Mongo Db connection failed!!!", err);
@@ -25,7 +25,7 @@ connectDB()
   app.get("/api/config/paypal", (req, res) => {
     res.send({ clientId: process.env.PAYPAL_CLIENT_ID });
   });
-  
+
 console.log("hello")
 app.get("/", (req, res) => {
   res.send("Welcome to the backend");
