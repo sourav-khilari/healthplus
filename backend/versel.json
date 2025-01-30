@@ -12,7 +12,8 @@
         "dest": "src/index.js",
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
       }
-    ]
+    ],
+    "rewrites": [{ "source": "/(.*)", "destination": "/" }] 
 }
   
   
